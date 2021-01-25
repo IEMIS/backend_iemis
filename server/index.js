@@ -24,13 +24,13 @@ mongoose.connection.on("error", err => {
 
 const swagerFile = require('../swagger_output.json');
 
-/*
+
 // bring in routes
-const postRoutes = require("./routes/post");
-const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/user");
+//const postRoutes = require("./routes/post");
+const studentAuthRoutes = require("../routes/students");
+//const userRoutes = require("./routes/user");
 // apiDocs
-*/
+
 
 
 
@@ -53,11 +53,13 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 //app.use(expressValidator);
 app.use(cors());
-/*
-app.use("/api", postRoutes);
-app.use("/api", authRoutes);
-app.use("/api", userRoutes);
-*/
+
+app.use("/api/v1", studentAuthRoutes);
+app.use("/api", (req, res)=>{
+    res.json(req.body);
+});
+//app.use("/api", userRoutes);
+
 
 
 app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swagerFile));
