@@ -5,35 +5,18 @@
     "title": "education inteligent Management system",
     "description": "education inteligent Management system, api "
   },
-  "host": "localhost:9000",
+  "host": "https://iemis.herokuapp.com/api/v1",
   "basePath": "/",
-  "tags": [
-    {
-      "name": "Student Data",
-      "description": "Endpoint to access student data, and examination records"
-    }
-  ],
+  "tags": [],
   "schemes": [
     "http",
     "https"
   ],
   "securityDefinitions": {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    "Authorization": "Bearer {token}",
     "api_key": {
       "type": "apiKey",
       "name": "api_key",
       "in": "header"
-    },
-    "petstore_auth": {
-      "type": "oauth2",
-      "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
-      "flow": "implicit",
-      "scopes": {
-        "read_pets": "read your pets",
-        "write_pets": "modify pets in your account"
-      }
     }
   },
   "consumes": [
@@ -43,21 +26,131 @@
     "application/json"
   ],
   "paths": {
-    "/student": {
+    "/student/signin": {
       "post": {
-        "tags": [
-          "User"
-        ],
-        "description": "Endpoint to sign in a specific user",
+        "tags": [],
+        "description": "Endpoint to sign in a specific student and have access to their data",
         "parameters": [
           {
             "name": "obj",
             "in": "body",
-            "description": "User information.",
+            "description": "Student Students login details",
             "required": true,
             "type": "object",
             "schema": {
-              "$ref": "#/definitions/AddUser"
+              "type": "object",
+              "properties": {
+                "studentId": {
+                  "type": "string",
+                  "example": "011273Vb"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password_demo_123"
+                }
+              },
+              "required": [
+                "studentId",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "student successfully login"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "token"
+                    },
+                    "student": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "0030303"
+                        },
+                        "studentId": {
+                          "type": "string",
+                          "example": "49494"
+                        },
+                        "First Name": {
+                          "type": "string",
+                          "example": "ade"
+                        },
+                        "Last Name": {
+                          "type": "string",
+                          "example": "Yemi"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "user not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error ": {
+                  "type": "string",
+                  "example": "invalid Student Id "
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "405": {
+            "description": "Password error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error ": {
+                  "type": "string",
+                  "example": "student Id and Password not match, incorrect password"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/student/forgetPassword": {
+      "post": {
+        "tags": [],
+        "description": "Endpoint to sign in a specific student and have access to their data",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Student information.",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/students"
             }
           }
         ],
@@ -68,67 +161,35 @@
         }
       }
     },
-    "/responses": {
-      "get": {
+    "/student/resetPassword": {
+      "post": {
         "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "001": {
-            "description": "myBoolean",
+        "description": "Endpoint to sign in a specific student and have access to their data",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Student information.",
+            "required": true,
+            "type": "object",
             "schema": {
-              "$ref": "#/definitions/myBoolean"
-            }
-          },
-          "002": {
-            "description": "myNumber",
-            "schema": {
-              "$ref": "#/definitions/myNumber"
-            }
-          },
-          "003": {
-            "description": "myString",
-            "schema": {
-              "$ref": "#/definitions/myString"
-            }
-          },
-          "004": {
-            "description": "myObject",
-            "schema": {
-              "$ref": "#/definitions/myObject"
-            }
-          },
-          "005": {
-            "description": "myArrayOfBooleans",
-            "schema": {
-              "$ref": "#/definitions/myArrayOfBooleans"
-            }
-          },
-          "006": {
-            "description": "myArrayOfNumbers",
-            "schema": {
-              "$ref": "#/definitions/myArrayOfNumbers"
-            }
-          },
-          "007": {
-            "description": "myArrayOfStrings",
-            "schema": {
-              "$ref": "#/definitions/myArrayOfStrings"
-            }
-          },
-          "008": {
-            "description": "myArrayOfObjects",
-            "schema": {
-              "$ref": "#/definitions/myArrayOfObjects"
-            }
-          },
-          "009": {
-            "description": "myReferencedObjectArray",
-            "schema": {
-              "$ref": "#/definitions/myReferencedObjectArray"
+              "$ref": "#/definitions/students"
             }
           }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
         }
+      }
+    },
+    "/_undefined_path_0x18e": {
+      "get": {
+        "tags": [],
+        "description": "Endpoint to sign in a specific student and have access to their data",
+        "parameters": [],
+        "responses": {}
       }
     }
   },
@@ -318,7 +379,8 @@
           "example": "Ibadan"
         },
         "created": {
-          "type": "function"
+          "type": "string",
+          "example": "03/09/34"
         }
       }
     }

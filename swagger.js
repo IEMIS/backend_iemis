@@ -6,17 +6,20 @@ const doc = {
         title: "education inteligent Management system",
         description: "education inteligent Management system, api "
     },
-    host: "localhost:9000",
+    host: "https://iemis.herokuapp.com/api/v1",
     basePath: "/",
     schemes: ['http', 'https'],
     consumes: ['application/json'],
     produces: ['application/json'],
+    /*
     tags: [
         {
             "name": "Student Data",
             "description": "Endpoint to access student data, and examination records"
         }
     ],
+    */
+    
 
     securityDefinitions: {
         api_key: {
@@ -86,7 +89,6 @@ const doc = {
             created:"03/09/34",
         },
     }
-
 }
 
 
