@@ -1,0 +1,326 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "education inteligent Management system",
+    "description": "education inteligent Management system, api "
+  },
+  "host": "localhost:9000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Student Data",
+      "description": "Endpoint to access student data, and examination records"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Authorization": "Bearer {token}",
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    },
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
+      "flow": "implicit",
+      "scopes": {
+        "read_pets": "read your pets",
+        "write_pets": "modify pets in your account"
+      }
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/student": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint to sign in a specific user",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "User information.",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/AddUser"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/responses": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "001": {
+            "description": "myBoolean",
+            "schema": {
+              "$ref": "#/definitions/myBoolean"
+            }
+          },
+          "002": {
+            "description": "myNumber",
+            "schema": {
+              "$ref": "#/definitions/myNumber"
+            }
+          },
+          "003": {
+            "description": "myString",
+            "schema": {
+              "$ref": "#/definitions/myString"
+            }
+          },
+          "004": {
+            "description": "myObject",
+            "schema": {
+              "$ref": "#/definitions/myObject"
+            }
+          },
+          "005": {
+            "description": "myArrayOfBooleans",
+            "schema": {
+              "$ref": "#/definitions/myArrayOfBooleans"
+            }
+          },
+          "006": {
+            "description": "myArrayOfNumbers",
+            "schema": {
+              "$ref": "#/definitions/myArrayOfNumbers"
+            }
+          },
+          "007": {
+            "description": "myArrayOfStrings",
+            "schema": {
+              "$ref": "#/definitions/myArrayOfStrings"
+            }
+          },
+          "008": {
+            "description": "myArrayOfObjects",
+            "schema": {
+              "$ref": "#/definitions/myArrayOfObjects"
+            }
+          },
+          "009": {
+            "description": "myReferencedObjectArray",
+            "schema": {
+              "$ref": "#/definitions/myReferencedObjectArray"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "students": {
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "string",
+          "example": "023AV"
+        },
+        "schoolCode": {
+          "type": "string",
+          "example": "00033"
+        },
+        "firstName": {
+          "type": "string",
+          "example": "Ademye"
+        },
+        "middleName": {
+          "type": "string",
+          "example": "Akinkunmi"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Alake"
+        },
+        "religion": {
+          "type": "string",
+          "example": "Tradition"
+        },
+        "gender": {
+          "type": "string",
+          "example": "male"
+        },
+        "dob": {
+          "type": "string",
+          "example": "08/09/1641"
+        },
+        "country": {
+          "type": "string",
+          "example": "Ghana"
+        },
+        "ethnicity": {
+          "type": "string",
+          "example": "Yoruba"
+        },
+        "providence": {
+          "type": "string",
+          "example": "South-west"
+        },
+        "address": {
+          "type": "string",
+          "example": "Ibadan"
+        },
+        "disability": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "yearAdmission": {
+          "type": "string",
+          "example": "02/09/2021"
+        },
+        "presentClass": {
+          "type": "string",
+          "example": "Primary One"
+        },
+        "HadEce": {
+          "type": "string",
+          "example": ""
+        },
+        "subject": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string",
+          "example": "Active"
+        },
+        "session": {
+          "type": "string",
+          "example": "2021/2023"
+        },
+        "father": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Adekunle"
+              },
+              "TIN": {
+                "type": "string",
+                "example": "01-3554A"
+              },
+              "address": {
+                "type": "string",
+                "example": "Ibadan"
+              },
+              "occupation": {
+                "type": "string",
+                "example": "Software Enginner"
+              },
+              "email": {
+                "type": "string",
+                "example": "jtalkng@gmail.com"
+              },
+              "phone": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "mother": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Adekunle"
+              },
+              "TIN": {
+                "type": "string",
+                "example": "01-3554A"
+              },
+              "address": {
+                "type": "string",
+                "example": "Ibadan"
+              },
+              "occupation": {
+                "type": "string",
+                "example": "Project Manager"
+              },
+              "email": {
+                "type": "string",
+                "example": "jtalkng@gmail.com"
+              },
+              "phone": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "school": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "09935"
+        },
+        "name": {
+          "type": "string",
+          "example": "K1 primary School"
+        },
+        "locality": {
+          "type": "string",
+          "example": "Abeokuta"
+        },
+        "mailBox": {
+          "type": "string",
+          "example": "BOX-2345"
+        },
+        "email": {
+          "type": "string",
+          "example": "school@gmail.com"
+        },
+        "phone": {
+          "type": "string",
+          "example": "090875645"
+        },
+        "district": {
+          "type": "string",
+          "example": "Ibadan"
+        },
+        "created": {
+          "type": "function"
+        }
+      }
+    }
+  }
+}
