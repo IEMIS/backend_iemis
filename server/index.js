@@ -11,11 +11,13 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
+
+const port = process.env.PORT || 9000;
+
 // MONGO_URI=mongodb://localhost/nodeapi
 mongoose
-    .connect(process.env.MONGO_URI, { useUnifiedTopology:true,useNewUrlParser:true,keepAlive:true,poolSize:30,socketTimeoutMS:360000*3600,connectTimeoutMS:36000*678 })
-    .then(() => console.log("DB Connected"));
-
+    .connect(process.env.MONGO_URI, {useUnifiedTopology:true, useNewUrlParser:true, keepAlive:true,})
+    .then(() => console.log(`Database is connected on port ${port}`));
 mongoose.connection.on("error", err => {
     console.log(`DB connection error: ${err.message}`);
 });
@@ -66,7 +68,7 @@ app.use(function(err, req, res, next) {
     }
 });
 
-const port = process.env.PORT || 9000;
+
 app.listen(port, () => {
     console.log(`A Node Js API is listening on port: ${port}`);
 });
