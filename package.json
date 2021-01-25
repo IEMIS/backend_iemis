@@ -4,6 +4,8 @@
   "description": "iemis backend api with nodejs and mongoDB",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon server",
+    "swagger-autogen": "node swagger.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,5 +25,23 @@
   "bugs": {
     "url": "https://github.com/IEMIS/api/issues"
   },
-  "homepage": "https://github.com/IEMIS/api#readme"
+  "homepage": "https://github.com/IEMIS/api#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
+    "express-validator": "^6.9.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.13",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7",
+    "swagger-autogen": "^2.5.6",
+    "swagger-ui-express": "^4.1.6",
+    "uuid": "^8.3.2"
+  }
 }
