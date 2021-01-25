@@ -6,19 +6,20 @@ const doc = {
         title: "education inteligent Management system",
         description: "education inteligent Management system, api "
     },
-    host: "https://iemis.herokuapp.com/api/v1",
+    host: "iemis.herokuapp.com/api/v1",
     basePath: "/",
-    schemes: ['http', 'https'],
+    schemes: ['http','https'],
     consumes: ['application/json'],
     produces: ['application/json'],
- /*
+
+   /*
     tags: [
         {
             "name": "Student Authentication Page",
             "description": "Endpoint to access student data, and examination records"
         }
     ],
-    */
+    
 
     securityDefinitions: {
         api_key: {
@@ -26,7 +27,7 @@ const doc = {
             name: "api_key",
             in: "header"
         },
-        /*
+      
         petstore_auth: {
             type: "oauth2",
             authorizationUrl: "https://petstore.swagger.io/oauth/authorize",
@@ -36,9 +37,10 @@ const doc = {
                 write_pets: "modify pets in your account"
             }
         }
-        */
+       
     },
-   
+    */
+
     definitions: {
         students:{
             studentId:"023AV",
@@ -88,11 +90,12 @@ const doc = {
             created:"03/09/34",
         },
     }
+
 }
 
 
 const outputFile = './swagger_output.json'
-const endpointsFiles = ['./server/index','./routes/students.js']
+const endpointsFiles = ['./routes/students.js']
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {
     require('./server/index')           // Your project's root file

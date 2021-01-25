@@ -5,20 +5,14 @@
     "title": "education inteligent Management system",
     "description": "education inteligent Management system, api "
   },
-  "host": "https://iemis.herokuapp.com/api/v1",
+  "host": "iemis.herokuapp.com/api/v1",
   "basePath": "/",
   "tags": [],
   "schemes": [
     "http",
     "https"
   ],
-  "securityDefinitions": {
-    "api_key": {
-      "type": "apiKey",
-      "name": "api_key",
-      "in": "header"
-    }
-  },
+  "securityDefinitions": {},
   "consumes": [
     "application/json"
   ],
@@ -142,20 +136,60 @@
         "tags": [
           "Student Authentication Page"
         ],
-        "description": "Endpoint to sign in a specific student and have access to their data",
+        "description": "Endpoint to request for password reset token",
         "parameters": [
           {
             "name": "obj",
             "in": "body",
-            "description": "Student information.",
+            "description": "Password reset token",
             "required": true,
             "type": "object",
             "schema": {
-              "$ref": "#/definitions/students"
+              "type": "object",
+              "properties": {
+                "studentId": {
+                  "type": "string",
+                  "example": "011273Vb"
+                }
+              },
+              "required": [
+                "studentId"
+              ]
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "sending email contain password reset token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "email send successfully send"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Invalid students Id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "invalid students Id"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       }
     },
     "/student/resetPassword": {
@@ -163,23 +197,108 @@
         "tags": [
           "Student Authentication Page"
         ],
-        "description": "Endpoint to sign in a specific student and have access to their data",
+        "description": "Endpoint reset password",
         "parameters": [
           {
             "name": "obj",
             "in": "body",
-            "description": "Student information.",
+            "description": "Password reset",
             "required": true,
             "type": "object",
             "schema": {
-              "$ref": "#/definitions/students"
+              "type": "object",
+              "properties": {
+                "studentId": {
+                  "type": "string",
+                  "example": "011273Vb"
+                },
+                "resetToken": {
+                  "type": "string",
+                  "example": "011273Vb"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "011273Vb"
+                },
+                "passwordConfirmation": {
+                  "type": "string",
+                  "example": "011273Vb"
+                }
+              },
+              "required": [
+                "studentId",
+                "resetToken",
+                "password",
+                "passwordConfirmation"
+              ]
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "reset password",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "password successfully reset, you can now login"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Invalid students Id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "invalid students Id"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "invalid reset tokem"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "406": {
+            "description": "Password error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Password must match each other"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       }
     },
-    "/_undefined_path_0xa7": {
+    "/_undefined_path_0xa3": {
       "get": {
         "tags": [
           {
