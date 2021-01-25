@@ -7,12 +7,7 @@
   },
   "host": "https://iemis.herokuapp.com/api/v1",
   "basePath": "/",
-  "tags": [
-    {
-      "name": "Student Authentication Page",
-      "description": "Endpoint to access student data, and examination records"
-    }
-  ],
+  "tags": [],
   "schemes": [
     "http",
     "https"
@@ -109,9 +104,6 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request"
-          },
           "404": {
             "description": "user not found",
             "schema": {
@@ -163,11 +155,7 @@
             }
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/student/resetPassword": {
@@ -188,14 +176,10 @@
             }
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
-    "/_undefined_path_0xef": {
+    "/_undefined_path_0xa7": {
       "get": {
         "tags": [
           {
