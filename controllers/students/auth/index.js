@@ -22,7 +22,7 @@ exports.signin = async (req, res)=>{
                     $studentId: "011273Vb",
                     $password: "password_demo_123",
                 }
-      } 
+       } 
     */
    const isUser = await  Student.findOne({studentId});
    if(!isUser){
@@ -77,34 +77,112 @@ exports.signin = async (req, res)=>{
 }
 
 exports.forgetPassword = async (req, res)=>{
-       /*
+    /*
       #swagger.tags = ['Student Authentication Page']
-      #swagger.description = 'Endpoint to sign in a specific student and have access to their data' 
+      #swagger.description = 'Endpoint to request for password reset token' 
   
         #swagger.parameters['obj'] = {
         in: 'body',
-        description: 'Student information.',
+        description: 'Password reset token',
         required: true,
         type: 'object',
-        schema: { $ref: "#/definitions/students"}
+        schema: {
+             $studentId: "011273Vb",
+        }
       } 
     */
-    res.json(req.body)
+   const { studentId} = req.body;
+    Student.findOne({studentId}, (err, student)=>{
+       if(err || !student){
+            /* 
+                #swagger.responses[404] = {
+                    description: "Invalid students Id",
+                    schema: { 
+                        error:"invalid students Id",
+                    }
+                } 
+            */
+           return res.status(404).json({error:"invalid students Id"});
+        }
+        /**
+         * send email notification to the parents 
+        */
+
+        /* #swagger.responses[200] = {
+                description: "sending email contain password reset token",
+                schema: { 
+                    message:"email send successfully send",
+                 }
+            } 
+        */
+       res.status(200).json({student})
+   })
+    ///res.json(req.body)
 }
 
 
 exports.resetPassword = async (req, res)=>{
-       /*
+     /*
       #swagger.tags = ['Student Authentication Page']
-      #swagger.description = 'Endpoint to sign in a specific student and have access to their data' 
+      #swagger.description = 'Endpoint reset password' 
   
         #swagger.parameters['obj'] = {
         in: 'body',
-        description: 'Student information.',
+        description: 'Password reset',
         required: true,
         type: 'object',
-        schema: { $ref: "#/definitions/students"}
+        schema: {
+             $studentId: "011273Vb",
+             $resetToken: "011273Vb",
+             $password: "011273Vb",
+             $passwordConfirmation: "011273Vb",
+        }
       } 
     */
-    res.json(req.body)
+   const { studentId, resetToken,password, passwordConfirmation} = req.body;
+    Student.findOne({studentId}, (err, student)=>{
+      if(err || !student){
+           /* #swagger.responses[404] = {
+               description: "Invalid students Id",
+               schema: { 
+                   error:"invalid students Id",
+                }
+           } 
+           */
+          return res.status(404).json({error:"invalid students Id"});
+       }
+       if(student.resetToken !== resetToken){
+           /* #swagger.responses[405] = {
+               description: "Invalid token",
+               schema: { 
+                   error:"invalid reset tokem",
+                }
+           } 
+           */
+           return res.status(405).json({error:"invalid reset token"});
+        }
+        if(password !== passwordConfirmation){
+            /* #swagger.responses[406] = {
+                description: "Password error",
+                schema: { 
+                    error:"Password must match each other",
+                 }
+            } 
+            */
+            return res.status(406).json({error:"Password must match each other"});
+        }
+       /**
+        * send email notification to the parents 
+       */
+
+       /* #swagger.responses[200] = {
+               description: "reset password",
+               schema: { 
+                   message:"password successfully reset, you can now login",
+                }
+           } 
+       */
+      res.status(200).json({message:"password successfully reset, you can now login",student})
+    })
+    //res.json(req.body)
 }
