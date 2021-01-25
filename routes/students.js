@@ -1,12 +1,22 @@
 const express = require("express");
-const { signup, resp } = require("../controllers/auth/StudentAuth");
+const {signin, forgetPassword, resetPassword} = require("../controllers/students/auth/index");
 const router = express.Router();
 
 const {studentSignupValidator} = require("../helpers/validator/student")
+ // #swagger.start
 
-router.post("/student", studentSignupValidator,signup);
+/*	
+    #swagger.tags = ['Student Authentication endpoint]
+    #swagger.description = 'Endpoint to sign in a specific student and have access to their data' 
+*/
+router.post("/student/signin", studentSignupValidator, signin);
+router.post("/student/forgetPassword", studentSignupValidator, forgetPassword);
+router.post("/student/resetPassword", studentSignupValidator, resetPassword);
 
-app.get('/responses', resp)
+
+
+ // #swagger.end
+
 
 
 

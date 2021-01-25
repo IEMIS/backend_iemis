@@ -6,15 +6,18 @@ const _ = require("lodash");
 const Student = require("../../models/students");
 
 exports.signup = async (req, res) =>{
-      /* 	#swagger.tags = ['Student Creation']
-      #swagger.description = 'Endpoint to sign in a specific user' */
+    /* 	
+      #swagger.tags = ['Student Creation']
+      #swagger.description = 'Endpoint to sign in a specific user' 
+    */
 
-  /*	#swagger.parameters['obj'] = {
-          in: 'body',
-          description: 'User information.',
-          required: true,
-          type: 'object',
-          schema: { $ref: "#/definitions/AddUser" }
+    /*
+        #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'User information.',
+        required: true,
+        type: 'object',
+        schema: { $ref: "#/definitions/AddUser" }
   } */
 
      /*
