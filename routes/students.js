@@ -5,13 +5,9 @@ const router = express.Router();
 const {studentSignupValidator} = require("../helpers/validator/student")
  // #swagger.start
 
-/*	
-    #swagger.tags = ['Student Authentication endpoint]
-    #swagger.description = 'Endpoint to sign in a specific student and have access to their data' 
-*/
-router.post("/student/signin", studentSignupValidator, signin);
-router.post("/student/forgetPassword", studentSignupValidator, forgetPassword);
-router.post("/student/resetPassword", studentSignupValidator, resetPassword);
+router.post("/student/signin", signin);
+router.post("/student/forgetPassword", forgetPassword);
+router.post("/student/resetPassword", resetPassword);
 
 
 

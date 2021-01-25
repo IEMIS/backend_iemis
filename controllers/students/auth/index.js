@@ -8,9 +8,9 @@ const Student = require("../../../models/students")
 
 exports.signin = async (req, res)=>{
     const {studentId, password} = req.body;
+    console.log(req.body)
   
-   /*	
-      #swagger.tags = ['Student Authentication endpoint]
+   /* #swagger.tags = ['Student Authentication Page']
       #swagger.description = 'Endpoint to sign in a specific student and have access to their data' 
   
         #swagger.parameters['obj'] = {
@@ -77,8 +77,8 @@ exports.signin = async (req, res)=>{
 }
 
 exports.forgetPassword = async (req, res)=>{
-       /*	
-      #swagger.tags = ['Student Authentication endpoint]
+       /*
+      #swagger.tags = ['Student Authentication Page']
       #swagger.description = 'Endpoint to sign in a specific student and have access to their data' 
   
         #swagger.parameters['obj'] = {
@@ -94,8 +94,8 @@ exports.forgetPassword = async (req, res)=>{
 
 
 exports.resetPassword = async (req, res)=>{
-       /*	
-      #swagger.tags = ['Student Authentication endpoint]
+       /*
+      #swagger.tags = ['Student Authentication Page']
       #swagger.description = 'Endpoint to sign in a specific student and have access to their data' 
   
         #swagger.parameters['obj'] = {

@@ -11,14 +11,13 @@ const doc = {
     schemes: ['http', 'https'],
     consumes: ['application/json'],
     produces: ['application/json'],
-    /*
+ 
     tags: [
         {
-            "name": "Student Data",
+            "name": "Student Authentication Page",
             "description": "Endpoint to access student data, and examination records"
         }
     ],
-    */
     
 
     securityDefinitions: {

@@ -7,7 +7,12 @@
   },
   "host": "https://iemis.herokuapp.com/api/v1",
   "basePath": "/",
-  "tags": [],
+  "tags": [
+    {
+      "name": "Student Authentication Page",
+      "description": "Endpoint to access student data, and examination records"
+    }
+  ],
   "schemes": [
     "http",
     "https"
@@ -28,7 +33,9 @@
   "paths": {
     "/student/signin": {
       "post": {
-        "tags": [],
+        "tags": [
+          "Student Authentication Page"
+        ],
         "description": "Endpoint to sign in a specific student and have access to their data",
         "parameters": [
           {
@@ -140,7 +147,9 @@
     },
     "/student/forgetPassword": {
       "post": {
-        "tags": [],
+        "tags": [
+          "Student Authentication Page"
+        ],
         "description": "Endpoint to sign in a specific student and have access to their data",
         "parameters": [
           {
@@ -163,7 +172,9 @@
     },
     "/student/resetPassword": {
       "post": {
-        "tags": [],
+        "tags": [
+          "Student Authentication Page"
+        ],
         "description": "Endpoint to sign in a specific student and have access to their data",
         "parameters": [
           {
@@ -184,10 +195,14 @@
         }
       }
     },
-    "/_undefined_path_0x18e": {
+    "/_undefined_path_0xef": {
       "get": {
-        "tags": [],
-        "description": "Endpoint to sign in a specific student and have access to their data",
+        "tags": [
+          {
+            "name": "Endpoints without path or method"
+          }
+        ],
+        "description": "",
         "parameters": [],
         "responses": {}
       }
