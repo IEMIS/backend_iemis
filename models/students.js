@@ -53,7 +53,7 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    providence:{
+    province:{
         type: String,
         trim: true,
         required: true,

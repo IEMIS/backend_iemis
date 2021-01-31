@@ -11,7 +11,7 @@ exports.studentSignupValidator = (req, res, next) => {
     req.check('dob', 'Date of Birth  is required').notEmpty();
     req.check('country', 'Country is required').notEmpty();
     req.check('ethnicity', 'Ethnicity is required').notEmpty();
-    req.check('providence', 'Providence is required').notEmpty();
+    req.check('province', 'Province is required').notEmpty();
     req.check('address', 'Address is required').notEmpty();
     req.check('yearAdmission', 'Year of admission is required').notEmpty();
     req.check('presentClass', 'present Class is required').notEmpty();

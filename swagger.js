@@ -3,8 +3,8 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
     info: {
         version: "1.0.0",
-        title: "education inteligent Management system",
-        description: "education inteligent Management system, api "
+        title: " Inteligent Education Management Information System",
+        description: "IEMIS, api "
     },
     host: "iemis.herokuapp.com/api/v1",
     basePath: "/",
@@ -53,7 +53,7 @@ const doc = {
             dob:"08/09/1641",
             country:"Ghana",
             ethnicity:"Yoruba",
-            providence:"South-west",
+            province:"South-west",
             address:"Ibadan",
             disability:["none"],
             yearAdmission:"02/09/2021",
