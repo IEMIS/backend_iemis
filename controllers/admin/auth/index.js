@@ -10,7 +10,8 @@ exports.signin = async (req, res)=>{
     const {email, password} = req.body;
     console.log(req.body)
   
-   /* #swagger.tags = ['Admin Authentication Page']
+    /* 
+       #swagger.tags = ['Admin Auth Page']
       #swagger.description = 'Endpoint allow admin to signin' 
   
         #swagger.parameters['obj'] = {
@@ -78,7 +79,7 @@ exports.signin = async (req, res)=>{
 
 exports.forgetPassword = async (req, res)=>{
     /*
-      #swagger.tags = ['Admin Authentication Page']
+      #swagger.tags = ['Admin Auth Page']
       #swagger.description = 'Endpoint to request for password reset token' 
   
         #swagger.parameters['obj'] = {
@@ -123,7 +124,7 @@ exports.forgetPassword = async (req, res)=>{
 
 exports.resetPassword = async (req, res)=>{
      /*
-      #swagger.tags = ['Admin Authentication Page']
+      #swagger.tags = ['Admin Auth Page']
       #swagger.description = 'Endpoint reset password' 
   
         #swagger.parameters['obj'] = {
@@ -175,12 +176,13 @@ exports.resetPassword = async (req, res)=>{
         * send email notification to the parents 
        */
 
-       /* #swagger.responses[200] = {
-               description: "reset password",
-               schema: { 
-                   message:"password successfully reset, you can now login",
-                }
-           } 
+       /*
+        #swagger.responses[200] = {
+            description: "reset password",
+            schema: { 
+                message:"password successfully reset, you can now login",
+            }
+        } 
        */
       res.status(200).json({message:"password successfully reset, you can now login", admin})
     })

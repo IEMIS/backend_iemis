@@ -1,8 +1,8 @@
 
 const Admin = require("../../models/admin");
 
-exports.create = async () =>{
-    const {email, password, firstName, lastName, middleName} = req.body;
+exports.create = async (req, res) =>{
+    const {email, password, firstName, lastName, middleName, phone} = req.body;
     /* #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint allow to create admin user' 
   
@@ -31,21 +31,22 @@ exports.create = async () =>{
         */
        return res.status(400).json({error:"admin already on system, can also signin"})
     }  
-    const admin = new Admin ({email, lastName, firstName,middleName, password});
+    const admin = new Admin ({email, lastName, firstName,middleName, password, phone});
     admin.save((err, data)=>{
+        console.log({err, data})
         if(err || !data){
 
-            /* #swagger.responses[400] = {
+            /* #swagger.responses[401] = {
                 description: "error in creating admin",
                 schema: { 
                     "error ":"error in creating admin",
                  }
             } 
             */
-            return res.status(401).json({error:"error in creating admin, please try again",})
+            return res.status(401).json({error:"error in creating admin, please try again",err})
         }
 
-            /* #swagger.responses[400] = {
+            /* #swagger.responses[200] = {
                 description: "admin succesfully created",
                 schema: { 
                     "message ":"admin succesfully created",

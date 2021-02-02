@@ -309,6 +309,155 @@
         "parameters": [],
         "responses": {}
       }
+    },
+    "/admin": {
+      "post": {
+        "tags": [
+          "Admin services"
+        ],
+        "description": "Endpoint allow to create admin user",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "create a new admin",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "admin@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password_demo_123"
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": "ade"
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": "lastName"
+                },
+                "middleName": {
+                  "type": "string",
+                  "example": "ola"
+                }
+              },
+              "required": [
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "admin succesfully created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message ": {
+                  "type": "string",
+                  "example": "admin succesfully created"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "002whhe"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "adem"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Oluyemi"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "adin@gmail.com"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "admin available",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error ": {
+                  "type": "string",
+                  "example": "admin already on system, can also signin"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "error in creating admin",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error ": {
+                  "type": "string",
+                  "example": "error in creating admin"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/signin": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/admin/forgetPassword": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/admin/resetPassword": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/_undefined_path_0xbb": {
+      "get": {
+        "tags": [
+          {
+            "name": "Endpoints without path or method"
+          }
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
     }
   },
   "definitions": {
