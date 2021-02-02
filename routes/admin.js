@@ -1,0 +1,22 @@
+const express = require("express");
+const router = express.Router();
+
+
+const {signin, forgetPassword, resetPassword} = require("../controllers/admin/auth");
+const {create} = require("../controllers/admin/admin")
+const {adminSignUpValidator} = require("../helpers/validator")
+
+// #swagger.start
+router.post("/admin", create);
+router.post("/admin/signin", signin);
+router.post("/admin/forgetPassword", forgetPassword);
+router.post("/admin/resetPassword", resetPassword);
+
+// #swagger.end
+
+
+
+
+
+
+module.exports = router;

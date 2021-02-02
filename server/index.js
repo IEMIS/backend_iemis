@@ -28,19 +28,21 @@ const swagerFile = require('../swagger_output.json');
 // bring in routes
 
 const studentAuthRoutes = require("../routes/students");
+const adminRoutes = require("../routes/admin")
 
 
 // middleware -
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
-//app.use(expressValidator);
+//app.use(expressValidator());
 app.use(cors());
 
 
 /**
  * listen the endpoit in url orders 
  */
+app.use("/api/v1", adminRoutes);
 app.use("/api/v1", studentAuthRoutes);
 
 app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swagerFile));
