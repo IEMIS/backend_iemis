@@ -4,7 +4,7 @@ const _ = require("lodash");
 require("dotenv").config();
 const Admin = require("../../../models/admin")
 
-//#swagger.tags = ['Admin services']
+
 exports.signin = async (req, res)=>{
     const {email, password} = req.body;
 
@@ -36,6 +36,7 @@ exports.signin = async (req, res)=>{
        return res.status(404).json({error:"Invalid email address"})
     }
     const user = await isAdmin.authenticate(password);
+    
     if(!user){
         /* #swagger.responses[405] = {
                 description: "Password error",

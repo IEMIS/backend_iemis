@@ -1,5 +1,6 @@
 
 const Admin = require("../../models/admin");
+const District = require("../../models/district");
 
 exports.create = async (req, res) =>{
     const {email, password, firstName, lastName, middleName, phone} = req.body;
