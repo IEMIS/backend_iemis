@@ -43,6 +43,8 @@ const studentSchema = mongoose.Schema({
         type:Date,
         required:true,
     },
+    //age to be generated based on dob
+    age:Number,
     country:{
         type: String,
         trim: true,

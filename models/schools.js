@@ -14,14 +14,30 @@ const schoolSchema = mongoose.Schema({
         trim:true,
         required:true,
     },
-    locality:{
-        type:String,
-        trim:true,
-        required:true,
+    //ECE, Primary, Secondary, Technical Educ
+    eduLevel:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    province:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    district:{
+        type: String,
+        trim: true,
+        required: true,
     },
     mailBox:{
         type:String,
         trim:true,
+        required:true,
+    },
+    //Year of Establishment
+    estabYear:{
+        type:Date,
         required:true,
     },
     email:{
@@ -36,19 +52,61 @@ const schoolSchema = mongoose.Schema({
         required:true,
         unique:true,
     },
+    fax:{
+        type:String,
+        trim:true,
+        required:false,
+        unique:true,
+    },
     district:{
         type:String,
         trim:true,
         required:true,
     },
-    created:Date,
-    salt:String,
-    hashed_password:{
-        type: String,
-        trim: true,
-        required: true,
+    //govt, community, faith-based, private
+    ownership:{
+        type:String,
+        trim:true,
+        required:true,
     },
-});
+    //Regular or Special
+    schoolCat:{
+        type:String,
+        trim:true,
+        required:true,
+    },
+    //boarding or day
+    schoolTpe:{
+        type:String,
+        trim:true,
+        required:true,
+    },
+    //school head staff ID
+    headID:{
+        type:String,
+        trim:true,
+        required:true,
+    },
+    //Date of Last Inspection to School
+    lastInspection:[{
+            specific:Date,
+            byWhom:String,
+            observation:{
+                type: String,
+                trim: true,
+                required: true,
+            }
+    }],
+            created:Date,
+            updated_at:Date,
+            salt:String,
+            hashed_password:{
+                type: String,
+                trim: true,
+                required: true,
+            },
+        });
+        
 
 // virtual field
 schoolSchema
