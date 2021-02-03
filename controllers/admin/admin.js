@@ -62,5 +62,4 @@ exports.create = async (req, res) =>{
             */
         res.status(200).json({message:"admin successfully created, you can now login", data})
     }) 
-
 }
