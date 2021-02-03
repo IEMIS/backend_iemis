@@ -6,13 +6,12 @@ const {signin, forgetPassword, resetPassword} = require("../controllers/admin/au
 const {create} = require("../controllers/admin/admin")
 const {adminSignUpValidator} = require("../helpers/validator")
 
-// #swagger.start
-router.post("/admin", create);
+
+
 router.post("/admin/signin", signin);
 router.post("/admin/forgetPassword", forgetPassword);
 router.post("/admin/resetPassword", resetPassword);
-
-// #swagger.end
+router.post("/admin", create);
 
 
 

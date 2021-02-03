@@ -1,30 +1,29 @@
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const expressJwt = require("express-jwt");
+const expressJWT = require('express-jwt');
 const _ = require("lodash");
-
+require("dotenv").config();
 const Admin = require("../../../models/admin")
 
 
 exports.signin = async (req, res)=>{
     const {email, password} = req.body;
-    console.log(req.body)
-  
-    /* 
-       #swagger.tags = ['Admin Auth Page']
+
+    /* #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint allow admin to signin' 
   
         #swagger.parameters['obj'] = {
         in: 'body',
-        description: 'admin login details',
+        description: 'Admin Sign',
         required: true,
         type: 'object',
         schema: {
-                    $phone: "admin@gmail.com",
-                    $password: "password_demo_123",
+                    "email": "admin@gmail.com",
+                    $password: "password_demo_123"
                 }
        } 
     */
+   
+    
    const isAdmin = await  Admin.findOne({email});
    if(!isAdmin){
         /* #swagger.responses[404] = {
@@ -37,7 +36,7 @@ exports.signin = async (req, res)=>{
        return res.status(404).json({error:"Invalid email address"})
     }
     const user = await isAdmin.authenticate(password);
-    ///if(!isUser.authenticate(password)){
+    
     if(!user){
         /* #swagger.responses[405] = {
                 description: "Password error",
@@ -50,7 +49,7 @@ exports.signin = async (req, res)=>{
     }
      // generate a token with user id and secret
      const token = jwt.sign(
-        { _id: user._id, role:"admin" },
+        { _id: user._id, role:"superAdmin" },
         process.env.JWT_SECRET
     );
     // persist the token as 't' in cookie with expiry date
@@ -74,12 +73,12 @@ exports.signin = async (req, res)=>{
                  }
             } 
         */
-    return res.json({ token, student: { _id, firstName, lastName, email } });
+    return res.json({ token, admin: { _id, firstName, lastName, email } });
 }
 
 exports.forgetPassword = async (req, res)=>{
     /*
-      #swagger.tags = ['Admin Auth Page']
+      #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to request for password reset token' 
   
         #swagger.parameters['obj'] = {
@@ -124,7 +123,7 @@ exports.forgetPassword = async (req, res)=>{
 
 exports.resetPassword = async (req, res)=>{
      /*
-      #swagger.tags = ['Admin Auth Page']
+      #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint reset password' 
   
         #swagger.parameters['obj'] = {
@@ -186,4 +185,18 @@ exports.resetPassword = async (req, res)=>{
        */
       res.status(200).json({message:"password successfully reset, you can now login", admin})
     })
+}
+
+exports.requiredSignin = expressJWT({
+    algorithms:['sha1', 'RS256', 'HS256'],
+    secret:process.env.JWT_SECRET,
+    requestProperty: 'auth'
+})
+
+exports.isSuperAdmin = (req, res,next) =>{
+    const authorised = req.profile && req.auth && req.profile._id == req.auth._id && req.auth.role === "superAdmin"
+    console.log(req.auth.role);
+    //return res.json({ userIdfromProfile:req.profile._id, usersToken:req.user._id, authorised})
+    if(!authorised) return res.status(401).json({error:"you're not super Admin, contact system addministrator"})
+    next()
 }

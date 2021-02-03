@@ -1,5 +1,6 @@
 
 const Admin = require("../../models/admin");
+const District = require("../../models/district");
 
 exports.create = async (req, res) =>{
     const {email, password, firstName, lastName, middleName, phone} = req.body;
@@ -61,5 +62,4 @@ exports.create = async (req, res) =>{
             */
         res.status(200).json({message:"admin successfully created, you can now login", data})
     }) 
-
 }
