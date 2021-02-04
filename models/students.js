@@ -9,6 +9,12 @@ const studentSchema = mongoose.Schema({
         required: true,
         unique: true
     },
+    admissionNo:{
+        type: String,
+        trim: true,
+        required: true,
+        unique: true
+    },
     schoolCode:{
         type: String,
         trim: true,
