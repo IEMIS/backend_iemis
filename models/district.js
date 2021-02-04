@@ -34,7 +34,7 @@ const districtSchema = mongoose.Schema({
 });
 
 // virtual field
-adminSchema
+districtSchema
     .virtual('password')
     .set(function(password) {
         this._password = password;
@@ -45,7 +45,7 @@ adminSchema
         return this._password;
     });
 
-adminSchema.methods = {
+districtSchema.methods = {
     authenticate: function(plainText) {
         return this.encryptPassword(plainText) === this.hashed_password;
     },

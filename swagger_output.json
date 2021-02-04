@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "education inteligent Management system",
-    "description": "education inteligent Management system, api "
+    "title": " Inteligent Education Management Information System",
+    "description": "IEMIS, api "
   },
   "host": "iemis.herokuapp.com/api/v1",
   "basePath": "/",
@@ -147,6 +147,115 @@
                 "error ": {
                   "type": "string",
                   "example": "error in creating admin"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/district": {
+      "post": {
+        "tags": [
+          "Admin services"
+        ],
+        "description": "Endpoint to create a new district",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "create a new admin",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "admin@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "ade"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "09045677"
+                }
+              },
+              "required": [
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "district succesfully created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message ": {
+                  "type": "string",
+                  "example": "district succesfully created"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "002whhe"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "adem"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Oluyemi"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "adin@gmail.com"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "district already created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error ": {
+                  "type": "string",
+                  "example": "District already created"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "error in creating district",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error ": {
+                  "type": "string",
+                  "example": "error in creating district"
                 }
               },
               "xml": {
@@ -480,7 +589,7 @@
           "type": "string",
           "example": "Yoruba"
         },
-        "providence": {
+        "province": {
           "type": "string",
           "example": "South-west"
         },
