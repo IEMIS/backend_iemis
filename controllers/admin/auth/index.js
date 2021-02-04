@@ -8,7 +8,7 @@ const Admin = require("../../../models/admin")
 exports.signin = async (req, res)=>{
     const {email, password} = req.body;
 
-    /* #swagger.tags = ['Admin services']
+    /* #swagger.tags = ['Auth-Admin']
       #swagger.description = 'Endpoint allow admin to signin' 
   
         #swagger.parameters['obj'] = {
@@ -52,9 +52,9 @@ exports.signin = async (req, res)=>{
         { _id: user._id, role:"superAdmin" },
         process.env.JWT_SECRET
     );
-    // persist the token as 't' in cookie with expiry date
+  
     res.cookie("t", token, { expire: new Date() + 9999 });
-    // retrun response with user and token to frontend client
+    
     const { _id, firstName, lastName } = user;
 
     /* #swagger.responses[200] = {
@@ -78,7 +78,7 @@ exports.signin = async (req, res)=>{
 
 exports.forgetPassword = async (req, res)=>{
     /*
-      #swagger.tags = ['Admin services']
+      #swagger.tags = ['Auth-Admin']
       #swagger.description = 'Endpoint to request for password reset token' 
   
         #swagger.parameters['obj'] = {
@@ -123,7 +123,7 @@ exports.forgetPassword = async (req, res)=>{
 
 exports.resetPassword = async (req, res)=>{
      /*
-      #swagger.tags = ['Admin services']
+      #swagger.tags = ['Auth-Admin']
       #swagger.description = 'Endpoint reset password' 
   
         #swagger.parameters['obj'] = {
