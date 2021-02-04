@@ -7,7 +7,7 @@ const {create, createDistric, districtList, districtById, oneDistrict, updateDis
 const {adminSignUpValidator} = require("../helpers/validator")
 
 
-
+// #swagger.start
 router.post("/admin/signin", signin);
 router.post("/admin/forgetPassword", forgetPassword);
 router.post("/admin/resetPassword", resetPassword);
@@ -20,4 +20,5 @@ router.delete("/admin/district/:districtId", deleteDistrict);
 
 router.param("districtId",districtById)
 
+// #swagger.end
 module.exports = router;

@@ -68,6 +68,18 @@
         "responses": {}
       }
     },
+    "/_undefined_path_0x233": {
+      "get": {
+        "tags": [
+          {
+            "name": "Endpoints without path or method"
+          }
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
     "/student/signin": {
       "post": {
         "tags": [

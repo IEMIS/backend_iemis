@@ -52,9 +52,9 @@ exports.signin = async (req, res)=>{
         { _id: user._id, role:"superAdmin" },
         process.env.JWT_SECRET
     );
-    // persist the token as 't' in cookie with expiry date
+  
     res.cookie("t", token, { expire: new Date() + 9999 });
-    // retrun response with user and token to frontend client
+    
     const { _id, firstName, lastName } = user;
 
     /* #swagger.responses[200] = {
