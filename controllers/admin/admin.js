@@ -133,15 +133,30 @@ exports.districtList = async (req, res)=>{
     */
    District.find((err, data)=>{
        if(err || !data){
-           /* #swagger.responses[401] = {
+           /* #swagger.responses[404] = {
                 description: "Find all the district",
                 schema: { 
                     "error ":"Disrict is not available",
                 }
             } 
             */
-
-       }
+           return res.status(404).json({error:"Disrict is not available",err})
+        }
+        /*
+            #swagger.responses[200] = {
+                description: "All district list",
+                schema: { 
+                    "mesage":"Disrict is successfully fetched",
+                    "data":{
+                        "_id":"88888888888888",
+                        "name":"ggaga",
+                        "phone":"090888",
+                        "email":"ass@dd.vb"
+                    }
+                }
+            } 
+        */
+       return res.status(200).json({"mesage":"Disrict is successfully fetched",data})
    })
 
 }
