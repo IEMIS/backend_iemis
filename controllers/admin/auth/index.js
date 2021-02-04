@@ -8,7 +8,7 @@ const Admin = require("../../../models/admin")
 exports.signin = async (req, res)=>{
     const {email, password} = req.body;
 
-    /* #swagger.tags = ['Admin services']
+    /* #swagger.tags = ['Auth-Admin']
       #swagger.description = 'Endpoint allow admin to signin' 
   
         #swagger.parameters['obj'] = {
@@ -78,7 +78,7 @@ exports.signin = async (req, res)=>{
 
 exports.forgetPassword = async (req, res)=>{
     /*
-      #swagger.tags = ['Admin services']
+      #swagger.tags = ['Auth-Admin']
       #swagger.description = 'Endpoint to request for password reset token' 
   
         #swagger.parameters['obj'] = {
@@ -123,7 +123,7 @@ exports.forgetPassword = async (req, res)=>{
 
 exports.resetPassword = async (req, res)=>{
      /*
-      #swagger.tags = ['Admin services']
+      #swagger.tags = ['Auth-Admin']
       #swagger.description = 'Endpoint reset password' 
   
         #swagger.parameters['obj'] = {

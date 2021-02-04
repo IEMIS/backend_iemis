@@ -147,16 +147,138 @@ exports.districtList = async (req, res)=>{
                 description: "All district list",
                 schema: { 
                     "mesage":"Disrict is successfully fetched",
-                    "data":{
+                    "data":[
+                        {
                         "_id":"88888888888888",
                         "name":"ggaga",
                         "phone":"090888",
                         "email":"ass@dd.vb"
-                    }
+                        },
+                        {
+                        "_id":"88888888888888",
+                        "name":"ggaga",
+                        "phone":"090888",
+                        "email":"ass@dd.vb"
+                        },
+                    ]
                 }
             } 
         */
        return res.status(200).json({"mesage":"Disrict is successfully fetched",data})
    })
-
 }
+
+exports.districtById= async (req, res, next,id)=>{
+    /* #swagger.tags = ['Admin services']
+      #swagger.description = 'Endpoint to create a new district' 
+      */
+    District.findById(id).exec((err, user)=>{
+        if(err || !user){ 
+            /* #swagger.responses[401] = {
+                description: "District not found",
+                schema: { 
+                    "error ":"District not found",
+                }
+            } 
+            */
+            return res.status(404).json({error: "District not found"})
+        }
+        req.district = user;
+        next()
+    })
+}
+
+exports.oneDistrict = async (req, res)=>{
+    const {_id, name, phone, email} = req.district;
+    /* 
+       #swagger.tags = ['Admin services']
+       #swagger.description = 'Endpoint to create a new district' 
+      */
+        /* 
+            #swagger.responses[200] = {
+                description: "district succesfully fetched",
+                schema: { 
+                    "message ":"district succesfully fetched",
+                    "data":{
+                        "_id":"002whhe",
+                        "firstName":"adem",
+                        "lastName":"Oluyemi",
+                        "email":"adin@gmail.com"
+                    }
+                 }
+            } 
+        */
+    
+    res.status(200).json({message:"district succesfully fetched", data:{_id, name, phone, email}})
+}
+
+exports.updateDistrict = async (req, res) => {
+    /* #swagger.tags = ['Admin services']
+      #swagger.description = 'Endpoint to create a new district' 
+      */
+    let district = req.district
+    district = _.extend(district,req.body);
+    district.update_at = Date.now();
+    district.save((err,data)=>{
+        if(err ||!data) {
+             /* #swagger.responses[401] = {
+                description: "error in update district",
+                schema: { 
+                    "error ":"error in update district",
+                }
+            } 
+            */
+            return res.json({error: "error in update district"})
+        }
+
+        /* 
+            #swagger.responses[200] = {
+                description: "district succesfully updated",
+                schema: { 
+                    "message ":"district succesfully updated",
+                    "data":{
+                        "_id":"002whhe",
+                        "firstName":"adem",
+                        "lastName":"Oluyemi",
+                        "email":"adin@gmail.com"
+                    }
+                 }
+            } 
+        */
+        res.json({data,message:"district succesfully updated"})
+    })
+};
+
+exports.deleteDistrict = async (req, res) => {
+    /* #swagger.tags = ['Admin services']
+      #swagger.description = 'Endpoint to create a new district' 
+      */
+    const district = req.district
+    district.remove((err, data)=>{
+        if(err){
+             /* #swagger.responses[400] = {
+                description: "Error in deleting district",
+                schema: { 
+                    "error ":"Error in deleting district",
+                }
+            } 
+            */
+            return res.status(400).json({error:"Error in deleting district"});
+        }
+         /* 
+            #swagger.responses[200] = {
+                description: "district successfully deleted",
+                schema: { 
+                    "message ":"district successfully deleted",
+                    "data":{
+                        "_id":"002whhe",
+                        "firstName":"adem",
+                        "lastName":"Oluyemi",
+                        "email":"adin@gmail.com"
+                    }
+                 }
+            } 
+        */
+        return res.json({message:"district successfully deleted", data})
+    })
+};

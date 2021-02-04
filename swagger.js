@@ -15,12 +15,10 @@ const doc = {
    /*
     tags: [
         {
-            "name": "Student Authentication Page",
-            "description": "Endpoint to access student data, and examination records"
+            "name": "Auth-Admin",
+            "description": "Admin Authentication endpoint"
         }
     ],
-    
-
     securityDefinitions: {
         api_key: {
             type: "apiKey",
