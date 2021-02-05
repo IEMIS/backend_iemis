@@ -22,26 +22,279 @@
   "paths": {
     "/admin/signin": {
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
+        "tags": [
+          "Auth-Admin"
+        ],
+        "description": "Endpoint allow admin to signin",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Admin Sign",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "admin@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password_demo_123"
+                }
+              },
+              "required": [
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Admin successfully login",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "adminsuccessfully login"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "token"
+                    },
+                    "student": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "0030303"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "admin@gmail.com"
+                        },
+                        "First Name": {
+                          "type": "string",
+                          "example": "ade"
+                        },
+                        "Last Name": {
+                          "type": "string",
+                          "example": "Yemi"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "user not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error ": {
+                  "type": "string",
+                  "example": "invalid email address"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "405": {
+            "description": "Password error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error ": {
+                  "type": "string",
+                  "example": "email and Password not match, incorrect password"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       }
     },
     "/admin/forgetPassword": {
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
+        "tags": [
+          "Auth-Admin"
+        ],
+        "description": "Endpoint to request for password reset token",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Password reset token",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "admin@gmail"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sending email contain password reset token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "email send successfully send"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Invalid email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "invalid email"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       }
     },
     "/admin/resetPassword": {
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
+        "tags": [
+          "Auth-Admin"
+        ],
+        "description": "Endpoint reset password",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Password reset",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "admin@gmail"
+                },
+                "resetToken": {
+                  "type": "string",
+                  "example": "011273Vb"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "011273Vb"
+                },
+                "passwordConfirmation": {
+                  "type": "string",
+                  "example": "011273Vb"
+                }
+              },
+              "required": [
+                "email",
+                "resetToken",
+                "password",
+                "passwordConfirmation"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "reset password",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "password successfully reset, you can now login"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Invalid ",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "user not found"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "invalid reset token"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "406": {
+            "description": "Password error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Password must match each other"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       }
     },
     "/admin": {
@@ -49,7 +302,11 @@
         "tags": [],
         "description": "",
         "parameters": [],
-        "responses": {}
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
       }
     },
     "/admin/district": {
