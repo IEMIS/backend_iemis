@@ -4,7 +4,8 @@ const District = require("../../models/district");
 
 exports.create = async (req, res) =>{
     const {email, password, firstName, lastName, middleName, phone} = req.body;
-    /* #swagger.tags = ['Admin services']
+    /* 
+      #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint allow to create admin user' 
   
         #swagger.parameters['obj'] = {
@@ -67,7 +68,8 @@ exports.create = async (req, res) =>{
 
 exports.createDistric = async (req, res)=>{
     const {email, password, name, phone} = req.body;
-    /* #swagger.tags = ['Admin services']
+    /* 
+      #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
   
         #swagger.parameters['obj'] = {
@@ -169,9 +171,10 @@ exports.districtList = async (req, res)=>{
 }
 
 exports.districtById= async (req, res, next,id)=>{
-    /* #swagger.tags = ['Admin services']
+    /* 
+      #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
-      */
+    */
     District.findById(id).exec((err, user)=>{
         if(err || !user){ 
             /* #swagger.responses[401] = {
@@ -192,10 +195,9 @@ exports.oneDistrict = async (req, res)=>{
     const {_id, name, phone, email} = req.district;
     /* 
        #swagger.tags = ['Admin services']
-       #swagger.description = 'Endpoint to create a new district' 
-      */
-        /* 
-            #swagger.responses[200] = {
+       #swagger.description = 'Endpoint to create a new district'  
+
+        #swagger.responses[200] = {
                 description: "district succesfully fetched",
                 schema: { 
                     "message ":"district succesfully fetched",
@@ -213,9 +215,10 @@ exports.oneDistrict = async (req, res)=>{
 }
 
 exports.updateDistrict = async (req, res) => {
-    /* #swagger.tags = ['Admin services']
+    /* 
+      #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
-      */
+    */
     let district = req.district
     district = _.extend(district,req.body);
     district.update_at = Date.now();
@@ -250,9 +253,10 @@ exports.updateDistrict = async (req, res) => {
 };
 
 exports.deleteDistrict = async (req, res) => {
-    /* #swagger.tags = ['Admin services']
+    /* 
+      #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
-      */
+    */
     const district = req.district
     district.remove((err, data)=>{
         if(err){
