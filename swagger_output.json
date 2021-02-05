@@ -20,34 +20,6 @@
     "application/json"
   ],
   "paths": {
-    "/admin": {
-      "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
-    "/admin/district": {
-      "get": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/admin/district/{districtId}": {
-      "delete": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
     "/admin/signin": {
       "post": {
         "tags": [
@@ -323,6 +295,30 @@
             }
           }
         }
+      }
+    },
+    "/admin": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/admin/district": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/admin/district/{districtId}": {
+      "put": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "/student/signin": {

@@ -2,12 +2,14 @@
 const Admin = require("../../models/admin");
 const District = require("../../models/district");
 
+
+
 exports.create = async (req, res) =>{
     const {email, password, firstName, lastName, middleName, phone} = req.body;
     /* 
-      #swagger.tags = ['Admin services']
-      #swagger.description = 'Endpoint allow to create admin user' 
-  
+        #swagger.tags = ['Admin services']
+        #swagger.description = 'Endpoint allow to create admin user' 
+     
         #swagger.parameters['obj'] = {
         in: 'body',
         description: 'create a new admin',
@@ -15,10 +17,10 @@ exports.create = async (req, res) =>{
         type: 'object',
         schema: {
                     "email": "admin@gmail.com",
-                    $password: "password_demo_123",
+                    "password": "password_demo_123",
                     "firstName" : "ade",
                     "lastName" : "lastName",
-                    "middleName" : "ola"
+                    "middleName" : "ola",
                 }
        } 
     */
@@ -79,9 +81,9 @@ exports.createDistric = async (req, res)=>{
         type: 'object',
         schema: {
                     "email": "admin@gmail.com",
-                    $password: "password",
+                    "password": "password",
                     "name" : "ade",
-                    "phone" : "09045677"
+                    "phone" : "09045677",
                 }
        } 
     */
@@ -101,7 +103,8 @@ exports.createDistric = async (req, res)=>{
         console.log({err, data})
         if(err || !data){
 
-            /* #swagger.responses[401] = {
+            /* 
+               #swagger.responses[401] = {
                 description: "error in creating district",
                 schema: { 
                     "error ":"error in creating district",
@@ -171,9 +174,11 @@ exports.districtList = async (req, res)=>{
 }
 
 exports.districtById= async (req, res, next,id)=>{
+    // #swagger.start
     /* 
       #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
+      #swagger.parameters['districtById'] = { description: "District  ID" } 
     */
     District.findById(id).exec((err, user)=>{
         if(err || !user){ 
@@ -189,29 +194,32 @@ exports.districtById= async (req, res, next,id)=>{
         req.district = user;
         next()
     })
+    // #swagger.start
 }
 
 exports.oneDistrict = async (req, res)=>{
+    // #swagger.start
     const {_id, name, phone, email} = req.district;
+
     /* 
        #swagger.tags = ['Admin services']
        #swagger.description = 'Endpoint to create a new district'  
 
         #swagger.responses[200] = {
-                description: "district succesfully fetched",
-                schema: { 
-                    "message ":"district succesfully fetched",
-                    "data":{
-                        "_id":"002whhe",
-                        "firstName":"adem",
-                        "lastName":"Oluyemi",
-                        "email":"adin@gmail.com"
-                    }
-                 }
-            } 
-        */
-    
+            description: "district succesfully fetched",
+            schema: { 
+                "message ":"district succesfully fetched",
+                "data":{
+                    "_id":"002whhe",
+                    "firstName":"adem",
+                    "lastName":"Oluyemi",
+                    "email":"adin@gmail.com"
+                }
+            }
+        } 
+    */
     res.status(200).json({message:"district succesfully fetched", data:{_id, name, phone, email}})
+    // #swagger.end
 }
 
 exports.updateDistrict = async (req, res) => {
@@ -286,3 +294,4 @@ exports.deleteDistrict = async (req, res) => {
         return res.json({message:"district successfully deleted", data})
     })
 };
+

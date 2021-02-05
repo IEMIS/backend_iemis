@@ -14,11 +14,11 @@ router.post("/admin/forgetPassword", forgetPassword);
 router.post("/admin/resetPassword", resetPassword);
 
 router.post("/admin",  create);
-router.post("/admin/district", createDistric);
 router.get("/admin/district", districtList);
+router.post("/admin/district", createDistric);
+router.delete("/admin/district/:districtId", deleteDistrict);
 router.get("/admin/district/:districtId", oneDistrict);
 router.put("/admin/district/:districtId", updateDistrict);
-router.delete("/admin/district/:districtId", deleteDistrict);
 
 
 router.param("districtId",districtById)
