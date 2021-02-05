@@ -20,6 +20,34 @@
     "application/json"
   ],
   "paths": {
+    "/admin": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/admin/district": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/admin/district/{districtId}": {
+      "delete": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
     "/admin/signin": {
       "post": {
         "tags": [
@@ -295,46 +323,6 @@
             }
           }
         }
-      }
-    },
-    "/admin": {
-      "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
-    "/admin/district": {
-      "get": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/admin/district/{districtId}": {
-      "delete": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/_undefined_path_0x233": {
-      "get": {
-        "tags": [
-          {
-            "name": "Endpoints without path or method"
-          }
-        ],
-        "description": "",
-        "parameters": [],
-        "responses": {}
       }
     },
     "/student/signin": {
