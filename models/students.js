@@ -83,10 +83,10 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    HadEce:{
-        type: String,
-        trim: true,
-        required: true,
+    //this should be used to track class completion 1,2,3,4,5
+    classCompleted:{
+        type:Array,
+        default: [],
     },
     subject:{
         type:Array,
