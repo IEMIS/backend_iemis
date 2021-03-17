@@ -1,5 +1,7 @@
-const express = require("express");
+//const express = require("express");
+import express from 'express'
 const app = express();
+//import app from 'express';
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -26,11 +28,11 @@ const swagerFile = require('../docs/swagger_output.json');
 
 
 // bring in routes
-
+/*
 const studentAuthRoutes = require("../routes/students");
 const adminRoutes = require("../routes/admin")
 
-
+*/
 // middleware -
 app.use(morgan("dev"));
 app.use(bodyParser.json());
@@ -41,7 +43,7 @@ app.use(cors());
 
 /**
  * listen the endpoit in url orders 
- */
+ *
 app.use("/api/v1", adminRoutes);
 app.use("/api/v1", studentAuthRoutes);
 
@@ -50,7 +52,7 @@ app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swagerFile));
 app.use("/api", (req, res)=>{
     res.json({message:"hellow word"});
 });
-
+*/
 app.use("/", (req, res)=>{
     res.json({message:"hellow word", doc:"https://iemis.herokuapp.com/api/v1/"});
 });
@@ -63,7 +65,4 @@ app.use(function(err, req, res, next) {
     }
 });
 
-
-app.listen(port, () => {
-    console.log(`A Node Js API is listening on port: ${port}`);
-});
+export default app;
