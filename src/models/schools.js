@@ -140,4 +140,4 @@ schoolSchema.methods = {
     }
 };
 
-module.exports = mongoose.Schema('School', schoolSchema)
+module.exports = mongoose.model('School', schoolSchema)

@@ -61,7 +61,7 @@ const teacherSchema = mongoose.Schema({
     },
     phone:{
         type:Array,
-        default:[],
+        default:["Mathematices",],
     },
     subjectTaught:{
         type:Array,
@@ -72,7 +72,7 @@ const teacherSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    level: Number,
+    //level: Number,
 
     /*
     //age to be generated based on dob
@@ -182,4 +182,4 @@ teacherSchema.methods = {
     }
 };
 
-module.exports = mongoose.Schema('Teacher', teacherSchema)
+module.exports = mongoose.model('Teacher', teacherSchema)

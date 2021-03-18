@@ -1,5 +1,6 @@
 //const express = require("express");
-import express from 'express'
+import express from 'express';
+import dbConnection from './dbConnection';
 const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -9,12 +10,14 @@ const swaggerUi = require('swagger-ui-express')
 const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
-
-
-import dbConnection from './dbConnection';
-
 dbConnection();
+
+
 const swagerFile = require('../docs/swagger_output.json');
+/**
+ * import routes
+ */
+import adminRouter from './app/admin'
 
 // middleware -
 app.use(morgan("dev"));
@@ -23,9 +26,10 @@ app.use(cookieParser());
 app.use(expressValidator());
 app.use(cors());
 
+app.use("/api/v1", adminRouter);
+
 
 app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swagerFile));
-
 app.use("/api", (req, res)=>{
     res.json({message:"hellow word"});
 });

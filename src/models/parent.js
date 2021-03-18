@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const parentSchema = mongoose.Schema({
    familyName:String,
@@ -42,4 +42,6 @@ const parentSchema = mongoose.Schema({
     }],
 });
 
-module.exports = mongoose.Schema('Parent', parentSchema)
+//module.exports = mongoose.Schema('Parent', parentSchema);
+
+module.exports = mongoose.model('Parent', parentSchema);

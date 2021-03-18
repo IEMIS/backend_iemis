@@ -20,6 +20,7 @@ const studentSchema = mongoose.Schema({
         ref: "Parent",
         required: true,
     },
+    /*
     exam:{
         type: ObjectId,
         ref: "Exam",
@@ -41,6 +42,7 @@ const studentSchema = mongoose.Schema({
         required: true,
 
     },
+    */
     admissionNo:{
         type: String,
         trim: true,

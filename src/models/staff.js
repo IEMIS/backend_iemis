@@ -67,7 +67,7 @@ const staffSchema = mongoose.Schema({
         type: Array, 
         default: [""]
     },
-    level: Number,
+    //level: Number,
     created:Date,
     updated_at:Date,
     salt:String,
@@ -106,4 +106,4 @@ staffSchema.methods = {
     }
 };
 
-module.exports = mongoose.Schema('Staff', staffSchema)
+module.exports = mongoose.model('Staff', staffSchema)
