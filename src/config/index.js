@@ -11,15 +11,8 @@ const dbConnection = async ()=>{
     }); 
 }
 
-export default dbConnection;
 
-/*
-exports.dbConnection = async ()=>{
-    mongoose
-    .connect(process.env.MONGO_URI, {useCreateIndex: true,useUnifiedTopology:true, useNewUrlParser:true, keepAlive:true,})
-    .then(() => console.log(`Database is connected on port ${port}`));
-    mongoose.connection.on("error", err => {
-        console.log(`DB connection error: ${err.message}`);
-    });
-}
-*/
+
+
+
+export default dbConnection;
