@@ -14,10 +14,11 @@ dbConnection();
 
 
 const swagerFile = require('../docs/swagger_output.json');
-/**
- * import routes
- */
-import adminRouter from './app/admin'
+
+//import routes 
+import {
+    adminRouter
+} from './app';
 
 // middleware -
 app.use(morgan("dev"));
