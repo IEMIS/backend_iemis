@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
-const uuid = require("uuid/v1");
+const { v4: uuidv4 } = require('uuid');
+
+const { ObjectId } = mongoose.Schema;
 
 const schoolSchema = mongoose.Schema({
     code:{
@@ -9,16 +11,10 @@ const schoolSchema = mongoose.Schema({
         required:true,
         unique:true,
     },
-    name:{
+    names:{
         type:String,
         trim:true,
         required:true,
-    },
-    //ECE, Primary, Secondary, Technical Educ
-    eduLevel:{
-        type: String,
-        trim: true,
-        required: true,
     },
     province:{
         type: String,
@@ -26,18 +22,13 @@ const schoolSchema = mongoose.Schema({
         required: true,
     },
     district:{
-        type: String,
-        trim: true,
+        type: ObjectId,
+        ref: "District",
         required: true,
     },
     mailBox:{
         type:String,
         trim:true,
-        required:true,
-    },
-    //Year of Establishment
-    estabYear:{
-        type:Date,
         required:true,
     },
     email:{
@@ -58,10 +49,12 @@ const schoolSchema = mongoose.Schema({
         required:false,
         unique:true,
     },
-    district:{
-        type:String,
-        trim:true,
-        required:true,
+
+    //ECE, Primary, Secondary, Technical Educ
+    eduLevel:{
+        type: String,
+        trim: true,
+        required: true,
     },
     //govt, community, faith-based, private
     ownership:{
@@ -69,18 +62,26 @@ const schoolSchema = mongoose.Schema({
         trim:true,
         required:true,
     },
+    //Year of Establishment
+    estabYear:{
+        type:Date,
+        required:true,
+    },
+    /*
     //Regular or Special
     schoolCat:{
         type:String,
         trim:true,
         required:true,
     },
+    */
     //boarding or day
     schoolTpe:{
         type:String,
         trim:true,
         required:true,
     },
+    /*
     //school head staff ID
     headID:{
         type:String,
@@ -89,23 +90,24 @@ const schoolSchema = mongoose.Schema({
     },
     //Date of Last Inspection to School
     lastInspection:[{
-            specific:Date,
-            byWhom:String,
-            observation:{
-                type: String,
-                trim: true,
-                required: true,
-            }
+        specific:Date,
+        byWhom:String,
+        observation:{
+            type: String,
+            trim: true,
+            required: true,
+        }
     }],
-            created:Date,
-            updated_at:Date,
-            salt:String,
-            hashed_password:{
-                type: String,
-                trim: true,
-                required: true,
-            },
-        });
+    */
+    created:Date,
+    updated_at:Date,
+    salt:String,
+    hashed_password:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+});
         
 
 // virtual field
@@ -113,7 +115,7 @@ schoolSchema
     .virtual('password')
     .set(function(password) {
         this._password = password;
-        this.salt = uuidv1();
+        this.salt = uuidv4();
         this.hashed_password = this.encryptPassword(password);
     })
     .get(function() {
@@ -137,3 +139,5 @@ schoolSchema.methods = {
         }
     }
 };
+
+module.exports = mongoose.model('School', schoolSchema)

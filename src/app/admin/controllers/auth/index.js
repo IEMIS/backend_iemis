@@ -2,7 +2,11 @@ const jwt = require("jsonwebtoken");
 const expressJWT = require('express-jwt');
 const _ = require("lodash");
 require("dotenv").config();
-const Admin = require("../../../models/admin")
+import * as models from '../../../../models'
+//const  Admin from '../../../../models/admin.js'
+//const Admin = require('../../../../models/admin');
+
+
 
 
 exports.signin = async (req, res)=>{
@@ -24,7 +28,7 @@ exports.signin = async (req, res)=>{
     */
    
     
-   const isAdmin = await  Admin.findOne({email});
+   const isAdmin = await  models.Admin.findOne({email});
    if(!isAdmin){
         /* #swagger.responses[404] = {
                 description: "user not found",
@@ -92,7 +96,7 @@ exports.forgetPassword = async (req, res)=>{
       }  
     */
    const { email} = req.body;
-    Admin.findOne({email}, (err, admin)=>{
+    models.Admin.findOne({email}, (err, admin)=>{
        if(err || !admin){
             /* 
                 #swagger.responses[404] = {
@@ -140,7 +144,7 @@ exports.resetPassword = async (req, res)=>{
       } 
     */
    const { email, resetToken,password, passwordConfirmation} = req.body;
-    Admin.findOne({email}, (err, admin)=>{
+    models.Admin.findOne({email}, (err, admin)=>{
       if(err || !admin){
            /* #swagger.responses[404] = {
                description: "Invalid ",
@@ -200,3 +204,8 @@ exports.isSuperAdmin = (req, res,next) =>{
     if(!authorised) return res.status(401).json({error:"you're not super Admin, contact system addministrator"})
     next()
 }
+
+
+
+
+

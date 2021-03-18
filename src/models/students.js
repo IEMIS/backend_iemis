@@ -1,18 +1,53 @@
 const mongoose = require("mongoose");
 const crypto = require('crypto');
-const uuidv1 = require('uuid');
+const { v4: uuidv4 } = require('uuid');
+const {ObjectId} = mongoose.Schema;
 
-const staffSchema = mongoose.Schema({
-    staffId:{
+const studentSchema = mongoose.Schema({
+    studentCode:{
         type: String,
         trim: true,
         required: true,
         unique: true
     },
-    schoolCode:{
+    school:{
+        type: ObjectId,
+        ref: "School",
+        required: true,
+    },
+    parent:{
+        type: ObjectId,
+        ref: "Parent",
+        required: true,
+    },
+    /*
+    exam:{
+        type: ObjectId,
+        ref: "Exam",
+        required: true,
+    },
+    result:{
+        type: ObjectId,
+        ref: "Result",
+        required: true,
+    },
+    class:{
+        type: ObjectId,
+        ref: "Class",
+        required: true,
+    },
+    history:{
+        type: ObjectId,
+        ref: "History",
+        required: true,
+
+    },
+    */
+    admissionNo:{
         type: String,
         trim: true,
         required: true,
+        unique: true
     },
     firstName:{
         type: String,
@@ -29,7 +64,7 @@ const staffSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    title:{
+    religion:{
         type: String,
         trim: true,
         required: true,
@@ -44,73 +79,49 @@ const staffSchema = mongoose.Schema({
         required:true,
     },
     //age to be generated based on dob
-    age:Number,
-    typeOfstaff:{
+   // age:Number,
+    country:{
         type: String,
         trim: true,
         required: true,
     },
-    nationality:{
+    ethnicity:{
         type: String,
         trim: true,
         required: true,
     },
-    Qualification:{
+    province:{
         type: String,
         trim: true,
         required: true,
     },
-    firstappt:{
+    address:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    disability:{
+        type: Array,
+        default:[],
+    },
+    yearAdmission:{
         type:Date,
-        required:true,
     },
-    lastPosting:{
-        type:Date,
-        required:true,
-    },
-    // this should decrease automaically after a year
-    contractYears:{
-        type: Number,
-        required:year,
-    },
-   // Date of retirement if not a contract staff and should be generated and determine either by spending 35years or age is 60years  
-    retirementyear: Date,
-        
-    gradeLevel:{
-        type: Number,
-        required:true,
-    },
-    designation:{
+    presentClass:{
         type: String,
         trim: true,
         required: true,
     },
-    serviceStatus:{
+    HadEce:{
         type: String,
         trim: true,
         required: true,
     },
-    subjectSpecialisaion:{
-        type: String,
-        trim: true,
-        required: true,
-    },
-    subjectTaught:{
+    subject:{
         type:Array,
         default: ["Mathematices","English Language","Basic Science", "Social Science","Commercial Study"]
     },
-    teachingTypes:{
-        type: String,
-        trim: true,
-        required: true,
-    },
-    teachingPeriodWK:{
-        type: String,
-        trim: true,
-        required: true,
-    },
-    //any administrative role Y/N 
-    Engagement:{
+    status:{
         type: String,
         trim: true,
         required: true,
@@ -120,44 +131,28 @@ const staffSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    //Date of Last Workshop attended 
-    lastWorkshop:{
-        type:Date,
-        required:true,
-    },
-        email:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        phone:{
-            type:Array,
-            default:[],
-    },
-    created:Date,
-    updated_at:Date,
-    salt:String,
     hashed_password:{
         type: String,
         trim: true,
         required: true,
     },
+    salt:String,
 });
 
 
 // virtual field
-staffSchema
+studentSchema
     .virtual('password')
     .set(function(password) {
         this._password = password;
-        this.salt = uuidv1();
+        this.salt = uuidv4();
         this.hashed_password = this.encryptPassword(password);
     })
     .get(function() {
         return this._password;
     });
 
-staffSchema.methods = {
+studentSchema.methods = {
     authenticate: function(plainText) {
         return this.encryptPassword(plainText) === this.hashed_password;
     },
@@ -174,3 +169,5 @@ staffSchema.methods = {
         }
     }
 };
+
+module.exports = mongoose.model('Student', studentSchema);

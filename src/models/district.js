@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const { v4: uuidv4 } = require('uuid');
 
 const districtSchema = mongoose.Schema({
-    name:{
+    names:{
         type: String,
         trim: true,
         required: true,
@@ -20,6 +20,11 @@ const districtSchema = mongoose.Schema({
         required:true,
         unique:true,
     },
+    address: {
+        type:String,
+        trim:true,
+        required:true,
+    },
     status:{
         type:Boolean,
         default:false,
@@ -31,7 +36,9 @@ const districtSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-});
+},
+{ timestamps: true }
+);
 
 // virtual field
 districtSchema

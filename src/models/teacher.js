@@ -1,23 +1,18 @@
 const mongoose = require("mongoose");
 const crypto = require('crypto');
-const uuidv1 = require('uuid');
+const { v4: uuidv4 } = require('uuid');
+const {ObjectId} = mongoose.Schema;
 
-const studentSchema = mongoose.Schema({
-    studentId:{
+const teacherSchema = mongoose.Schema({
+    teacherCode:{
         type: String,
         trim: true,
         required: true,
         unique: true
     },
-    admissionNo:{
-        type: String,
-        trim: true,
-        required: true,
-        unique: true
-    },
-    schoolCode:{
-        type: String,
-        trim: true,
+    school:{
+        type: ObjectId,
+        ref: "School",
         required: true,
     },
     firstName:{
@@ -35,7 +30,7 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    religion:{
+    title:{
         type: String,
         trim: true,
         required: true,
@@ -49,50 +44,88 @@ const studentSchema = mongoose.Schema({
         type:Date,
         required:true,
     },
-    //age to be generated based on dob
-    age:Number,
-    country:{
+    nationality:{
         type: String,
         trim: true,
         required: true,
     },
-    ethnicity:{
+    qualification:{
         type: String,
         trim: true,
         required: true,
     },
-    province:{
+    email:{
         type: String,
         trim: true,
         required: true,
     },
-    address:{
-        type: String,
-        trim: true,
-        required: true,
+    phone:{
+        type:Array,
+        default:["Mathematices",],
     },
-    disability:{
-        type: Array,
-        default:[],
-    },
-    yearAdmission:{
-        type:Date,
-    },
-    presentClass:{
-        type: String,
-        trim: true,
-        required: true,
-    },
-    HadEce:{
-        type: String,
-        trim: true,
-        required: true,
-    },
-    subject:{
+    subjectTaught:{
         type:Array,
         default: ["Mathematices","English Language","Basic Science", "Social Science","Commercial Study"]
     },
-    status:{
+    subjectSpecialisaion:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    //level: Number,
+
+    /*
+    //age to be generated based on dob
+    //age:Number,
+    typeOfstaff:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    firstappt:{
+        type:Date,
+        required:true,
+    },
+    lastPosting:{
+        type:Date,
+        required:true,
+    },
+    // this should decrease automaically after a year
+    contractYears:{
+        type: Number,
+        required:year,
+    },
+   // Date of retirement if not a contract staff and should be generated and determine either by spending 35years or age is 60years  
+    retirementyear: Date,
+        
+    gradeLevel:{
+        type: Number,
+        required:true,
+    },
+    designation:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    serviceStatus:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    
+    
+    teachingTypes:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    teachingPeriodWK:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    //any administrative role Y/N 
+    Engagement:{
         type: String,
         trim: true,
         required: true,
@@ -102,70 +135,40 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    father:[{
-        name:String,
-        TIN:String,
-        address:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        occupation:String,
-        email:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        phone:{
-            type:Array,
-            default:[],
-        }
-    }],
-    mother:[{
-        name:String,
-        TIN:String,
-        address:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        occupation:String,
-        email:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        phone:{
-            type:Array,
-            default:[],
-        }
-    }],
+    //Date of Last Workshop attended 
+    lastWorkshop:{
+        type:Date,
+        required:true,
+    },
+    */
+    
+    created:Date,
+    updated_at:Date,
+    salt:String,
     hashed_password:{
         type: String,
         trim: true,
         required: true,
     },
-    salt:String,
 });
 
 
 // virtual field
-studentSchema
+teacherSchema
     .virtual('password')
     .set(function(password) {
         this._password = password;
-        this.salt = uuidv1();
+        this.salt = uuidv4();
         this.hashed_password = this.encryptPassword(password);
     })
     .get(function() {
         return this._password;
     });
 
-studentSchema.methods = {
+teacherSchema.methods = {
     authenticate: function(plainText) {
         return this.encryptPassword(plainText) === this.hashed_password;
     },
-
     encryptPassword: function(password) {
         if (!password) return '';
         try {
@@ -179,4 +182,4 @@ studentSchema.methods = {
     }
 };
 
-module.exports = mongoose.model('Student', studentSchema);
+module.exports = mongoose.model('Teacher', teacherSchema)

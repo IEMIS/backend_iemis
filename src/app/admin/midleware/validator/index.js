@@ -1,11 +1,5 @@
-exports.schoolSignupValidator = (req, res, next) => {
-    req.check('code', 'school code is required').notEmpty();
-    req.check('name', 'School name is required').notEmpty();
-    req.check('locality', 'school locality is required').notEmpty();
-    req.check('mailBox', 'school mail box is required').notEmpty();
-    req.check('phone', 'school official phone numbre is required').notEmpty();
-    req.check('district', 'school district required').notEmpty();
-    req.check('created', 'school establishment year is required').notEmpty();
+exports.userSignupValidator = (req, res, next) => {
+    req.check('name', 'Name is required').notEmpty();
     req.check('email', 'Email must be between 3 to 32 characters')
         .matches(/.+\@.+\..+/)
         .withMessage('Email must contain @')

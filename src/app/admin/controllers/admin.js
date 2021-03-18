@@ -1,6 +1,6 @@
 
-const Admin = require("../../models/admin");
-const District = require("../../models/district");
+const Admin = require("../../../models/admin");
+const District = require("../../../models/district");
 
 
 
