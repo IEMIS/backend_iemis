@@ -1,7 +1,6 @@
 //const express = require("express");
 import express from 'express'
 const app = express();
-//import app from 'express';
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -14,16 +13,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 
-const port = process.env.PORT || 9000;
+import dbConnection from './dbConnection';
 
-// MONGO_URI=mongodb://localhost/nodeapi
-mongoose
-    .connect(process.env.MONGO_URI, {useCreateIndex: true,useUnifiedTopology:true, useNewUrlParser:true, keepAlive:true,})
-    .then(() => console.log(`Database is connected on port ${port}`));
-mongoose.connection.on("error", err => {
-    console.log(`DB connection error: ${err.message}`);
-});
-
+dbConnection();
 const swagerFile = require('../docs/swagger_output.json');
 
 
@@ -37,7 +29,7 @@ const adminRoutes = require("../routes/admin")
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
-//app.use(expressValidator());
+app.use(expressValidator());
 app.use(cors());
 
 
@@ -46,18 +38,17 @@ app.use(cors());
  *
 app.use("/api/v1", adminRoutes);
 app.use("/api/v1", studentAuthRoutes);
+*/
 
 app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swagerFile));
 
 app.use("/api", (req, res)=>{
     res.json({message:"hellow word"});
 });
-*/
+
 app.use("/", (req, res)=>{
     res.json({message:"hellow word", doc:"https://iemis.herokuapp.com/api/v1/"});
 });
-
-
 
 app.use(function(err, req, res, next) {
     if (err.name === "UnauthorizedError") {

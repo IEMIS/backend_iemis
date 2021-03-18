@@ -30,6 +30,7 @@ const adminSchema = mongoose.Schema({
         required:true,
         unique:true,
     },
+    level:Number,
     created:Date,
     salt:String,
     hashed_password:{
