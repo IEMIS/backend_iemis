@@ -1,24 +1,51 @@
 const mongoose = require("mongoose");
 const crypto = require('crypto');
-const uuidv1 = require('uuid');
+const { v4: uuidv4 } = require('uuid');
+const {ObjectId} = mongoose.Schema;
 
 const studentSchema = mongoose.Schema({
-    studentId:{
+    studentCode:{
         type: String,
         trim: true,
         required: true,
         unique: true
+    },
+    school:{
+        type: ObjectId,
+        ref: "School",
+        required: true,
+    },
+    parent:{
+        type: ObjectId,
+        ref: "Parent",
+        required: true,
+    },
+    exam:{
+        type: ObjectId,
+        ref: "Exam",
+        required: true,
+    },
+    result:{
+        type: ObjectId,
+        ref: "Result",
+        required: true,
+    },
+    class:{
+        type: ObjectId,
+        ref: "Class",
+        required: true,
+    },
+    history:{
+        type: ObjectId,
+        ref: "History",
+        required: true,
+
     },
     admissionNo:{
         type: String,
         trim: true,
         required: true,
         unique: true
-    },
-    schoolCode:{
-        type: String,
-        trim: true,
-        required: true,
     },
     firstName:{
         type: String,
@@ -50,7 +77,7 @@ const studentSchema = mongoose.Schema({
         required:true,
     },
     //age to be generated based on dob
-    age:Number,
+   // age:Number,
     country:{
         type: String,
         trim: true,
@@ -102,44 +129,6 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    father:[{
-        name:String,
-        TIN:String,
-        address:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        occupation:String,
-        email:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        phone:{
-            type:Array,
-            default:[],
-        }
-    }],
-    mother:[{
-        name:String,
-        TIN:String,
-        address:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        occupation:String,
-        email:{
-            type: String,
-            trim: true,
-            required: true,
-        },
-        phone:{
-            type:Array,
-            default:[],
-        }
-    }],
     hashed_password:{
         type: String,
         trim: true,
@@ -154,7 +143,7 @@ studentSchema
     .virtual('password')
     .set(function(password) {
         this._password = password;
-        this.salt = uuidv1();
+        this.salt = uuidv4();
         this.hashed_password = this.encryptPassword(password);
     })
     .get(function() {
