@@ -1,6 +1,7 @@
-
 import express from 'express';
 import dbConnection from './config';
+//const express = require('express');
+//const dbConnection = require('./config')
 const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -16,10 +17,9 @@ dbConnection();
 const swagerFile = require('../docs/swagger_output.json');
 
 //import routes 
-import {
-    adminRouter
-} from './app';
+import {adminRouter} from './app';
 
+//const {adminRouter} = require('./app')
 // middleware -
 app.use(morgan("dev"));
 app.use(bodyParser.json());
@@ -46,3 +46,5 @@ app.use(function(err, req, res, next) {
 });
 
 export default app;
+
+//module.exports = app;
