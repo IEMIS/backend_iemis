@@ -16,39 +16,43 @@ const schoolSchema = mongoose.Schema({
         trim:true,
         required:true,
     },
-    province:{
-        type: String,
-        trim: true,
-        required: true,
-    },
     district:{
         type: ObjectId,
         ref: "District",
         required: true,
     },
-    mailBox:{
-        type:String,
-        trim:true,
-        required:true,
-    },
+    
     email:{
         type:String,
         trim:true,
         required:true,
         unique:true,
     },
-    phone:{
-        type:String,
-        trim:true,
-        required:true,
-        unique:true,
-    },
-    fax:{
-        type:String,
-        trim:true,
-        required:false,
-        unique:true,
-    },
+    contact: [{
+        fax:{
+            type:String,
+            trim:true,
+            required:false,
+            unique:true,
+        },
+        mailBox:{
+            type:String,
+            trim:true,
+            required:true,
+        },
+        phone:{
+            type:String,
+            trim:true,
+            required:true,
+            unique:true,
+        },
+        province:{
+            type: String,
+            trim: true,
+            required: true,
+        },
+    }],
+    
 
     //ECE, Primary, Secondary, Technical Educ
     eduLevel:{
@@ -76,7 +80,7 @@ const schoolSchema = mongoose.Schema({
     },
     */
     //boarding or day
-    schoolTpe:{
+    schoolType:{
         type:String,
         trim:true,
         required:true,
