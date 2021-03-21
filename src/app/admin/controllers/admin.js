@@ -3,6 +3,7 @@
 //const District = require("../../../models/district");
 
 import * as models from "../../../models";
+import _ from 'loadash';
 
 
 
@@ -67,6 +68,64 @@ exports.create = async (req, res) =>{
             */
         res.status(200).json({message:"admin successfully created, you can now login", data})
     }) 
+}
+
+exports.list = async (req, res)=>{
+    models.Admin.find().exec((err, admins)=>{
+        if (err ||!admins ) {
+            /**
+             * 
+             */
+            return res.status(404).json({error:"no single Admin", err})
+            
+        }
+        res.status(200).json({admins, "message":"admin sucessfully fetched"})
+    })
+
+}
+
+exports.adminById= async (req, res, next, id)=>{
+    models.Admin.findById(id).exec((err, admin)=>{
+        if(err || !admin){
+            /**
+             * 
+             * 
+             */
+            return res.status(404).json({"error":"admin not found", err})
+        }
+
+        req.Admin = admin
+
+        next()
+    })
+}
+exports.oneAdmin = async (req, res)=>{
+    let admin = req.Admin;
+    res.status(200).json({admin, mesage:"operaton successful"}) 
+}
+
+exports.update = async (req, res)=>{
+    let admin = req.Admin;
+    admin = _.extend(admin, req.body)
+    admin.updated_at = Date.now();
+    admin.save((err, data)=>{
+        if(err || !data){
+            return res.status(404).json({error:"error in updating admin", err})
+        }
+        res.status(200).json({message:"operation sucseful", data})
+    })
+}
+
+exports.delete = async (req, res) =>{
+    let admin = req.Admin;
+    admin.remove((err, data)=>{
+        if(err || !data){
+            return res.status(405).json({err, error:"error in deleting admin" })
+        }
+
+        res.status(200).json({mesage:"admin deleted", data})
+    })
+
 }
 
 
