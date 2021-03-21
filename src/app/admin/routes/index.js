@@ -11,15 +11,13 @@ import * as Ctr from '../controllers/admin';
 //const {adminSignUpValidator} = require("../helpers/validator")
 import * as validator from "../midleware/validator";
 import * as access from "../midleware";
-
-
-
-
+//Admin Auth routes
 router.post("/admin/signin", Auth.signin);
 router.post("/admin/forgetPassword", Auth.forgetPassword);
 router.post("/admin/resetPassword", Auth.resetPassword);
 
-router.post("/admin", validator.createAdmin, access.requiredSignin, Ctr.create);
+//Admin Services with access creators and validations 
+router.post("/admin", validator.createAdmin, access.requiredSignin, access.isSuperAdmin, Ctr.create);
 router.get("/admin/district", Ctr.districtList);
 router.post("/admin/district", Ctr.createDistric);
 router.delete("/admin/district/:districtId", Ctr.deleteDistrict);

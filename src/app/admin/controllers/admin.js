@@ -1,6 +1,8 @@
 
-const Admin = require("../../../models/admin");
-const District = require("../../../models/district");
+//const Admin = require("../../../models/admin");
+//const District = require("../../../models/district");
+
+import * as models from "../../../models";
 
 
 
@@ -24,7 +26,7 @@ exports.create = async (req, res) =>{
                 }
        } 
     */
-   const isAdmin = await  Admin.findOne({email});
+   const isAdmin = await  models.Admin.findOne({email});
    if(isAdmin){
         /* #swagger.responses[400] = {
                 description: "admin available",
@@ -35,7 +37,7 @@ exports.create = async (req, res) =>{
         */
        return res.status(400).json({error:"admin already on system, can also signin"})
     }  
-    const admin = new Admin ({email, lastName, firstName,middleName, password, phone});
+    const admin = new models.Admin ({email, lastName, firstName,middleName, password, phone});
     admin.save((err, data)=>{
         console.log({err, data})
         if(err || !data){
@@ -69,7 +71,7 @@ exports.create = async (req, res) =>{
 
 
 exports.createDistric = async (req, res)=>{
-    const {email, password, name, phone} = req.body;
+    const {email, password, names, phone} = req.body;
     /* 
       #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
@@ -87,7 +89,7 @@ exports.createDistric = async (req, res)=>{
                 }
        } 
     */
-   const isDistrict = await  District.findOne({email});
+   const isDistrict = await  models.District.findOne({email});
    if(isDistrict){
         /* #swagger.responses[400] = {
                 description: "district already created",
@@ -98,7 +100,7 @@ exports.createDistric = async (req, res)=>{
         */
        return res.status(400).json({error:"District already created"})
     }  
-    const district = new District({email, password, phone, name});
+    const district = new models.District({email, password, phone, names});
     district.save((err, data)=>{
         console.log({err, data})
         if(err || !data){
@@ -136,7 +138,7 @@ exports.districtList = async (req, res)=>{
       #swagger.tags = ['Admin services']
       #swagger.description = 'List of all district' 
     */
-   District.find((err, data)=>{
+   models.District.find((err, data)=>{
        if(err || !data){
            /* #swagger.responses[404] = {
                 description: "Find all the district",
@@ -180,8 +182,8 @@ exports.districtById= async (req, res, next,id)=>{
       #swagger.description = 'Endpoint to create a new district' 
       #swagger.parameters['districtById'] = { description: "District  ID" } 
     */
-    District.findById(id).exec((err, user)=>{
-        if(err || !user){ 
+    models.District.findById(id).exec((err, dist)=>{
+        if(err || !dist){ 
             /* #swagger.responses[401] = {
                 description: "District not found",
                 schema: { 
@@ -191,7 +193,7 @@ exports.districtById= async (req, res, next,id)=>{
             */
             return res.status(404).json({error: "District not found"})
         }
-        req.district = user;
+        req.district = dist;
         next()
     })
     // #swagger.start
@@ -199,7 +201,7 @@ exports.districtById= async (req, res, next,id)=>{
 
 exports.oneDistrict = async (req, res)=>{
     // #swagger.start
-    const {_id, name, phone, email} = req.district;
+    const {_id, names, phone, email} = req.district;
 
     /* 
        #swagger.tags = ['Admin services']
@@ -218,7 +220,7 @@ exports.oneDistrict = async (req, res)=>{
             }
         } 
     */
-    res.status(200).json({message:"district succesfully fetched", data:{_id, name, phone, email}})
+    res.status(200).json({message:"district succesfully fetched", data:{_id, names, phone, email}})
     // #swagger.end
 }
 
@@ -232,7 +234,7 @@ exports.updateDistrict = async (req, res) => {
     district.update_at = Date.now();
     district.save((err,data)=>{
         if(err ||!data) {
-             /* #swagger.responses[401] = {
+          /* #swagger.responses[401] = {
                 description: "error in update district",
                 schema: { 
                     "error ":"error in update district",
@@ -294,4 +296,5 @@ exports.deleteDistrict = async (req, res) => {
         return res.json({message:"district successfully deleted", data})
     })
 };
+
 
