@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 const { v4: uuidv4 } = require('uuid');
 
-const { ObjectId } = mongoose.Schema;
-
 const districtSchema = mongoose.Schema({
     names:{
         type: String,
@@ -26,10 +24,6 @@ const districtSchema = mongoose.Schema({
         type:String,
         trim:true,
         required:true,
-    },
-    school:{
-        type:ObjectId,
-        ref:"School"
     },
     status:{
         type:Boolean,
