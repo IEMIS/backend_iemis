@@ -30,14 +30,22 @@ const adminSchema = mongoose.Schema({
         required:true,
         unique:true,
     },
-    level:Number,
-    created:Date,
+    level:{
+        type:Number,
+        default:1,
+    },
+    created_at:{
+        type:Date,
+        default:Date.now()
+    },
+    updated_at:Date,
     salt:String,
     hashed_password:{
         type: String,
         trim: true,
         required: true,
     },
+    resetToken:String,
 });
 
 // virtual field

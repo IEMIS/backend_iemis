@@ -104,7 +104,7 @@ const teacherSchema = mongoose.Schema({
     // this should decrease automaically after a year
     contractYears:{
         type: Number,
-        required:year,
+        required:true,
     },
    // Date of retirement if not a contract staff and should be generated and determine either by spending 35years or age is 60years  
     retirementyear: Date,

@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-const {ObjectId} = mongoose.Schema;
 
 const sessionSchema = mongoose.Schema({
     name:{
@@ -14,4 +13,4 @@ const sessionSchema = mongoose.Schema({
     },
 })
 
-module.exports = mongoose.Schema('Session',sessionSchema)
+module.exports = mongoose.model('Session',sessionSchema)
