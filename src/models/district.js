@@ -5,6 +5,11 @@ const { v4: uuidv4 } = require('uuid');
 const { ObjectId } = mongoose.Schema;
 
 const districtSchema = mongoose.Schema({
+    code:{
+        type: String,
+        trim: true,
+        required: true,
+    },
     names:{
         type: String,
         trim: true,
@@ -30,6 +35,10 @@ const districtSchema = mongoose.Schema({
     school:{
         type:ObjectId,
         ref:"School"
+    },
+    staffs:{
+        type:ObjectId,
+        ref:"Staff"
     },
     status:{
         type:Boolean,

@@ -77,15 +77,21 @@ import _ from 'loadash';
              res.status(404).json({"error":"District not exist"})
          }
          req.schoolByDistrict = district;
+         next()
      })
  }
 
  export const studentInSchool = async (req, res )=>{
      const school = req.school;
-     /*
-     school.populate('student').exec((err ||student)=>{
+  
+     school.populate('student').exec((err, student)=>{
          if(err || !student){
-
+             /**
+              * 
+              */
+             return res.status(400).json({"error":"fail", err})
          }
-     })*/
+
+         res.status(200).json({"message":"succesfull", student})
+     })
  }

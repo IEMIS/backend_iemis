@@ -65,16 +65,27 @@ const teacherSchema = mongoose.Schema({
     },
     subjectTaught:{
         type:Array,
-        default: ["Mathematices","English Language","Basic Science", "Social Science","Commercial Study"]
+        //default: ["Mathematices","English Language","Basic Science", "Social Science","Commercial Study"]
+        default: [{
+            type:ObjectId,
+            ref:"Subject"
+        }]
     },
+    classTaking:[{
+        type:Array,
+        default:[{
+            type:ObjectId,
+            ref:"Class"
+        }]
+    }],
     subjectSpecialisaion:{
         type: String,
         trim: true,
         required: true,
     },
-    //level: Number,
+    level: Number,
 
-    /*
+ 
     //age to be generated based on dob
     //age:Number,
     typeOfstaff:{
@@ -113,7 +124,6 @@ const teacherSchema = mongoose.Schema({
         required: true,
     },
     
-    
     teachingTypes:{
         type: String,
         trim: true,
@@ -140,8 +150,7 @@ const teacherSchema = mongoose.Schema({
         type:Date,
         required:true,
     },
-    */
-    
+
     created:Date,
     updated_at:Date,
     salt:String,
@@ -154,6 +163,10 @@ const teacherSchema = mongoose.Schema({
 
 
 // virtual field
+teacherSchema.virtual('names').get(()=>{
+    return `${firstName} ${lastName} ${middleName}`
+})
+
 teacherSchema
     .virtual('password')
     .set(function(password) {

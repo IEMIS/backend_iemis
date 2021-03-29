@@ -11,17 +11,16 @@ const schoolSchema = mongoose.Schema({
         required:true,
         unique:true,
     },
-    names:{
-        type:String,
-        trim:true,
-        required:true,
-    },
     district:{
         type: ObjectId,
         ref: "District",
         required: true,
     },
-    
+    names:{
+        type:String,
+        trim:true,
+        required:true,
+    },
     email:{
         type:String,
         trim:true,
@@ -53,8 +52,13 @@ const schoolSchema = mongoose.Schema({
         },
     }],
     
-
     //ECE, Primary, Secondary, Technical Educ
+    /**
+     * to do 
+     * =============
+     * Move Edu level variable type to an array for simplicity validations, 
+     * however, String can work well and validated by the front end
+     */
     eduLevel:{
         type: String,
         trim: true,
@@ -71,38 +75,40 @@ const schoolSchema = mongoose.Schema({
         type:Date,
         required:true,
     },
-    /*
+    
     //Regular or Special
     schoolCat:{
         type:String,
         trim:true,
         required:true,
     },
-    */
+ 
     //boarding or day
     schoolType:{
         type:String,
         trim:true,
         required:true,
     },
-    /*
+    
     //school head staff ID
     headID:{
-        type:String,
-        trim:true,
-        required:true,
+        type:ObjectId,
+        ref:"Teacher",
     },
     //Date of Last Inspection to School
     lastInspection:[{
         specific:Date,
         byWhom:String,
-        observation:{
+        by:{
+            type:ObjectId,
+            ref:"Staff"
+        },
+        observation:[{
             type: String,
             trim: true,
             required: true,
-        }
+        }]
     }],
-    */
     created:Date,
     updated_at:Date,
     salt:String,

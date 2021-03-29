@@ -15,6 +15,10 @@ const staffSchema = mongoose.Schema({
         ref: "District",
         required: true,
     },
+    role:{
+        type: Array, 
+        default: [""]
+    },
     firstName:{
         type: String,
         trim: true,
@@ -63,10 +67,7 @@ const staffSchema = mongoose.Schema({
         type:Array,
         default:[],
     },
-    role:{
-        type: Array, 
-        default: [""]
-    },
+    
     //level: Number,
     created:Date,
     updated_at:Date,

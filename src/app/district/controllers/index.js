@@ -229,3 +229,7 @@ exports.deleteDistrict = async (req, res) => {
         return res.json({message:"district successfully deleted", data})
     })
 };
+
+exports.schoolInDistrict = async (req, res)=>{
+    
+}
