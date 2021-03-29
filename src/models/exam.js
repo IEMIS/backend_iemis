@@ -21,4 +21,4 @@ const examSchema = mongoose.Schema({
     term:String
 })
 
-module.exports = mongoose.Schema('Exam',examSchema)
+module.exports = mongoose.model('Exam',examSchema)

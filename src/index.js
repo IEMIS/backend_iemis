@@ -23,6 +23,7 @@ import {
 // middleware -
 app.use(morgan("dev"));
 app.use(bodyParser.json());
+//app.use(bodyParser.json({ type: 'application/*+json' }))
 app.use(cookieParser());
 app.use(expressValidator());
 app.use(cors());

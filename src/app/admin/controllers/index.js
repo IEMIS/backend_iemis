@@ -1,11 +1,11 @@
 
-const Admin = require("../../../models/admin");
 const District = require("../../../models/district");
-
+import _ from 'lodash';
+import * as models from '../../../models'
 
 
 exports.create = async (req, res) =>{
-    const {email, password, firstName, lastName, middleName, phone} = req.body;
+    const {email} = req.body;
     /* 
         #swagger.tags = ['Admin services']
         #swagger.description = 'Endpoint allow to create admin user' 
@@ -24,7 +24,7 @@ exports.create = async (req, res) =>{
                 }
        } 
     */
-   const isAdmin = await  Admin.findOne({email});
+   const isAdmin = await  models.Admin.findOne({email});
    if(isAdmin){
         /* #swagger.responses[400] = {
                 description: "admin available",
@@ -35,9 +35,9 @@ exports.create = async (req, res) =>{
         */
        return res.status(400).json({error:"admin already on system, can also signin"})
     }  
-    const admin = new Admin ({email, lastName, firstName,middleName, password, phone});
+    const admin = new models.Admin (req.body);
     admin.save((err, data)=>{
-        console.log({err, data})
+        //console.log({err, data})
         if(err || !data){
 
             /* #swagger.responses[401] = {
@@ -65,6 +65,98 @@ exports.create = async (req, res) =>{
             */
         res.status(200).json({message:"admin successfully created, you can now login", data})
     }) 
+}
+
+exports.adminById= async (req, res, next, id)=>{
+    models.Admin.findById(id).exec((err, admin)=>{
+        //console.log({admin, err})
+        if(err || !admin){
+            /**
+             * docs
+             */
+            return res.status(404).json({error:"admin not found", err});
+        }
+        req.admin = admin;
+        next();
+    })
+}
+exports.update = async (req, res)=>{
+    console.log(req.admin)
+    console.log(req.body)
+    let admin = _.extend(req.admin, req.body)
+    admin.update_at = Date.now();
+    admin.save((err, data)=>{
+        console.log({err, data})
+        if(err){
+            /**
+             * 
+            */
+           return res.status(403).json({error:"fails to upadte admin", err})
+        }
+        /**
+         * docs
+         */
+        res.status(200).json({message:"admin successfully update", data})
+    })
+}
+
+exports.delete = async (req, res)=>{
+    let admin = req.admin;
+    admin.remove((err, data)=>{
+        if(err || !data){
+            /**
+             * 
+             */
+            res.status(403).json({error:"fails to delete admin", err})
+        }
+        /**
+         * docs
+         */
+        res.status(200).json({message:"admin succesfully deleted", data})
+    })
+}
+
+exports.admin = async (req, res) =>{
+    req.admin.salt= undefined
+    req.admin.resetToken = undefined
+    req.admin.hashed_password = undefined
+    res.status(200).json(req.admin)
+}
+
+exports.admins = async (req, res) =>{
+    const admins =await models.Admin.find();
+    if(!admins){
+        /**
+         * docs not get any admin
+         */
+        return res.status(404).json({error:"admin not founds"})
+    }
+    res.status(200).json({message:"admin successfully fetched", data:admins})
+}
+
+exports.countAdmin= async (req, res)=>{
+    models.Admin.countDocuments().exec((err, result)=>{
+        if(err || !result){
+            /**
+             * docs for not count
+             */
+            return res.status(404).json({error:"fails to count documents", err})
+        }
+        res.status(200).json({message:"admin successfully count", data:result})
+    });
+
+    /*
+    const count =await  models.Admin.aggregate(_id).exec((err, result)=>{
+
+        if(err || !result){
+            /**
+             * docs for not count
+             *
+            return res.status(404).json({error:"fails to count documents", err})
+        }
+        res.status(200).json({message:"admin successfully count", data:result})
+    })
+    */
 }
 
 
