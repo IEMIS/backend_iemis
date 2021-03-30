@@ -1,8 +1,6 @@
 import express from 'express';
 const router = express.Router();
 
-
-
 import * as Auth from '../controllers/auth'
 import * as Ctr from '../controllers';
 import * as Valid from '../midleware/validator';

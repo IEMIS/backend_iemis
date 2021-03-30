@@ -3,8 +3,8 @@
 import * as models from "../../../models";
 import _ from 'loadash';
 
-exports.createDistric = async (req, res)=>{
-    const {email, password, names, phone} = req.body;
+exports.create = async (req, res)=>{
+    const {email} = req.body;
     /* 
       #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
@@ -33,7 +33,7 @@ exports.createDistric = async (req, res)=>{
         */
        return res.status(400).json({error:"District already created"})
     }  
-    const district = new models.District({email, password, phone, names});
+    const district = new models.District(req.body);
     district.save((err, data)=>{
         console.log({err, data})
         if(err || !data){
@@ -66,10 +66,9 @@ exports.createDistric = async (req, res)=>{
     })
 }
 
-exports.districtList = async (req, res)=>{
+exports.districts = async (req, res)=>{
     /* 
-      #swagger.tags = ['Admin services']
-      #swagger.description = 'List of all district' 
+    *
     */
    models.District.find((err, data)=>{
        if(err || !data){
@@ -132,9 +131,9 @@ exports.districtById= async (req, res, next,id)=>{
     // #swagger.start
 }
 
-exports.oneDistrict = async (req, res)=>{
+exports.district = async (req, res)=>{
     // #swagger.start
-    const {_id, names, phone, email} = req.district;
+    //const {_id, names, phone, email} = req.district;
 
     /* 
        #swagger.tags = ['Admin services']
@@ -153,11 +152,11 @@ exports.oneDistrict = async (req, res)=>{
             }
         } 
     */
-    res.status(200).json({message:"district succesfully fetched", data:{_id, names, phone, email}})
+    res.status(200).json({message:"district succesfully fetched", data:req.district})
     // #swagger.end
 }
 
-exports.updateDistrict = async (req, res) => {
+exports.update = async (req, res) => {
     /* 
       #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
@@ -195,7 +194,7 @@ exports.updateDistrict = async (req, res) => {
     })
 };
 
-exports.deleteDistrict = async (req, res) => {
+exports.delete = async (req, res) => {
     /* 
       #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
@@ -229,6 +228,74 @@ exports.deleteDistrict = async (req, res) => {
         return res.json({message:"district successfully deleted", data})
     })
 };
+
+exports.countDistrict = async (req, res)=>{
+    models.District.countDocuments().exec((err, data)=>{
+        /**
+         * docs
+         */
+        if(err || !data){
+            /**
+             * docs
+             */
+            return res.status(404).json({error:"error to count document", err})
+        }
+        /**
+         * docs
+         */
+        res.status(200).json({message:"District successfully counted", data})
+    })
+}
+
+exports.countSchoolInDistrict = async (req, res)=>{
+    //const {_id} = req.district
+    req.district.populate('school').countDocuments().exec((err, data)=>{
+        if(err || !data){
+            /**
+             * docs
+             */
+            return res.status(404).json({error:"fails to count school", err})
+        }
+        /**
+         * 
+         */
+        res.status(200).json({message:"schools successfully counted", data})
+    })
+}
+
+exports.countstaffInDistrict = async (req, res)=>{
+    //const {_id} = req.district
+    req.district.populate('staff').countDocuments().exec((err, data)=>{
+        if(err || !data){
+            /**
+             * docs
+             */
+            return res.status(404).json({error:"fails to count school", err})
+        }
+        /**
+         * 
+         */
+        res.status(200).json({message:"schools successfully counted", data})
+    })
+}
+
+exports.countstudentInDistrict = async (req, res)=>{
+    //const {_id} = req.district
+    req.district.populate('school').populate('student').countDocuments().exec((err, data)=>{
+        console.log({err, data})
+        if(err || !data){
+            /**
+             * docs
+             */
+            return res.status(404).json({error:"fails to count school", err})
+        }
+        /**
+         * 
+         */
+        res.status(200).json({message:"schools successfully counted", data})
+    })
+}
+
 
 exports.schoolInDistrict = async (req, res)=>{
     
