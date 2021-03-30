@@ -102,7 +102,7 @@ exports.forgetPassword = async (req, res)=>{
                     }
                 } 
             */
-           return res.status(404).json({error:"invalid students Id"});
+           return res.status(404).json({error:"invalid student Id"});
         }
         /**
          * send email notification to the parents 
@@ -149,7 +149,7 @@ exports.resetPassword = async (req, res)=>{
                 }
            } 
            */
-          return res.status(404).json({error:"invalid students Id"});
+          return res.status(404).json({error:"invalid student Id"});
        }
        if(student.resetToken !== resetToken){
            /* #swagger.responses[405] = {
