@@ -114,6 +114,7 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
+<<<<<<< HEAD:src/models/students.js
     /****
      * HadEce, Please can you explaining the field sir
      */
@@ -121,6 +122,12 @@ const studentSchema = mongoose.Schema({
         type: String,
         trim: true,
         required: true,
+=======
+    //this should be used to track class completion 1,2,3,4,5
+    classCompleted:{
+        type:Array,
+        default: [],
+>>>>>>> d7e39aef89086c458b15dc0e18dc818264e74c63:models/students.js
     },
     subject:{
         type:Array,
