@@ -298,5 +298,6 @@ exports.countstudentInDistrict = async (req, res)=>{
 
 
 exports.schoolInDistrict = async (req, res)=>{
+    console.log("looking")
     
 }
