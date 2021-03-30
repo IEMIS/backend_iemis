@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
+const {ObjectId} = mongoose.Schema;
 
 const parentSchema = mongoose.Schema({
    familyName:String,
+   students:[{
+       type:ObjectId,
+       ref:"Students"
+   }],
     father:[{
         name:String,
         TIN:String,
@@ -41,7 +46,10 @@ const parentSchema = mongoose.Schema({
         }
     }],
 });
-
-//module.exports = mongoose.Schema('Parent', parentSchema);
+/**
+ * to do
+ * =================
+ * implement parent login : to manage the students
+ */
 
 module.exports = mongoose.model('Parent', parentSchema);

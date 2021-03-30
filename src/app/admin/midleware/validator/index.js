@@ -16,6 +16,7 @@ exports.createAdmin =async (req, res, next) =>{
         .withMessage('Password must contain a number');
     req.check('phone','enter a phone number').notEmpty();
     req.check('phone')
+    // minimum phone number in fiji is 7digits
     .isLength({min:7}).withMessage('phone number must be valid')
     .matches(/\d/).withMessage('phone number must be a plain number');
     const errors = req.validationErrors();

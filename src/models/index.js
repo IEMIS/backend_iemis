@@ -6,8 +6,11 @@ import School from './schools';
 import Staff from './staff';
 import Student from './students';
 import Teacher from './teacher';
+import Exam from './exam';
+import Subject from './subject';
+import Session from './session';
 
-export { Admin, Class, District, Parent, School, Staff, Student, Teacher    }
+export { Admin, Class, District, Parent, School, Staff, Student, Teacher, Exam, Subject, Session   }
 
 
 

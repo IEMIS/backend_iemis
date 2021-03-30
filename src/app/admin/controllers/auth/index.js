@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const expressJWT = require('express-jwt');
 const _ = require("lodash");
+const { v4: uuidv4 } = require('uuid');
 require("dotenv").config();
 import * as models from '../../../../models'
 //const  Admin from '../../../../models/admin.js'
@@ -59,7 +60,7 @@ exports.signin = async (req, res)=>{
   
     res.cookie("t", token, { expire: new Date() + 9999 });
     
-    const { _id, firstName, lastName } = user;
+    //const { _id, firstName, lastName } = user;
 
     /* #swagger.responses[200] = {
                 description: "Admin successfully login",
@@ -77,7 +78,7 @@ exports.signin = async (req, res)=>{
                  }
             } 
         */
-    return res.json({ token, admin: { _id, firstName, lastName, email } });
+    return res.json({ token, admin: isAdmin });
 }
 
 exports.forgetPassword = async (req, res)=>{
@@ -119,7 +120,30 @@ exports.forgetPassword = async (req, res)=>{
                  }
             } 
         */
-       res.status(200).json({admin})
+
+            const updatedFields = {resetToken:uuidv4()};
+            console.log({admin, updatedFields})
+            
+            
+            admin = _.extend(admin, updatedFields);
+            admin.save((er, result)=>{
+                console.log({er, result})
+                if(er || !result){
+                    /**
+                     * docs here
+                     */
+                    return res.status(407).json({error:"error in reseting password", er})
+                }
+                /**
+                 * to do 
+                 * ++++++
+                 * email notifications here
+                 */
+      
+                res.status(200).json({message:`Dear ${result.firstName} password reset request is successful, check your email for details`, result})
+            })
+            
+       //res.status(200).json({admin})
    })
     ///res.json(req.body)
 }
@@ -143,8 +167,8 @@ exports.resetPassword = async (req, res)=>{
         }
       } 
     */
-   const { email, resetToken,password, passwordConfirmation} = req.body;
-    models.Admin.findOne({email}, (err, admin)=>{
+   const { resetToken,password, passwordConfirmation} = req.body;
+    models.Admin.findOne({resetToken}, (err, admin)=>{
       if(err || !admin){
            /* #swagger.responses[404] = {
                description: "Invalid ",
@@ -153,7 +177,7 @@ exports.resetPassword = async (req, res)=>{
                 }
            } 
            */
-          return res.status(404).json({error:"user not found"});
+          return res.status(404).json({error:"Invalid token"});
        }
        if(admin.resetToken !== resetToken){
            /* #swagger.responses[405] = {
@@ -187,7 +211,26 @@ exports.resetPassword = async (req, res)=>{
             }
         } 
        */
-      res.status(200).json({message:"password successfully reset, you can now login", admin})
+
+      const updatedFields = {resetToken:'',password};
+      admin = _.extend(admin, updatedFields);
+      admin.save((er, result)=>{
+          if(er || !result){
+              /**
+               * docs here
+               */
+              return res.status(407).json({error:"error in reseting password", er})
+          }
+          /**
+           * to do 
+           * ++++++
+           * email notifications here
+           */
+
+          res.status(200).json({message:`Dear ${result.firstName} password successfully reset, you can now login`, admin})
+      })
+    
+      
     })
 }
 

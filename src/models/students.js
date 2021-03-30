@@ -20,7 +20,6 @@ const studentSchema = mongoose.Schema({
         ref: "Parent",
         required: true,
     },
-    /*
     exam:{
         type: ObjectId,
         ref: "Exam",
@@ -42,13 +41,16 @@ const studentSchema = mongoose.Schema({
         required: true,
 
     },
-    */
+    /*
+    *student code replicate admission numbers
+    *
     admissionNo:{
         type: String,
         trim: true,
         required: true,
         unique: true
     },
+    */
     firstName:{
         type: String,
         trim: true,
@@ -112,6 +114,9 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
+    /****
+     * HadEce, Please can you explaining the field sir
+     */
     HadEce:{
         type: String,
         trim: true,
@@ -119,7 +124,11 @@ const studentSchema = mongoose.Schema({
     },
     subject:{
         type:Array,
-        default: ["Mathematices","English Language","Basic Science", "Social Science","Commercial Study"]
+        //default: ["Mathematices","English Language","Basic Science", "Social Science","Commercial Study"]
+        default: [{
+            type:ObjectId,
+            ref:"Subject"
+        }]
     },
     status:{
         type: String,
@@ -141,6 +150,11 @@ const studentSchema = mongoose.Schema({
 
 
 // virtual field
+studentSchema.virtual('names').get(function(){
+    //return this.firstName +' ' + this.middleName + ' ' + this.lastName;
+    return `${this.firstName} ${this.middleName} ${this.lastName}`;
+});
+
 studentSchema
     .virtual('password')
     .set(function(password) {
