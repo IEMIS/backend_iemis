@@ -36,7 +36,7 @@ exports.create = async (req, res) =>{
                  }
             } 
         */
-       return res.status(400).json({error:"admin already on system, can also signin"})
+       return res.status(400).json({error:"admin profile already created on the system, Officer should signin"})
     }  
     const admin = new models.Admin ({email, lastName, firstName,middleName, password, phone});
     admin.save((err, data)=>{

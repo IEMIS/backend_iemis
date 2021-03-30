@@ -1,6 +1,6 @@
 exports.createAdmin =async (req, res, next) =>{
-    req.check('firstName', 'Admin First Name is reuired').notEmpty();
-    req.check('lastName', 'Admin last Name is reuired').notEmpty();
+    req.check('firstName', 'Admin First Name is required').notEmpty();
+    req.check('lastName', 'Admin last Name is required').notEmpty();
     req.check('email', 'Email must be between 3 to 32 characters')
     .matches(/.+\@.+\..+/)
     .withMessage('a valid email address is required')
@@ -16,7 +16,7 @@ exports.createAdmin =async (req, res, next) =>{
         .withMessage('Password must contain a number');
     req.check('phone','enter a phone number').notEmpty();
     req.check('phone')
-    .isLength({min:10}).withMessage('phone number must be valid')
+    .isLength({min:7}).withMessage('phone number must be valid')
     .matches(/\d/).withMessage('phone number must be a plain number');
     const errors = req.validationErrors();
     if (errors) {
@@ -27,8 +27,8 @@ exports.createAdmin =async (req, res, next) =>{
 };
 
 exports.createDistrict =async (req, res, next) =>{
-    req.check('names', 'District names is reuired').notEmpty();
-    req.check('address', 'District address is reuired').notEmpty();
+    req.check('names', 'District names is required').notEmpty();
+    req.check('address', 'District address is required').notEmpty();
     req.check('email', 'Email must be between 3 to 32 characters')
     .matches(/.+\@.+\..+/)
     .withMessage('a valid email address is required')
@@ -44,7 +44,8 @@ exports.createDistrict =async (req, res, next) =>{
         .withMessage('Password must contain a number');
     req.check('phone','enter a phone number').notEmpty();
     req.check('phone')
-    .isLength({min:10}).withMessage('phone number must be valid')
+    // minimum phone number in fiji is 7digits
+    .isLength({min:7}).withMessage('phone number must be valid')
     .matches(/\d/).withMessage('phone number must be a plain number');
     const errors = req.validationErrors();
     if (errors) {
@@ -55,7 +56,7 @@ exports.createDistrict =async (req, res, next) =>{
 };
 
 exports.adminSignIn = (req, res, next)=>{
-    req.check('email', 'Admin email address is reuired').notEmpty();
+    req.check('email', 'Admin email address is required').notEmpty();
     
     const errors = req.validationErrors();
     if (errors) {
