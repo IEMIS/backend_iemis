@@ -51,6 +51,7 @@ const districtSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
+    resetToken:String,
 },
 { timestamps: true }
 );

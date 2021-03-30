@@ -16,6 +16,10 @@ const schoolSchema = mongoose.Schema({
         ref: "District",
         required: true,
     },
+    student:{
+        type: ObjectId,
+        ref: "Student",
+    },
     names:{
         type:String,
         trim:true,
