@@ -4,9 +4,11 @@
   "description": "iemis backend api with nodejs and mongoDB",
   "main": "index.js",
   "scripts": {
+    "build": "babel index.js -d dist",
+    "startb": "npm run build && nodemon dist/index.js",
+    "start": "nodemon index.js --exec babel",
+    "serve": "node dist/index.js",
     "server": "nodemon --exec babel-node  index.js",
-    "heroku-postbuild": "npm install",
-    "start": "babel-node index.js",
     "swagger-autogen": "node swagger.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,12 +31,12 @@
   },
   "homepage": "https://github.com/IEMIS/api#readme",
   "devDependencies": {
-    "@babel/core": "^7.13.1",
+    "@babel/cli": "^7.13.14",
+    "@babel/core": "^7.13.14",
     "@babel/node": "^7.13.0",
-    "@babel/preset-env": "^7.13.5"
+    "@babel/preset-env": "^7.13.12"
   },
   "dependencies": {
-    "babel-cli": "^6.26.0",
     "body-parser": "^1.19.0",
     "consola": "^2.15.3",
     "cookie-parser": "^1.4.5",

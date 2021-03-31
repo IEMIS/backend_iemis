@@ -1,6 +1,6 @@
 
-import express from 'express';
-import dbConnection from './config';
+const express = require('express');
+const dbConnection = require('./config');
 const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -16,9 +16,9 @@ dbConnection();
 const swagerFile = require('../docs/swagger_output.json');
 
 //import routes 
-import {
+const  {
     adminRouter
-} from './app';
+} = require('./app');
 
 // middleware -
 app.use(morgan("dev"));
