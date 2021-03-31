@@ -3,7 +3,7 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
     info: {
         version: "1.0.0",
-        title: " Inteligent Education Management Information System",
+        title: " Intelligent Education Management Information System",
         description: "IEMIS, api "
     },
     host: "iemis.herokuapp.com/api/v1",
@@ -37,6 +37,10 @@ const doc = {
         }
        
     },
+<<<<<<< HEAD:docs/swagger.js
+=======
+    */
+>>>>>>> d7e39aef89086c458b15dc0e18dc818264e74c63:swagger.js
     
     definitions: {
         students:{

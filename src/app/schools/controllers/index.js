@@ -92,6 +92,6 @@ import _ from 'loadash';
              return res.status(400).json({"error":"fail", err})
          }
 
-         res.status(200).json({"message":"succesfull", student})
+         res.status(200).json({"message":"success", student})
      })
  }

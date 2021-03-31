@@ -33,7 +33,7 @@ exports.create = async (req, res) =>{
                  }
             } 
         */
-       return res.status(400).json({error:"admin already on system, can also signin"})
+       return res.status(400).json({error:"admin profile already created on the system, Officer should signin"})
     }  
     const admin = new models.Admin (req.body);
     admin.save((err, data)=>{
@@ -91,12 +91,12 @@ exports.update = async (req, res)=>{
             /**
              * 
             */
-           return res.status(403).json({error:"fails to upadte admin", err})
+           return res.status(403).json({error:"failed to update admin", err})
         }
         /**
          * docs
          */
-        res.status(200).json({message:"admin successfully update", data})
+        res.status(200).json({message:"admin successfully updated", data})
     })
 }
 
@@ -107,7 +107,7 @@ exports.delete = async (req, res)=>{
             /**
              * 
              */
-            res.status(403).json({error:"fails to delete admin", err})
+            res.status(403).json({error:"failed to delete admin", err})
         }
         /**
          * docs
@@ -129,7 +129,7 @@ exports.admins = async (req, res) =>{
         /**
          * docs not get any admin
          */
-        return res.status(404).json({error:"admin not founds"})
+        return res.status(404).json({error:"admin not found"})
     }
     res.status(200).json({message:"admin successfully fetched", data:admins})
 }
