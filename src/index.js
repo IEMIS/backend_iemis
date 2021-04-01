@@ -1,6 +1,5 @@
-
-const express = require('express');
-const dbConnection = require('./config');
+import express  from 'express';
+import dbConnection from './config';
 const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
