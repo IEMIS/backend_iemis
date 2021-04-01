@@ -72,7 +72,7 @@ exports.forgetPassword = async (req, res)=>{
                     /**
                      * docs here
                      */
-                    return res.status(407).json({error:"error in reseting password", er})
+                    return res.status(407).json({error:"error in resetting password", er})
                 }
                 /**
                  * to do 
@@ -139,14 +139,14 @@ exports.resetPassword = async (req, res)=>{
               /**
                * docs here
                */
-              return res.status(407).json({error:"error in reseting password", er})
+              return res.status(407).json({error:"error in resetting password", er})
           }
           /**
            * to do 
            * ++++++
            * email notifications here
            */
-          res.status(200).json({message:`Dear ${result.names} password successfully reset, you can now login`, data:result})
+          res.status(200).json({message:`Dear ${result.names} password reset successful, you can now login`, data:result})
       })
     })
 }

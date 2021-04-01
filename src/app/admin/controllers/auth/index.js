@@ -227,7 +227,7 @@ exports.resetPassword = async (req, res)=>{
            * email notifications here
            */
 
-          res.status(200).json({message:`Dear ${result.firstName} password successfully reset, you can now login`, admin})
+          res.status(200).json({message:`Dear ${result.firstName} password reset successful, you can now login`, admin})
       })
     
       
