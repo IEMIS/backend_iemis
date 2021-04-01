@@ -33,7 +33,7 @@ exports.create = async (req, res) =>{
                  }
             } 
         */
-       return res.status(400).json({error:"admin profile already created on the system, Officer should signin"})
+       return res.status(400).json({error:"admin already on system, can also signin"})
     }  
     const admin = new models.Admin (req.body);
     admin.save((err, data)=>{
@@ -91,12 +91,12 @@ exports.update = async (req, res)=>{
             /**
              * 
             */
-           return res.status(403).json({error:"failed to update admin", err})
+           return res.status(403).json({error:"fails to upadte admin", err})
         }
         /**
          * docs
          */
-        res.status(200).json({message:"admin successfully updated", data})
+        res.status(200).json({message:"admin update successful", data})
     })
 }
 
@@ -107,7 +107,7 @@ exports.delete = async (req, res)=>{
             /**
              * 
              */
-            res.status(403).json({error:"failed to delete admin", err})
+            res.status(403).json({error:"fails to delete admin", err})
         }
         /**
          * docs

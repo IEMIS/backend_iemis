@@ -182,7 +182,7 @@ exports.resetPassword = async (req, res)=>{
                 }
            } 
        */
-      res.status(200).json({message:"password successfully reset, you can now login",student})
+      res.status(200).json({message:"password reset successful, you can now login",student})
     })
     //res.json(req.body)
 }
