@@ -96,7 +96,7 @@ exports.update = async (req, res)=>{
         /**
          * docs
          */
-        res.status(200).json({message:"admin successfully update", data})
+        res.status(200).json({message:"admin update successful", data})
     })
 }
 
