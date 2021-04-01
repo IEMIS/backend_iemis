@@ -2,22 +2,20 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { v4: uuidv4 } = require('uuid');
 require("dotenv").config();
-import * as models from '../../../../models'
+import * as models from '../../../../models';
 
 exports.signin = async (req, res)=>{
     const {email, password} = req.body;
-
     /* 
     */
-
-   const isDistrict = await  models.District.findOne({email});
-   if(!isDistrict){
+   const isSchool = await  models.School.findOne({email});
+   if(!isSchool){
         /* 
+        *
         */
        return res.status(404).json({error:"Invalid email address"})
     }
-    const user = await isDistrict.authenticate(password);
-    console.log({user})
+    const user = await isSchool.authenticate(password);
     
     if(!user){
         /* 
@@ -26,52 +24,49 @@ exports.signin = async (req, res)=>{
     }
      // generate a token with user id and secret
      const token = jwt.sign(
-        { _id: isDistrict._id, role:"superDistrict" },
+        { _id: isSchool._id, role:"schoolAdmin" },
         process.env.JWT_SECRET
     );
   
     res.cookie("t", token, { expire: new Date() + 9999 });
+
     /* 
     *
     */
-    return res.json({ token, district:isDistrict });
+    return res.json({ token, school: isSchool });
 }
+
 exports.forgetPassword = async (req, res)=>{
     /*
-     * 
+    *  
     */
    const { email} = req.body;
-    models.District.findOne({email}, (err, district)=>{
-       if(err || !district){
+    models.School.findOne({email}, (err, school)=>{
+       if(err || !school){
             /* 
-            *
+            * 
             */
            return res.status(404).json({error:"invalid email"});
         }
         /**
-         * send email notification to the parents 
+         * send email notification  
         */
 
-        /* #swagger.responses[200] = {
-                description: "sending email contain password reset token",
-                schema: { 
-                    message:"email send successfully send",
-                 }
-            } 
+        /* 
+        *
         */
-
             const updatedFields = {resetToken:uuidv4()};
-            console.log({district, updatedFields})
+            console.log({school, updatedFields})
             
             
-            district = _.extend(district, updatedFields);
-            district.save((er, result)=>{
+            school = _.extend(school, updatedFields);
+            school.save((er, result)=>{
                 console.log({er, result})
                 if(er || !result){
                     /**
                      * docs here
                      */
-                    return res.status(407).json({error:"error in resetting password", er})
+                    return res.status(407).json({error:"error in reseting password", er})
                 }
                 /**
                  * to do 
@@ -81,75 +76,60 @@ exports.forgetPassword = async (req, res)=>{
       
                 res.status(200).json({message:`Dear ${result.names} password reset request is successful, check your email for details`, result})
             })
-            
-       //res.status(200).json({admin})
    })
-    ///res.json(req.body)
 }
+
+
 exports.resetPassword = async (req, res)=>{
     /*
      *
     */
    const { resetToken,password, passwordConfirmation} = req.body;
-    models.District.findOne({resetToken}, (err, district)=>{
-      if(err || !district){
+    models.School.findOne({resetToken}, (err, school)=>{
+      if(err || !school){
            /*
            *
            */
           return res.status(404).json({error:"Invalid token"});
        }
-       if(district.resetToken !== resetToken){
-           /* #swagger.responses[405] = {
-               description: "Invalid token",
-               schema: { 
-                   error:"invalid reset token",
-                }
-           } 
+       if(school.resetToken !== resetToken){
+           /*
+           *
            */
            return res.status(405).json({error:"invalid reset token"});
         }
         if(password !== passwordConfirmation){
-            /* #swagger.responses[406] = {
-                description: "Password error",
-                schema: { 
-                    error:"Password must match each other",
-                 }
-            } 
+            /*
+            *
             */
             return res.status(406).json({error:"Password must match each other"});
         }
        /**
-        * send email notification to the School authorities
+        * send email notification 
        */
 
        /*
-        #swagger.responses[200] = {
-            description: "reset password",
-            schema: { 
-                message:"password successfully reset, you can now login",
-            }
-        } 
+       *
        */
 
       const updatedFields = {resetToken:'',password};
-      district = _.extend(district, updatedFields);
-      district.save((er, result)=>{
+      school = _.extend(school, updatedFields);
+      school.save((er, result)=>{
           if(er || !result){
               /**
                * docs here
                */
-              return res.status(407).json({error:"error in resetting password", er})
+              return res.status(407).json({error:"error in reseting password", er})
           }
           /**
            * to do 
            * ++++++
            * email notifications here
            */
-          res.status(200).json({message:`Dear ${result.names} password reset successful, you can now login`, data:result})
-      })
+          res.status(200).json({message:`Dear ${result.names} password reset successful, you can now login`, school})
+      })  
     })
 }
-
 
 
 
