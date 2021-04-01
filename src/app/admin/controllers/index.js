@@ -129,7 +129,7 @@ exports.admins = async (req, res) =>{
         /**
          * docs not get any admin
          */
-        return res.status(404).json({error:"admin not found"})
+        return res.status(404).json({error:"admin not founds"})
     }
     res.status(200).json({message:"admin successfully fetched", data:admins})
 }
