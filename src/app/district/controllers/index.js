@@ -1,7 +1,7 @@
 
 
 import * as models from "../../../models";
-import _ from 'loadash';
+import _ from 'lodash';
 
 exports.create = async (req, res)=>{
     const {email} = req.body;

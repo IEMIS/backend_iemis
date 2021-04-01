@@ -4,4 +4,5 @@ import schoolRouter from './schools';
 import studentRouter from './students';
 
 
+//export {adminRouter, districtRouter}
 export {adminRouter, districtRouter, schoolRouter, studentRouter}
