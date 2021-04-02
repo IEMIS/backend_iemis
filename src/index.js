@@ -1,5 +1,4 @@
-
-import express from 'express';
+import express  from 'express';
 import dbConnection from './config';
 const app = express();
 const morgan = require("morgan");
@@ -16,9 +15,7 @@ dbConnection();
 const swagerFile = require('../docs/swagger_output.json');
 
 //import routes 
-import {
-    adminRouter
-} from './app';
+import { adminRouter } from "./app"; 
 
 // middleware -
 app.use(morgan("dev"));

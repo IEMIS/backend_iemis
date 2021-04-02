@@ -1,70 +1,163 @@
 import * as models from  "../../../models";
 import _ from 'loadash';
 
- export const create = async (req, res) =>{
-     const  {code, names, email, district, contact, eduLevel, schoolType,ownership,estabYear  }= req.body 
-     const isSchool = await new models.School.findOne({email})
-     if(isSchool){
+/**
+ * create a new school
+ * @param {*} req 
+ * @param {*} res 
+ */
+export const create = async (req, res) =>{
+    const  {email }= req.body 
+    const isSchool = await new models.School.findOne({email})
+    if(isSchool){
          /***
           * 
           */
         res.status(400).json({"error":"School email already exist"})
-     }
-     const school = new models.School.create({code, names, email, district, contact,eduLevel,schoolType, ownership, estabYear })
-     school.save((err, scho)=>{
-         if(err || !scho){
+    }
+    const schoo = new models.School.create(req.body)
+    schoo.save((err, scho)=>{
+        if(err || !scho){
              /**
               * 
               */
              res.status(405).json({"error":"error in creating a school"})
-         }
+        }
+        res.status(200).json({"message":"school is created", school:scho})
+    })
+}
 
-         res.status(200).json({"message":"school is created", school:scho})
-     })
- }
+/**
+ * get all the school
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+export const schools = async (req, res)=>{
+   const data = await models.School.find()
+   if(!data){
+       /**
+        * docs
+        */
+       return res.status(404).json({error:"fails to get users"})
+   }
+   res.json({message:"schools successfully fetched", data})
+}
 
- export const schools = async(req, res) =>{
-     models.School.find().populate({
-         path:'district', select:'names', options: {limit:5}
-        }).exec((err, school)=>{
-         if(err || school){
-             /**
-              * 
-              */
-
-              res.status(404).json({"error":"schools are not available"})
-         }
-
-         /***
-          * 
-          */
-         res.status(200).json({"message":"successful", "schools":school})
-     })
- }
-
- export const schoolById = async (req, res, next, id) =>{
-    models.School.findById(id).populate('district').exec((err, school)=>{
-        if(err || !school){
+/**
+ * school by Id
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @param {*} id 
+ */
+export const schoolById = async (req, res, next, id) =>{
+    models.School.findById(id).exec((err, data)=>{
+        if(err || !data){
             /**
              * 
              */
             res.status(404).json({"error":"school not found"})
         }
-
-        req.school = school;
+        req.school = data;
         next();
     });
- }
+}
 
- export const updateSchool = async (req, res)=>{
+/**
+ * get Single school via school by Id
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 
- }
+export const school = async(req, res) =>{
+    return res.status(404).json({message:"school successfully fetched", data:req.school})
+}
 
- export const deleteSchool = async (req, res)=>{
+/**
+ * update school via school by Id
+ * @param {*} req 
+ * @param {*} res 
+*/
 
- }
+export const updateSchool = async (req, res)=>{
+    let update = _.extend(req.school,req.body)
+    update.save((err, data)=>{
+        if(err || !data){
+            return res.status(403).json({error:"error in updating school detail", err})
+        }
+        res.status(400).json({message:"school successfully updated", data})
 
- export const schoolByDistrict = async (req, res, next, id)=>{
+    })
+
+}
+
+/**
+  * delete School vai school by Id
+  * @param {*} req 
+  * @param {*} res 
+*/
+
+export const deleteSchool = async (req, res)=>{
+     let schol = req.school;
+     schol.remove((err, data)=>{
+         if(err || !data){
+             return res.status(403).json({error:"fails to delete school", err})
+         }
+         res.status(200).json({message:"school succesfully deleted", data})
+     })
+}
+
+/**
+ * count all the school
+ * @param {*} req 
+ * @param {*} res 
+ */
+
+export const countSchool = async (req, res)=>{
+    let count = await models.School.countDocuments();
+    if(!count){
+        return res.status(404).json({error:"failed to counts schoold"})
+    }
+    res.status(200).json({message:"schools successfully counted", data:count})
+}
+
+
+/**
+ * get district a school by long to via school by Id
+ * @param {*} req 
+ * @param {*} res 
+ */
+export const schoolbelongtoDistrict = async (req, res)=>{
+    let load = req.school;
+    load.populate('district').exec((err, data)=>{
+        console.log({data, err})
+        /**
+         * docs
+         */
+        if(err || !data){
+            return res.status(403).json({error:"fail to get district", err})
+        }
+        res.status(200).json({message:"successfully fetched district school belong to", data})
+    })
+}
+
+export const studentInSchool = async (req, res )=>{
+    const schol = req.school;
+    schol.populate('student').exec((err, student)=>{
+        if(err || !student){
+            /**
+             * 
+             */
+            return res.status(400).json({"error":"fail", err})
+        }
+        let total = student.countDocuments()
+        res.status(200).json({"message":"success", data:{student, total}})
+    })
+}
+
+export const schoolByDistrict = async (req, res, next, id)=>{
      //models.District.findById(id).exec((err, district)=>{
         models.District.findById(id)
         .populate('school')
@@ -81,17 +174,3 @@ import _ from 'loadash';
      })
  }
 
- export const studentInSchool = async (req, res )=>{
-     const school = req.school;
-  
-     school.populate('student').exec((err, student)=>{
-         if(err || !student){
-             /**
-              * 
-              */
-             return res.status(400).json({"error":"fail", err})
-         }
-
-         res.status(200).json({"message":"success", student})
-     })
- }
