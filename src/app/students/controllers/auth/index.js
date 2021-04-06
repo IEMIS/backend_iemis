@@ -25,7 +25,7 @@ exports.signin = async (req, res)=>{
                 }
        } 
     */
-   const isUser = await  Student.findOne({studentId});
+   const isUser = await  models.Student.findOne({studentId});
    if(!isUser){
         /* #swagger.responses[404] = {
                 description: "user not found",
@@ -93,7 +93,7 @@ exports.forgetPassword = async (req, res)=>{
       } 
     */
    const { studentId} = req.body;
-    Student.findOne({studentId}, (err, student)=>{
+    models.Student.findOne({studentId}, (err, student)=>{
        if(err || !student){
             /* 
                 #swagger.responses[404] = {
@@ -163,7 +163,7 @@ exports.resetPassword = async (req, res)=>{
       } 
     */
    const { resetToken,password, passwordConfirmation} = req.body;
-    Student.findOne({resetToken}, (err, student)=>{
+    models.Student.findOne({resetToken}, (err, student)=>{
       if(err || !student){
            /* #swagger.responses[404] = {
                description: "Invalid students Id",

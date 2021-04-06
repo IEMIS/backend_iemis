@@ -10,20 +10,21 @@ import * as models from '../../../models'
 export const create = async (req, res) =>{
     const  {email }= req.body 
     consola.success(req.body)
-    const isSchool = await new models.School.findOne({email})
+    const isSchool = await models.School.findOne({email})
     if(isSchool){
          /***
           * 
           */
         res.status(400).json({"error":"School email already exist"})
     }
-    const schoo = new models.School.create(req.body)
+    const schoo = new models.School(req.body)
     schoo.save((err, scho)=>{
+        consola.success({err, scho})
         if(err || !scho){
              /**
               * 
               */
-             res.status(405).json({"error":"error in creating a school"})
+            return  res.status(405).json({"error":"error in creating a school"})
         }
         res.status(200).json({"message":"school is created", school:scho})
     })
@@ -74,7 +75,7 @@ export const schoolById = async (req, res, next, id) =>{
  */
 
 export const school = async(req, res) =>{
-    return res.status(404).json({message:"school successfully fetched", data:req.school})
+    return res.status(200).json({message:"school successfully fetched", data:req.school})
 }
 
 /**
@@ -89,7 +90,7 @@ export const updateSchool = async (req, res)=>{
         if(err || !data){
             return res.status(403).json({error:"error in updating school detail", err})
         }
-        res.status(400).json({message:"school successfully updated", data})
+        res.status(200).json({message:"school successfully updated", data})
 
     })
 

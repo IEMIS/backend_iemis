@@ -25,7 +25,7 @@ router.get("/schools", DistrictAuth.requiredSignin, DistrictAuth.isSuperAdmin, C
 router.get("/schools/count", DistrictAuth.requiredSignin, DistrictAuth.isSuperAdmin, Ctr.countSchool);
 */
 
-router.post("/schools",   Ctr.create);
+router.post("/schools", Valid.schoolCreator,   Ctr.create);
 router.get("/schools",  Ctr.schools);
 router.get("/schools/count",  Ctr.countSchool);
 
