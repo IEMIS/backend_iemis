@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const expressJwt = require("express-jwt");
 const _ = require("lodash");
+const { v4: uuidv4 } = require('uuid');
 
 import * as models from '../../../../models'
 const Student = require("../../../../models/students")
@@ -25,7 +25,7 @@ exports.signin = async (req, res)=>{
                 }
        } 
     */
-   const isUser = await  Student.findOne({studentId});
+   const isUser = await  models.Student.findOne({studentId});
    if(!isUser){
         /* #swagger.responses[404] = {
                 description: "user not found",
@@ -56,7 +56,7 @@ exports.signin = async (req, res)=>{
     // persist the token as 't' in cookie with expiry date
     res.cookie("t", token, { expire: new Date() + 9999 });
     // retrun response with user and token to frontend client
-    const { _id, firstName, lastName } = user;
+    const { _id, firstName, lastName } = isUser;
 
     /* #swagger.responses[200] = {
                 description: "Login successfully",
@@ -93,7 +93,7 @@ exports.forgetPassword = async (req, res)=>{
       } 
     */
    const { studentId} = req.body;
-    Student.findOne({studentId}, (err, student)=>{
+    models.Student.findOne({studentId}, (err, student)=>{
        if(err || !student){
             /* 
                 #swagger.responses[404] = {
@@ -116,7 +116,29 @@ exports.forgetPassword = async (req, res)=>{
                  }
             } 
         */
-       res.status(200).json({student})
+            const updatedFields = {resetToken:uuidv4()};
+            console.log({student, updatedFields})
+            
+            
+            student = _.extend(student, updatedFields);
+            student.save((er, result)=>{
+                console.log({er, result})
+                if(er || !result){
+                    /**
+                     * docs here
+                     */
+                    return res.status(407).json({error:"error in reseting password", er})
+                }
+                /**
+                 * to do 
+                 * ++++++
+                 * email notifications here
+                 */
+      
+                res.status(200).json({message:`Dear ${result.firstName} password reset request is successful, check your email for details`, result})
+            })
+            
+       //res.status(200).json({student})
    })
     ///res.json(req.body)
 }
@@ -140,8 +162,8 @@ exports.resetPassword = async (req, res)=>{
         }
       } 
     */
-   const { studentId, resetToken,password, passwordConfirmation} = req.body;
-    Student.findOne({studentId}, (err, student)=>{
+   const { resetToken,password, passwordConfirmation} = req.body;
+    models.Student.findOne({resetToken}, (err, student)=>{
       if(err || !student){
            /* #swagger.responses[404] = {
                description: "Invalid students Id",
@@ -183,7 +205,24 @@ exports.resetPassword = async (req, res)=>{
                 }
            } 
        */
-      res.status(200).json({message:"password reset successful, you can now login",student})
+           const updatedFields = {resetToken:'',password};
+           student = _.extend(student, updatedFields);
+           student.save((er, result)=>{
+               if(er || !result){
+                   /**
+                    * docs here
+                    */
+                   return res.status(407).json({error:"error in reseting password", er})
+               }
+               /**
+                * to do 
+                * ++++++
+                * email notifications here
+                */
+     
+               res.status(200).json({message:`Dear ${result.firstName} password reset successful, you can now login`, student})
+           }) 
+      //res.status(200).json({message:"password reset successful, you can now login",student})
     })
     //res.json(req.body)
 }
