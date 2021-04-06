@@ -1,5 +1,6 @@
-import * as models from  "../../../models";
-import _ from 'loadash';
+import _ from 'lodash';
+import consola from 'consola';
+import * as models from '../../../models'
 
 /**
  * create a new school
@@ -8,6 +9,7 @@ import _ from 'loadash';
  */
 export const create = async (req, res) =>{
     const  {email }= req.body 
+    consola.success(req.body)
     const isSchool = await new models.School.findOne({email})
     if(isSchool){
          /***
@@ -156,6 +158,8 @@ export const studentInSchool = async (req, res )=>{
         res.status(200).json({"message":"success", data:{student, total}})
     })
 }
+
+
 
 export const schoolByDistrict = async (req, res, next, id)=>{
      //models.District.findById(id).exec((err, district)=>{

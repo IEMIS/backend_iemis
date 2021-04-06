@@ -15,7 +15,7 @@ dbConnection();
 const swagerFile = require('../docs/swagger_output.json');
 
 //import routes 
-import { adminRouter, districtRouter } from "./app"; 
+import { adminRouter, districtRouter, schoolRouter, studentRouter } from "./app"; 
 
 // middleware -
 app.use(morgan("dev"));
@@ -27,6 +27,8 @@ app.use(cors());
 
 app.use("/api/v1", adminRouter);
 app.use("/api/v1", districtRouter);
+app.use("/api/v1", schoolRouter);
+app.use("/api/v1", studentRouter);
 
 
 app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swagerFile));

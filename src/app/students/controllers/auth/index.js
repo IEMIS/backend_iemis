@@ -3,7 +3,8 @@ require("dotenv").config();
 const expressJwt = require("express-jwt");
 const _ = require("lodash");
 
-const Student = require("../../../models/students")
+import * as models from '../../../../models'
+const Student = require("../../../../models/students")
 
 
 exports.signin = async (req, res)=>{

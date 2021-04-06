@@ -8,7 +8,7 @@ import * as Mid from '../midleware';
 import * as AdminAuth from '../../admin/midleware';
 
 /**
- * Admin services
+ * District login services
  */
 router.post("/district/signin", Auth.signin);
 router.post("/district/forgetPassword", Auth.forgetPassword);
