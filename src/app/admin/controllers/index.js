@@ -90,7 +90,7 @@ exports.update = async (req, res)=>{
             /**
              * 
             */
-           return res.status(403).json({error:"fails to upadte admin", err})
+           return res.status(403).json({error:"fails to update admin", err})
         }
         /**
          * docs
