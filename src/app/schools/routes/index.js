@@ -6,7 +6,7 @@ import * as Ctr from '../controllers/index.js';
 import * as Valid from '../midleware/validator';
 import * as Mid from '../midleware';
 import * as DistrictAuth from '../../district/midleware';
-import { Consola } from 'consola';
+
 
 /**
  * District login services
@@ -43,11 +43,9 @@ router.get("/schools/:schoolId",  Ctr.school);
 router.put("/schools/:schoolId",  Ctr.updateSchool);
 router.delete("/schools/:schoolId",  Ctr.deleteSchool);  
 
-router.get("/schools/get/students/gender", (req, res)=>{
-    Consola({error:"servince is under construction", data:req.body})
+router.get("/schools/get/students/gender",  (req, res)=>{
     return res.status(403).json({error:"servince is under construction", data:req.body})
 });
-
 
 router.get("/schools/get/district/:schoolId",  Ctr.schoolbelongtoDistrict);
 router.get("/schools/get/students/:schoolId",  Ctr.studentInSchool);
