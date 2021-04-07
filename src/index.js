@@ -15,7 +15,7 @@ dbConnection();
 const swagerFile = require('../docs/swagger_output.json');
 
 //import routes 
-import { adminRouter, districtRouter, schoolRouter, studentRouter, teacherRouter } from "./app"; 
+import { adminRouter, districtRouter,examRouter, parentRouter, schoolRouter, sessionRouter, staffRouter, studentRouter, subjectRouter, teacherRouter } from "./app"; 
 
 // middleware -
 app.use(morgan("dev"));
@@ -27,6 +27,12 @@ app.use(cors());
 
 app.use("/api/v1", adminRouter);
 app.use("/api/v1", districtRouter);
+app.use("/api/v1", examRouter);
+app.use("/api/v1", parentRouter);
+app.use("/api/v1", sessionRouter);
+app.use("/api/v1", staffRouter);
+app.use("/api/v1", studentRouter);
+app.use("/api/v1", subjectRouter);
 app.use("/api/v1", schoolRouter);
 app.use("/api/v1", studentRouter);
 app.use("/api/v1", teacherRouter);
