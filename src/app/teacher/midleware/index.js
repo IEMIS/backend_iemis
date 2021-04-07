@@ -17,6 +17,6 @@ exports.Auth = (req, res,next) =>{
 exports.isTeacher = (req, res,next) =>{
     const authorised = req.auth && req.auth.role === "isTeacher"
     console.log(req.auth.role);
-    if(!authorised) return res.status(401).json({error:"you're not have access to this recources"})
+    if(!authorised) return res.status(401).json({error:"you're not permitted access to this resources, contact your head of school"})
     next()
 }

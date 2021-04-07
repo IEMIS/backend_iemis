@@ -1,5 +1,6 @@
 exports.sessionValidator = (req, res, next) => {
-    req.check('names', 'first Name is required').notEmpty();
+    req.check('name', 'session name is required').notEmpty();
+    req.check('slung', 'slung is required').notEmpty();
     
     const errors = req.validationErrors();
     if (errors) {

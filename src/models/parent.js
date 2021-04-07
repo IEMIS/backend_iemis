@@ -32,13 +32,13 @@ const parentSchema = mongoose.Schema({
         address:{
             type: String,
             trim: true,
-            required: true,
+            //required: true,
         },
         occupation:String,
         email:{
             type: String,
             trim: true,
-            required: true,
+           // required: true,
         },
         phone:{
             type:Array,

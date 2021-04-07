@@ -27,7 +27,7 @@ const staffSchema = mongoose.Schema({
     middleName:{
         type: String,
         trim: true,
-        required: true,
+        //required: false,
     },
     lastName:{
         type: String,
@@ -53,7 +53,7 @@ const staffSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    qualification:{
+    designation:{
         type: String,
         trim: true,
         required: true,

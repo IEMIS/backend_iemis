@@ -110,7 +110,7 @@ const schoolSchema = mongoose.Schema({
         observation:[{
             type: String,
             trim: true,
-            required: true,
+            //required: true,
         }]
     }],
     created:Date,

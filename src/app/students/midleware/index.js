@@ -19,6 +19,6 @@ exports.isStudent = (req, res,next) =>{
     const authorised = req.auth && req.auth.role === "student"
     console.log(req.auth.role);
     //return res.json({ userIdfromProfile:req.profile._id, usersToken:req.user._id, authorised})
-    if(!authorised) return res.status(401).json({error:"you're not have access to this recources"})
+    if(!authorised) return res.status(401).json({error:"you're not allowed to access this resources, contact school for more enquiry"})
     next()
 }

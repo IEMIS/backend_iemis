@@ -27,7 +27,7 @@ router.get("/staff",  Ctr.staffs);
 router.get("/staff/count",  Ctr.countStaff);
 
 /**
- * The Dististrci can  
+ * The District can  
  * --read it self 
  * --Update itself
  * --Delete itself
