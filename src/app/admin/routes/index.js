@@ -11,7 +11,8 @@ import * as Mid from '../midleware';
 
 /**
  * Admin services
- */
+ *
+
 router.post("/admin/signin", Auth.signin);
 router.post("/admin/forgetPassword", Auth.forgetPassword);
 router.post("/admin/resetPassword", Auth.resetPassword);
@@ -24,6 +25,20 @@ router.get("/admin/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countAdmin)
 router.get("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admin);
 router.put("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.update);
 router.delete("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.delete);
+*/
+
+router.post("/admin/signin", Auth.signin);
+router.post("/admin/forgetPassword", Auth.forgetPassword);
+router.post("/admin/resetPassword", Auth.resetPassword);
+
+router.post("/admin", Valid.adminCreator,  Ctr.create);
+router.get("/admin", Ctr.admins);
+router.get("/admin/count",  Ctr.countAdmin);
+
+
+router.get("/admin/:adminId",  Ctr.admin);
+router.put("/admin/:adminId",  Ctr.update);
+router.delete("/admin/:adminId", Ctr.delete);
 
 
 

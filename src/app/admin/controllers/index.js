@@ -79,9 +79,9 @@ exports.adminById= async (req, res, next, id)=>{
         next();
     })
 }
+
 exports.update = async (req, res)=>{
-    console.log(req.admin)
-    console.log(req.body)
+
     let admin = _.extend(req.admin, req.body)
     admin.update_at = Date.now();
     admin.save((err, data)=>{

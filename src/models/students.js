@@ -18,17 +18,17 @@ const studentSchema = mongoose.Schema({
     parent:{
         type: ObjectId,
         ref: "Parent",
-        required: true,
+        //required: true,
     },
     exam:{
         type: ObjectId,
         ref: "Exam",
-        required: true,
+        //required: true,
     },
     result:{
         type: ObjectId,
         ref: "Result",
-        required: true,
+        //required: true,
     },
     class:{
         type: ObjectId,
@@ -51,6 +51,7 @@ const studentSchema = mongoose.Schema({
         unique: true
     },
     */
+   
     firstName:{
         type: String,
         trim: true,
