@@ -1,5 +1,5 @@
 exports.subjectValidator = (req, res, next) => {
-    req.check('names', 'first Name is required').notEmpty();
+    req.check('subject_code', 'Subject code is required').notEmpty();
     const errors = req.validationErrors();
     if (errors) {
         const firstError = errors.map(error => error.msg)[0];

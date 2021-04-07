@@ -78,7 +78,7 @@ const teacherSchema = mongoose.Schema({
             ref:"Class"
         }]
     }],
-    subjectSpecialisaion:{
+    subjectSpecialisation:{
         type: String,
         trim: true,
         required: true,
@@ -104,7 +104,7 @@ const teacherSchema = mongoose.Schema({
     // this should decrease automaically after a year
     contractYears:{
         type: Number,
-        required:true,
+        //required:true,
     },
    // Date of retirement if not a contract staff and should be generated and determine either by spending 35years or age is 60years  
     retirementyear: Date,
@@ -136,7 +136,7 @@ const teacherSchema = mongoose.Schema({
     },
     //any administrative role Y/N 
     Engagement:{
-        type: String,
+        type:String,
         trim: true,
         required: true,
     },
@@ -145,7 +145,7 @@ const teacherSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    //Date of Last Workshop attended 
+    //Date of Last Workshop attended, it should be an array or subdocument
     lastWorkshop:{
         type:Date,
         required:true,
