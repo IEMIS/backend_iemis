@@ -1,5 +1,6 @@
 exports.createDistrictValidator = (req, res, next) => {
-    req.check('names', 'first Name is required').notEmpty();
+    req.check('code', 'District Code is required').notEmpty();
+    req.check('names', 'District Name is required').notEmpty();
     req.check('email', 'valid emaill address required')
         .matches(/.+\@.+\..+/)
         .withMessage('valid emaill address required')
