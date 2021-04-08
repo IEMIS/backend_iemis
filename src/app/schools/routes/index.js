@@ -44,7 +44,7 @@ router.put("/schools/:schoolId",  Ctr.updateSchool);
 router.delete("/schools/:schoolId",  Ctr.deleteSchool);  
 
 router.get("/schools/get/students/gender",  (req, res)=>{
-    return res.status(403).json({error:"servince is under construction", data:req.body})
+    return res.status(403).json({error:"service is under construction", data:req.body})
 });
 
 router.get("/schools/get/district/:schoolId",  Ctr.schoolbelongtoDistrict);
