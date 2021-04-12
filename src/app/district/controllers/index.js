@@ -247,9 +247,32 @@ exports.countDistrict = async (req, res)=>{
     })
 }
 
+exports.schoolInDistrict = async (req, res)=>{
+    let d = req.district
+    let {names, email, phone, _id} = d;
+    models.District.findById(_id)
+        .populate('school')
+        .sort({ district: -1, school:-1 })
+        .exec((err, school)=>{
+         if(err || !school){
+             /**
+              * 
+              * 
+              */
+             res.status(404).json({"error":"no School in this district"})
+         }
+
+         res.status(200).json({message:"all school in district ...", school, district:{names, email, phone, _id}})
+
+         //req.schoolInDistrict = school;
+        // next()
+     })
+
+}
+
 exports.countSchoolInDistrict = async (req, res)=>{
     //const {_id} = req.district
-    req.district.populate('school').countDocuments().exec((err, data)=>{
+    req.district.populate('school').exec((err, data)=>{
         if(err || !data){
             /**
              * docs
@@ -297,6 +320,6 @@ exports.countstudentInDistrict = async (req, res)=>{
 }
 
 
-exports.schoolInDistrict = async (req, res)=>{
+exports.schoolInDistrictaa = async (req, res)=>{
     console.log("looking")
 }

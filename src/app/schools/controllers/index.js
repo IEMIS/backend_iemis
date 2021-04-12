@@ -171,11 +171,22 @@ export const schoolByDistrict = async (req, res, next, id)=>{
          if(err || !district){
              /**
               * 
+              * 
               */
              res.status(404).json({"error":"District not exist"})
          }
          req.schoolByDistrict = district;
          next()
      })
- }
+}
+
+export const schoolInDistrcit = async(req, res) =>{
+    return res.status(200).json({message:"school successfully fetched", data:req.schoolByDistrict})
+}
+
+export const schoolInDistrcitCount = async(req, res) =>{
+    //let data = req.schoolByDistrict.countDocuments();
+    //data.countDocuments();
+    return res.status(200).json({message:"school successfully fetched", data:req.schoolByDistrict,})
+}
 

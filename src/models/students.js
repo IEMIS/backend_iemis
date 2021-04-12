@@ -33,12 +33,12 @@ const studentSchema = mongoose.Schema({
     class:{
         type: ObjectId,
         ref: "Class",
-        required: true,
+        //required: true,
     },
     history:{
         type: ObjectId,
         ref: "History",
-        required: true,
+        //required: true,
 
     },
     /*

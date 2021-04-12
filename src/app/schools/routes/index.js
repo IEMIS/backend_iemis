@@ -50,8 +50,13 @@ router.get("/schools/get/students/gender",  (req, res)=>{
 router.get("/schools/get/district/:schoolId",  Ctr.schoolbelongtoDistrict);
 router.get("/schools/get/students/:schoolId",  Ctr.studentInSchool);
 
+router.get("/schools/by/district/:districtId",  Ctr.schoolInDistrcit);
+router.get("/schools/by/district/count/:districtId",  Ctr.schoolInDistrcitCount);
+
+
 
 
 router.param("schoolId", Ctr.schoolById)
+router.param("districtId", Ctr.schoolByDistrict)
 
 export default router;
