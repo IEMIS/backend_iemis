@@ -1,11 +1,11 @@
 exports.studentCreator = (req, res, next) => {
-    req.check('studentcode', 'valid student code is required').notEmpty();
+    req.check('studentCode', 'valid student code is required').notEmpty();
     req.check('school', 'schoolis required').notEmpty();
-    req.check('parent', 'parent is required').notEmpty();
-    req.check('exam', 'exam is required').notEmpty();
-    req.check('result', 'result is required').notEmpty();
-    req.check('class', 'class is required').notEmpty();
-    req.check('history', 'history is required').notEmpty();
+    //req.check('parent', 'parent is required').notEmpty();
+    //req.check('exam', 'exam is required').notEmpty();
+    //req.check('result', 'result is required').notEmpty();
+    //req.check('class', 'class is required').notEmpty();
+    //req.check('history', 'history is required').notEmpty();
     req.check('firstName', 'First Name is required').notEmpty();
     req.check('middleName', 'Middle Name is required').notEmpty();
     req.check('lastName', 'Last Name is required').notEmpty();

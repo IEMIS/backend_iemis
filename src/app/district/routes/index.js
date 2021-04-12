@@ -54,6 +54,9 @@ router.get("/district/student/gender/:districtId", Mid.requiredSignin, Mid.isDis
 //router.get("/district/school/count/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.district);
 */
 router.get("/district/schools/:districtId",  Ctr.schoolInDistrict);
+router.get("/district/students/:districtId",  Ctr.studentInDistrict);
+
+
 router.get("/district/school/count/:districtId",  Ctr.countSchoolInDistrict);
 router.get("/district/staff/count/:districtId",  Ctr.countstaffInDistrict);
 router.get("/district/student/count/:districtId",  Ctr.countstudentInDistrict);

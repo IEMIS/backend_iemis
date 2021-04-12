@@ -263,12 +263,40 @@ exports.schoolInDistrict = async (req, res)=>{
          }
 
          res.status(200).json({message:"all school in district ...", school, district:{names, email, phone, _id}})
-
          //req.schoolInDistrict = school;
         // next()
      })
-
 }
+
+exports.studentInDistrict = async (req, res)=>{
+    let d = req.district
+    console.log({d})
+    let {names, email, phone, _id} = d;
+    models.District.findById(_id)
+        .populate({
+            path:'school',
+            populate:{
+                path:'student'
+            }
+        })
+        //.populate('student')
+        //.sort({ district: -1, school:-1 })
+        .exec((err, students)=>{
+         if(err || !students){
+             /**
+              * 
+              * 
+              */
+             res.status(404).json({"error":"no students in this district"})
+         }
+
+         res.status(200).json({message:"all school in district ...", students, district:{names, email, phone, _id}})
+         //req.schoolInDistrict = school;
+        // next()
+     })
+}
+
+
 
 exports.countSchoolInDistrict = async (req, res)=>{
     //const {_id} = req.district
