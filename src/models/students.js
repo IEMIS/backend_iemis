@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const {ObjectId} = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const studentSchema = mongoose.Schema({
     studentCode:{
@@ -11,32 +12,32 @@ const studentSchema = mongoose.Schema({
         unique: true
     },
     school:{
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "School",
-        //required: true,
+        required: true,
     },
     parent:{
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Parent",
         //required: true,
     },
     exam:{
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Exam",
         //required: true,
     },
     result:{
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Result",
         //required: true,
     },
     class:{
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Class",
         //required: true,
     },
     history:{
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "History",
         //required: true,
 
@@ -127,7 +128,7 @@ const studentSchema = mongoose.Schema({
         type:Array,
         //default: ["Mathematices","English Language","Basic Science", "Social Science","Commercial Study"]
         default: [{
-            type:ObjectId,
+            type:Schema.Types.ObjectId,
             ref:"Subject"
         }]
     },

@@ -250,50 +250,28 @@ exports.countDistrict = async (req, res)=>{
 exports.schoolInDistrict = async (req, res)=>{
     let d = req.district
     let {names, email, phone, _id} = d;
-    models.District.findById(_id)
-        .populate('school')
-        .sort({ district: -1, school:-1 })
-        .exec((err, school)=>{
-         if(err || !school){
-             /**
-              * 
-              * 
-              */
-             res.status(404).json({"error":"no School in this district"})
-         }
-
-         res.status(200).json({message:"all school in district ...", school, district:{names, email, phone, _id}})
-         //req.schoolInDistrict = school;
-        // next()
-     })
+    let total = await models.School.find().where('district').equals(_id).countDocuments()
+    await models.School.find().where('district').equals(_id).sort('names').exec((err, data)=>{
+        if(err || !data){
+            /**
+             * docs
+             */
+            return res.status(404).json({error:`fail to fetch school under ${names} district`, err})
+        }
+        res.status(200).json({message:`Succesffuly fetch schools under ${names} district`, data, total, district:{names, email, phone, _id}})
+    })
 }
 
 exports.studentInDistrict = async (req, res)=>{
     let d = req.district
-    console.log({d})
     let {names, email, phone, _id} = d;
-    models.District.findById(_id)
-        .populate({
-            path:'school',
-            populate:{
-                path:'student'
-            }
-        })
-        //.populate('student')
-        //.sort({ district: -1, school:-1 })
-        .exec((err, students)=>{
-         if(err || !students){
-             /**
-              * 
-              * 
-              */
-             res.status(404).json({"error":"no students in this district"})
-         }
-
-         res.status(200).json({message:"all school in district ...", students, district:{names, email, phone, _id}})
-         //req.schoolInDistrict = school;
-        // next()
-     })
+    let count = await models.School.find().where('district').equals(_id).countDocuments()
+    let student = await models.School.find().where('district').equals(_id).populate('student').exec()
+    console.log({student})
+    models.School.find().where('district').equals(_id)
+    .exec((err, data)=>{
+        return res.json({data, count, district:{_id, names, email, phone} })
+    })
 }
 
 

@@ -9,13 +9,13 @@ import * as models from '../../../models'
  */
 export const create = async (req, res) =>{
     const  {email }= req.body 
-    consola.success(req.body)
+    //consola.success(req.body)
     const isSchool = await models.School.findOne({email})
     if(isSchool){
          /***
           * 
           */
-        res.status(400).json({"error":"School email already exist"})
+        return res.status(400).json({"error":"School email already exist"})
     }
     const schoo = new models.School(req.body)
     schoo.save((err, scho)=>{
@@ -133,8 +133,8 @@ export const countSchool = async (req, res)=>{
  * @param {*} res 
  */
 export const schoolbelongtoDistrict = async (req, res)=>{
-    let load = req.school;
-    load.populate('district').exec((err, data)=>{
+    let {_id} = req.school;
+    models.School.find().populate('district').exec((err, data)=>{
         console.log({data, err})
         /**
          * docs
