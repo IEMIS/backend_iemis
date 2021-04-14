@@ -8,14 +8,15 @@ import * as models from '../../../models'
  * @param {*} res 
  */
 export const create = async (req, res) =>{
-    const  {email}= req.body 
-    consola.success(req.body)
+
+    const  {email }= req.body 
+
     const isSchool = await models.School.findOne({email})
     if(isSchool){
          /***
           * 
           */
-        res.status(400).json({"error":"School email already exist"})
+        return res.status(400).json({"error":"School email already exist"})
     }
     const schoo = new models.School(req.body)
     schoo.save((err, scho)=>{
@@ -133,8 +134,8 @@ export const countSchool = async (req, res)=>{
  * @param {*} res 
  */
 export const schoolbelongtoDistrict = async (req, res)=>{
-    let load = req.school;
-    load.populate('district').exec((err, data)=>{
+    let {_id} = req.school;
+    models.School.find().populate('district').exec((err, data)=>{
         console.log({data, err})
         /**
          * docs
@@ -171,11 +172,22 @@ export const schoolByDistrict = async (req, res, next, id)=>{
          if(err || !district){
              /**
               * 
+              * 
               */
              res.status(404).json({"error":"District not exist"})
          }
          req.schoolByDistrict = district;
          next()
      })
- }
+}
+
+export const schoolInDistrcit = async(req, res) =>{
+    return res.status(200).json({message:"school successfully fetched", data:req.schoolByDistrict})
+}
+
+export const schoolInDistrcitCount = async(req, res) =>{
+    //let data = req.schoolByDistrict.countDocuments();
+    //data.countDocuments();
+    return res.status(200).json({message:"school successfully fetched", data:req.schoolByDistrict,})
+}
 

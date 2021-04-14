@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const { v4: uuidv4 } = require('uuid');
 
 const { ObjectId } = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const schoolSchema = mongoose.Schema({
     code:{
@@ -12,14 +13,14 @@ const schoolSchema = mongoose.Schema({
         unique:true,
     },
     district:{
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "District",
         required: true,
     },
-    student:{
-        type: ObjectId,
+    student:[{
+        type: Schema.Types.ObjectId,
         ref: "Student",
-    },
+    }],
     names:{
         type:String,
         trim:true,
@@ -101,7 +102,7 @@ const schoolSchema = mongoose.Schema({
     
     //school head staff ID
     headID:{
-        type:ObjectId,
+        type:Schema.Types.ObjectId,
         ref:"Teacher",
     },
     //Date of Last Inspection to School
@@ -109,7 +110,7 @@ const schoolSchema = mongoose.Schema({
         specific:Date,
         byWhom:String,
         by:{
-            type:ObjectId,
+            type:Schema.Types.ObjectId,
             ref:"Staff"
         },
         observation:[{

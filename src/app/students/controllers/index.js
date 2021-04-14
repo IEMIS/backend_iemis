@@ -3,32 +3,35 @@ import * as models from '../../../models'
 
 
 exports.create = async (req, res) =>{
-    const {email} = req.body;
+    const {studentCode} = req.body;
     /* 
     *docs
     */
-   const isStudent = await  models.Student.findOne({email});
+
+   const isStudent = await  models.Student.findOne({studentCode});
    if(isStudent){
         /*
         *docs
         */
-       return res.status(400).json({error:"admin already on system, can also signin"})
+       return res.status(400).json({error:"Students already created"})
     }  
+    
     const student = new models.Student(req.body);
     student.save((err, data)=>{
+        //console.log({data, err})
         //console.log({err, data})
         if(err || !data){
             /* 
             */
-            return res.status(401).json({error:"error in creating admin, please try again",err})
+            return res.status(401).json({error:"error in creating student, please try again",err})
         }
             /* 
             */
-        res.status(200).json({message:"admin successfully created, you can now login", data})
+        res.status(200).json({message:"students successfully created, you can now login", data})
     }) 
 }
 
-exports.schoolById= async (req, res, next, id)=>{
+exports.studentById= async (req, res, next, id)=>{
     models.Student.findById(id).exec((err, student)=>{
         //console.log({admin, err})
         if(err || !student){
@@ -48,8 +51,7 @@ exports.update = async (req, res)=>{
     student.save((err, data)=>{
         console.log({err, data})
         if(err){
-            /**
-             * 
+            /*
             */
            return res.status(403).json({error:"fails to update students", err})
         }
@@ -106,6 +108,9 @@ exports.countStudents= async (req, res)=>{
     });
 }
 
+exports.studentByGender = async (req, res)=>{
+
+}
 
 
 

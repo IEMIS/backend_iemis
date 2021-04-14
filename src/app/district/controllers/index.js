@@ -247,9 +247,38 @@ exports.countDistrict = async (req, res)=>{
     })
 }
 
+exports.schoolInDistrict = async (req, res)=>{
+    let d = req.district
+    let {names, email, phone, _id} = d;
+    let total = await models.School.find().where('district').equals(_id).countDocuments()
+    await models.School.find().where('district').equals(_id).sort('names').exec((err, data)=>{
+        if(err || !data){
+            /**
+             * docs
+             */
+            return res.status(404).json({error:`fail to fetch school under ${names} district`, err})
+        }
+        res.status(200).json({message:`Succesffuly fetch schools under ${names} district`, data, total, district:{names, email, phone, _id}})
+    })
+}
+
+exports.studentInDistrict = async (req, res)=>{
+    let d = req.district
+    let {names, email, phone, _id} = d;
+    let count = await models.School.find().where('district').equals(_id).countDocuments()
+    let student = await models.School.find().where('district').equals(_id).populate('student').exec()
+    console.log({student})
+    models.School.find().where('district').equals(_id)
+    .exec((err, data)=>{
+        return res.json({data, count, district:{_id, names, email, phone} })
+    })
+}
+
+
+
 exports.countSchoolInDistrict = async (req, res)=>{
     //const {_id} = req.district
-    req.district.populate('school').countDocuments().exec((err, data)=>{
+    req.district.populate('school').exec((err, data)=>{
         if(err || !data){
             /**
              * docs
@@ -297,7 +326,6 @@ exports.countstudentInDistrict = async (req, res)=>{
 }
 
 
-exports.schoolInDistrict = async (req, res)=>{
+exports.schoolInDistrictaa = async (req, res)=>{
     console.log("looking")
-    
 }

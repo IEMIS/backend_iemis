@@ -13,15 +13,16 @@ exports.schoolCreator = (req, res, next) => {
             max: 32
         });
 
-    req.check('fax', 'valid school fax number is required').notEmpty();
-    req.check('mailBox', 'Mailing Address is missing').notEmpty();
+
+    //req.check('contact.fax', 'valid school fax number is required').notEmpty();
+    //req.check('contact.mailBox', 'Mailing Address is missing').notEmpty();
     //minimum phone digit in fiji is 7
-     req.check('phone','enter a phone number').notEmpty();
-     req.check('phone')
-        .isLength({min:7}).withMessage('phone number must be valid')
-        .matches(/\d/).withMessage('phone number must be a plain number');
-    req.check('address', 'school address is required').notEmpty();
-    req.check('province', 'province is required').notEmpty();
+     //req.check('contact.phone','enter a phone number').notEmpty();
+     //req.check('contact.phone')
+     //   .isLength({min:7}).withMessage('phone number must be valid')
+    //    .matches(/\d/).withMessage('phone number must be a plain number');
+    //req.check('contact.province', 'province is required').notEmpty();
+
     req.check('eduLevel', 'Education Level is required').notEmpty();
     req.check('ownership', 'ownership is required').notEmpty();
     req.check('estabYear', 'Establishment Year is missing').notEmpty();
@@ -33,11 +34,12 @@ exports.schoolCreator = (req, res, next) => {
         .withMessage('Password must contain at least 6 characters')
         .matches(/\d/)
         .withMessage('Password must contain a number');
+
+        //minimum phone digit in fiji is 7
     const errors = req.validationErrors();
     if (errors) {
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }
     next();
-
 };

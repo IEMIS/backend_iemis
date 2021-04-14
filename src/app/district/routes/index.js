@@ -20,11 +20,18 @@ router.post("/district/resetPassword", Auth.resetPassword);
  *  ---Read all the district
  *  ---count total numbers of district
  * 
- */
-
-router.post("/district", Valid.createDistrictValidator, AdminAuth.requiredSignin, AdminAuth.isSuperAdmin, Ctr.create);
+ * 
+ * router.post("/district", Valid.createDistrictValidator, AdminAuth.requiredSignin, AdminAuth.isSuperAdmin, Ctr.create);
 router.get("/district", AdminAuth.requiredSignin, AdminAuth.isSuperAdmin, Ctr.districts);
 router.get("/district/count", AdminAuth.requiredSignin, AdminAuth.isSuperAdmin, Ctr.countDistrict);
+ * 
+ */
+
+router.post("/district", Valid.createDistrictValidator, Ctr.create);
+router.get("/district",  Ctr.districts);
+router.get("/district/count",  Ctr.countDistrict);
+
+
 
 /**
  * The District can 
@@ -39,12 +46,23 @@ router.get("/district/count", AdminAuth.requiredSignin, AdminAuth.isSuperAdmin, 
 router.get("/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.district);
 router.put("/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.update);
 router.delete("/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.delete);  //countSchoolInDistrict
-
+/*
 router.get("/district/school/count/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.countSchoolInDistrict);
 router.get("/district/staff/count/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.countstaffInDistrict);
 router.get("/district/student/count/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.countstudentInDistrict);
 router.get("/district/student/gender/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.countstudentInDistrict);
 //router.get("/district/school/count/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.district);
+*/
+
+router.get("/district/schools/:districtId",  Ctr.schoolInDistrict);
+router.get("/district/students/:districtId",  Ctr.studentInDistrict);
+
+
+router.get("/district/school/count/:districtId",  Ctr.countSchoolInDistrict);
+router.get("/district/staff/count/:districtId",  Ctr.countstaffInDistrict);
+router.get("/district/student/count/:districtId",  Ctr.countstudentInDistrict);
+router.get("/district/student/gender/:districtId",  Ctr.countstudentInDistrict);
+
 
 
 

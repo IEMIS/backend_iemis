@@ -20,12 +20,15 @@ router.post("/students/resetPassword", Auth.resetPassword);
  router.post("/students", Valid.studentCreator, Ctr.create);
  router.get("/students", Ctr.students);
 
- router.get("/students/get/all", Ctr.countStudents);
+ 
  router.delete("/students/:studentId", Ctr.delete);
  router.get("/students/:studentId", Ctr.students);
  router.put("/students/:studentId", Ctr.update);
 
+ router.get("/students/get/count", Ctr.countStudents);
+ router.get("/students/get/gender", Ctr.studentByGender);
 
-router.param("studentId", Ctr.schoolById)
+
+router.param("studentId", Ctr.studentById)
 
 export default router;
