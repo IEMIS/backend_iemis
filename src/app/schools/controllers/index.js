@@ -9,6 +9,7 @@ import * as models from '../../../models'
  */
 export const create = async (req, res) =>{
     const  {email}= req.body 
+
     const isSchool = await models.School.findOne({email})
     if(isSchool){
          /***
