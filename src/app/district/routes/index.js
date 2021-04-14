@@ -16,7 +16,7 @@ router.post("/district/resetPassword", Auth.resetPassword);
 
 /**
  * Only Admin can 
- *  ---create District 
+ *  ---create District  ********district admin must not create district************** 
  *  ---Read all the district
  *  ---count total numbers of district
  * 
@@ -34,7 +34,7 @@ router.get("/district/count",  Ctr.countDistrict);
 
 
 /**
- * The Dististrci can  
+ * The District can 
  * --read it self 
  * --Update itself
  * --Delete itself
