@@ -160,7 +160,7 @@ exports.countAdmin= async (req, res)=>{
 
 
 exports.createDistric = async (req, res)=>{
-    const {email, password, name, phone} = req.body;
+    const {email, password, names,code, address, phone} = req.body;
     /* 
       #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
@@ -189,7 +189,7 @@ exports.createDistric = async (req, res)=>{
         */
        return res.status(400).json({error:"District already created"})
     }  
-    const district = new District({email, password, phone, name});
+    const district = new District({email,code,address, password, phone, names});
     district.save((err, data)=>{
         console.log({err, data})
         if(err || !data){

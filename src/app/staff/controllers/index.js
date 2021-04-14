@@ -8,7 +8,7 @@ exports.create = async (req, res)=>{
     /*
     */
    const isStaff = await  models.Staff.findOne({email});
-   if(!isStaff){
+   if(isStaff){
         /*
         */
        return res.status(400).json({error:"staff already created"})

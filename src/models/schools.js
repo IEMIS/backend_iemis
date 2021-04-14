@@ -36,8 +36,8 @@ const schoolSchema = mongoose.Schema({
         fax:{
             type:String,
             trim:true,
-            required:false,
-            unique:true,
+             required:true,
+             unique:true,
         },
         mailBox:{
             type:String,
@@ -49,6 +49,11 @@ const schoolSchema = mongoose.Schema({
             trim:true,
             required:true,
             unique:true,
+        },
+        province:{
+            type: String,
+            trim: true,
+            required: true,
         },
         province:{
             type: String,
@@ -75,7 +80,7 @@ const schoolSchema = mongoose.Schema({
         trim:true,
         required:true,
     },
-    //Year of Establishment
+    //Year of Establishment /MM/YYYY
     estabYear:{
         type:Date,
         required:true,
