@@ -122,6 +122,7 @@ const schoolSchema = mongoose.Schema({
     created:Date,
     updated_at:Date,
     salt:String,
+    resetToken:String,
     hashed_password:{
         type: String,
         trim: true,

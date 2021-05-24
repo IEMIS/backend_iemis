@@ -119,7 +119,7 @@ exports.admin = async (req, res) =>{
     req.admin.salt= undefined
     req.admin.resetToken = undefined
     req.admin.hashed_password = undefined
-    res.status(200).json(req.admin)
+    res.status(200).json({message:"admin successfully fetched", data:req.admin})
 }
 
 exports.admins = async (req, res) =>{
