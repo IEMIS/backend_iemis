@@ -35,7 +35,7 @@ exports.create = async (req, res)=>{
     }  
     const district = new models.District(req.body);
     district.save((err, data)=>{
-        console.log({err, data})
+        //console.log({err, data})
         if(err || !data){
 
             /* 
@@ -70,7 +70,7 @@ exports.districts = async (req, res)=>{
     /* 
     *
     */
-   models.District.find((err, data)=>{
+    models.District.find((err, data)=>{
        if(err || !data){
            /* #swagger.responses[404] = {
                 description: "Find all the district",
@@ -103,8 +103,8 @@ exports.districts = async (req, res)=>{
                 }
             } 
         */
-       return res.status(200).json({"mesage":"Disrict is successfully fetched",data})
-   })
+       return res.status(200).json({"message":"Disrict is successfully fetched",data})
+    })
 }
 
 exports.districtById= async (req, res, next,id)=>{
@@ -133,7 +133,6 @@ exports.districtById= async (req, res, next,id)=>{
 
 exports.district = async (req, res)=>{
     // #swagger.start
-    //const {_id, names, phone, email} = req.district;
 
     /* 
        #swagger.tags = ['Admin services']
@@ -153,7 +152,6 @@ exports.district = async (req, res)=>{
         } 
     */
     res.status(200).json({message:"district succesfully fetched", data:req.district})
-    // #swagger.end
 }
 
 exports.update = async (req, res) => {
@@ -193,6 +191,7 @@ exports.update = async (req, res) => {
         res.json({data,message:"district succesfully updated"})
     })
 };
+
 
 exports.delete = async (req, res) => {
     /* 

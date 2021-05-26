@@ -85,7 +85,7 @@ exports.update = async (req, res)=>{
     let admin = _.extend(req.admin, req.body)
     admin.update_at = Date.now();
     admin.save((err, data)=>{
-        console.log({err, data})
+        //console.log({err, data})
         if(err){
             /**
              * 
