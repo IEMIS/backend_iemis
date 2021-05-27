@@ -6,7 +6,6 @@ const { ObjectId } = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const districtSchema = mongoose.Schema({
-    _id: Schema.Types.ObjectId,
     code:{
         type: String,
         trim: true,
@@ -38,10 +37,10 @@ const districtSchema = mongoose.Schema({
         type:Schema.Types.ObjectId,
         ref:"School"
     }],
-    staffs:{
+    staffs:[{
         type:Schema.Types.ObjectId,
         ref:"Staff"
-    },
+    }],
     status:{
         type:Boolean,
         default:false,
