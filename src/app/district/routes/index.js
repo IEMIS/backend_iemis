@@ -43,10 +43,15 @@ router.get("/district/count",  Ctr.countDistrict);
  * --can can the students in it district 
  * 
  */
+router.get("/district/:districtId",  Ctr.district);
+router.put("/district/:districtId",  Ctr.update);
+router.delete("/district/:districtId",  Ctr.delete);  //countSchoolInDistrict
+/*
 router.get("/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.district);
 router.put("/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.update);
-router.delete("/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.delete);  //countSchoolInDistrict
-/*
+router.delete("/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.delete); 
+
+
 router.get("/district/school/count/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.countSchoolInDistrict);
 router.get("/district/staff/count/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.countstaffInDistrict);
 router.get("/district/student/count/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.countstudentInDistrict);
