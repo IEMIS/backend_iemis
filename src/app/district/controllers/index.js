@@ -79,7 +79,7 @@ exports.districts = async (req, res)=>{
                 }
             } 
             */
-           return res.status(404).json({error:"Disrict is not available",err})
+           return res.status(404).json({error:"District is not available",err})
         }
         /*
             #swagger.responses[200] = {
@@ -103,7 +103,7 @@ exports.districts = async (req, res)=>{
                 }
             } 
         */
-       return res.status(200).json({"message":"Disrict is successfully fetched",data})
+       return res.status(200).json({"message":"District is successfully fetched",data})
     })
 }
 
@@ -171,7 +171,7 @@ exports.update = async (req, res) => {
                 }
             } 
             */
-            return res.json({error: "error in update district"})
+            return res.json({error: "error in updating district"})
         }
 
         /* 
