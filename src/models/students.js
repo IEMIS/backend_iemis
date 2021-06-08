@@ -99,11 +99,14 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
+    // address of parent is enough
+    /*
     address:{
         type: String,
         trim: true,
         required: true,
     },
+    */
     disability:{
         type: Array,
         default:[],
@@ -112,6 +115,11 @@ const studentSchema = mongoose.Schema({
         type:Date,
     },
     presentClass:{
+        type: String,
+        trim: true,
+        required: true,
+    },
+    stream:{
         type: String,
         trim: true,
         required: true,
