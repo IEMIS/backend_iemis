@@ -61,7 +61,7 @@ const studentSchema = mongoose.Schema({
     middleName:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     lastName:{
         type: String,
@@ -126,6 +126,8 @@ const studentSchema = mongoose.Schema({
     },
     /****
      * HadEce, Please can you explaining the field sir
+     * 
+     * Please this section is only for Primary Section and it is yes or no checkbox input
      */
     HadEce:{
         type: String,
