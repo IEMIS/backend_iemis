@@ -37,7 +37,7 @@ const staffSchema = mongoose.Schema({
     title:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     gender:{
         type: String,
