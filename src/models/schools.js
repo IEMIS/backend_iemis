@@ -55,12 +55,6 @@ const schoolSchema = mongoose.Schema({
             trim: true,
             required: true,
         },
-    
-       /* province:{
-            type: String,
-            trim: true,
-            required: true,
-        },*/
     }],
     
     //ECE, Primary, Secondary, Technical Educ
