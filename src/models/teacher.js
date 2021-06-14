@@ -23,7 +23,7 @@ const teacherSchema = mongoose.Schema({
     middleName:{
         type: String,
         trim: true,
-        required: true,
+       // required: true,
     },
     lastName:{
         type: String,
@@ -50,9 +50,8 @@ const teacherSchema = mongoose.Schema({
         required: true,
     },
     qualification:{
-        type: String,
-        trim: true,
-        required: true,
+        type:Array,
+        default:["Mathematices",],
     },
     email:{
         type: String,
@@ -99,7 +98,7 @@ const teacherSchema = mongoose.Schema({
     },
     lastPosting:{
         type:Date,
-        required:true,
+        //required:true,
     },
     // this should decrease automaically after a year
     contractYears:{
@@ -127,18 +126,18 @@ const teacherSchema = mongoose.Schema({
     teachingTypes:{
         type: String,
         trim: true,
-        required: true,
+       // required: true,
     },
     teachingPeriodWK:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     //any administrative role Y/N 
     Engagement:{
         type:String,
         trim: true,
-        required: true,
+        //required: true,
     },
     session:{
         type: String,
@@ -148,7 +147,7 @@ const teacherSchema = mongoose.Schema({
     //Date of Last Workshop attended, it should be an array or subdocument
     lastWorkshop:{
         type:Date,
-        required:true,
+        //required:true,
     },
 
     created:Date,
