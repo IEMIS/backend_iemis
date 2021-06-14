@@ -55,7 +55,7 @@ const schoolSchema = mongoose.Schema({
             trim: true,
             required: true,
         },
-        province:{
+        address:{
             type: String,
             trim: true,
             required: true,
