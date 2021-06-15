@@ -497,7 +497,7 @@ exports.forgetPassword = async (req, res)=>{
                                                 <table role="presentation" style="border-collapse:separate;line-height:100%;" cellspacing="0" cellpadding="0" border="0">
                                                   <tbody><tr>
                                                     <td role="presentation" style="border:none;border-radius:3px;cursor:auto;mso-padding-alt:10px 25px;background:#ea4a40;" valign="middle" bgcolor="#ea4a40" align="center">
-                                                      <a href="https://google.com" style="display: inline-block; background: #ea4a40; color: #ffffff; font-family: Alata; font-size: 14px; font-weight: bold; line-height: 30px; margin: 0; text-decoration: none; text-transform: uppercase; padding: 10px 25px; mso-padding-alt: 0px; border-radius: 3px;" target="_blank"> Reset your password </a>
+                                                      <a href="" style="display: inline-block; background: #ea4a40; color: #ffffff; font-family: Alata; font-size: 14px; font-weight: bold; line-height: 30px; margin: 0; text-decoration: none; text-transform: uppercase; padding: 10px 25px; mso-padding-alt: 0px; border-radius: 3px;" target="_blank"> Reset your password </a>
                                                     </td>
                                                   </tr>
                                                 </tbody></table>
