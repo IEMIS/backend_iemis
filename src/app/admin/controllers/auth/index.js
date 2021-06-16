@@ -104,9 +104,7 @@ exports.forgetPassword = async (req, res)=>{
             */
            return res.status(404).json({error:"invalid email"});
         }
-        
         const updatedFields = {resetToken:uuidv4()};
-        //console.log({admin, updatedFields})
         admin = _.extend(admin, updatedFields);
         admin.save((er, result)=>{
             //console.log({er, result})
@@ -116,7 +114,8 @@ exports.forgetPassword = async (req, res)=>{
                 */
                 return res.status(407).json({error:"error in reseting password", er})
             }
-
+            
+            console.log({admin})
             const forgetEmail = {
                 from : "noreply@iemis.org",
                 to:admin.email,
@@ -798,7 +797,6 @@ exports.forgetPassword = async (req, res)=>{
                 
                 </body></html>`,
             }
-
             sendEmail(forgetEmail);
             
             /* #swagger.responses[200] = {
