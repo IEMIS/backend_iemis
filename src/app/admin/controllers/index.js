@@ -697,21 +697,46 @@ exports.students = async (req, res) =>{
     res.status(200).json({message:"students successfully fetched", data:students})
 }
 
-exports.countStudents= async (req, res)=>{
+exports.countStudent= async (req, res)=>{
+    models.Student.aggregate([
+        //{ $match: { gender:'Male'} },
+        {
+            $group: {
+               _id: "gender",
+               count: { $sum: 1 }
+            }
+        }
+        ,
+            function(err, resp){
+                console.log({err, resp})
+            }
+    ])//.exec((err, resp)=>{console.log({err, resp})})
+    
+    /*
+      {$group:
+            {_id:'gender', total:{$sum:1}}
+        }, 
+        function (err, result){
+            if(err){
+                console.log(err)
+            }
+            console.log(result)
+        }
+
     models.Student.countDocuments().exec((err, result)=>{
         if(err || !result){
             /**
              * docs for not count
-             */
+             *
             return res.status(404).json({error:"fails to count documents", err})
+            *
         }
         res.status(200).json({message:"students successfully count", data:result})
     });
-}
-
-exports.studentByGender = async (req, res)=>{
+    */
 
 }
+
 
 
 
