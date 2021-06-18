@@ -699,42 +699,77 @@ exports.students = async (req, res) =>{
 
 exports.countStudent= async (req, res)=>{
     models.Student.aggregate([
-        //{ $match: { gender:'Male'} },
         {
             $group: {
-               _id: "gender",
+               _id: "$gender",
                count: { $sum: 1 }
             }
         }
-        ,
-            function(err, resp){
-                console.log({err, resp})
-            }
-    ])//.exec((err, resp)=>{console.log({err, resp})})
-    
-    /*
-      {$group:
-            {_id:'gender', total:{$sum:1}}
-        }, 
-        function (err, result){
-            if(err){
-                console.log(err)
-            }
-            console.log(result)
-        }
+    ])
+    .exec((err, resp)=>{
+        if(err ) return res.status(400).json({error:"error in count students by gender"})
+        return res.json({message:"students successfully counted by gender",data:resp })
+    })
+}
 
-    models.Student.countDocuments().exec((err, result)=>{
-        if(err || !result){
-            /**
-             * docs for not count
-             *
-            return res.status(404).json({error:"fails to count documents", err})
-            *
+exports.countStudentByYear = async (req, res)=>{
+    models.Student.aggregate([
+        {
+            $group: {
+                _id: "$yearAdmission",
+                count:{$sum:1}
+            }
         }
-        res.status(200).json({message:"students successfully count", data:result})
-    });
-    */
+    ])
+    .exec((err, resp)=>{
+        if(err ) return res.status(400).json({error:"error in count students by year of Admission"})
+        return res.json({message:"students successfully counted by year of Admission",data:resp })
+    })
+}
 
+exports.countStudentByClass = async (req, res)=>{
+    models.Student.aggregate([
+        {
+            $group: {
+                _id: "$class",
+                count:{$sum:1}
+            }
+        }
+    ])
+    .exec((err, resp)=>{
+        if(err ) return res.status(400).json({error:"error in count students by Class"})
+        return res.json({message:"students successfully counted by Class",data:resp })
+    })
+}
+
+exports.countStudentByProvidence = async (req, res)=>{
+    models.Student.aggregate([
+        {
+            $group: {
+                _id: "$yearAdmission",
+                count:{$sum:1}
+            }
+        }
+    ])
+    .exec((err, resp)=>{
+        if(err ) return res.status(400).json({error:"error in count students by Providence"})
+        return res.json({message:"students successfully counted by Providence",data:resp })
+    })
+}
+
+exports.countStudentBySearch = async (req, res)=>{
+    models.Student.aggregate([
+        {
+            $group: {
+                _id: req.body,
+                count:{$sum:1}
+            }
+        }
+    ])
+    .exec((err, resp)=>{
+        if(err ) return res.status(400).json({error:"error in count students by Search"})
+        return res.json({message:"students successfully counted by searching",data:resp })
+    })
 }
 
 
