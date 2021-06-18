@@ -81,7 +81,6 @@ exports.adminById= async (req, res, next, id)=>{
 }
 
 exports.update = async (req, res)=>{
-
     let admin = _.extend(req.admin, req.body)
     admin.update_at = Date.now();
     admin.save((err, data)=>{
@@ -143,27 +142,13 @@ exports.countAdmin= async (req, res)=>{
         }
         res.status(200).json({message:"admin successfully count", data:result})
     });
-
-    /*
-    const count =await  models.Admin.aggregate(_id).exec((err, result)=>{
-
-        if(err || !result){
-            /**
-             * docs for not count
-             *
-            return res.status(404).json({error:"fails to count documents", err})
-        }
-        res.status(200).json({message:"admin successfully count", data:result})
-    })
-    */
 }
 
 
 /***
  * District services for Admin 
- */
-
- exports.createDistric = async (req, res)=>{
+*/
+exports.createDistric = async (req, res)=>{
     const {email} = req.body;
     /* 
       #swagger.tags = ['Admin services']
@@ -293,7 +278,6 @@ exports.districtById= async (req, res, next,id)=>{
 
 exports.district = async (req, res)=>{
     // #swagger.start
-
     /* 
        #swagger.tags = ['Admin services']
        #swagger.description = 'Endpoint to create a new district'  
@@ -533,6 +517,53 @@ export const countSchool = async (req, res)=>{
     }
     res.status(200).json({message:"schools successfully counted", data:count})
 }
+
+export const countSchoolByDistrict = async (req, res) =>{
+    models.School.aggregate([
+        {
+            $group : {
+                _id:"$district", count:{$sum:1}
+            },
+        },
+        { $sort: { count: -1 } },
+    ])
+    .exec((err, resp)=>{
+        if(err) return res.status(400).json({error:"failed to count school by district"})
+        return res.json({message:"schools counted by district",data:resp})
+    })
+}
+
+export const countSchoolByEduLevel = async (req, res) =>{
+    models.School.aggregate([
+        {
+            $group : {
+                _id:"$eduLevel", count:{$sum:1}
+            },
+        },
+        { $sort: { count: -1 } },
+    ])
+    .exec((err, resp)=>{
+        if(err) return res.status(400).json({error:"failed to count school by Edu Level"})
+        return res.json({message:"schools counted by edu level ",data:resp})
+    })
+}
+
+export const countSchoolByOwnerShip= async (req, res) =>{
+    models.School.aggregate([
+        {
+            $group : {
+                _id:"$ownership", count:{$sum:1}
+            },
+        },
+        { $sort: { count: -1 } },
+    ])
+    .exec((err, resp)=>{
+        if(err) return res.status(400).json({error:"failed to count school by Ownership"})
+        return res.json({message:"schools counted by OwnerShip ",data:resp})
+    })
+}
+
+
 
 
 /**

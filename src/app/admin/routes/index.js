@@ -6,20 +6,6 @@ import * as Ctr from '../controllers';
 import * as Valid from '../midleware/validator';
 import * as Mid from '../midleware';
 
-/**
- * Admin services
-*/
-router.post("/admin/signin", Auth.signin);
-router.post("/admin/forgetPassword", Auth.forgetPassword);
-router.post("/admin/resetPassword", Auth.resetPassword);
-router.post("/admin", Valid.adminCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.create);
-router.get("/admin", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admins);
-router.get("/admin/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countAdmin);
-router.get("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admin);
-router.put("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.update);
-router.delete("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.delete);
-
-
 /***
  *  District Services
 */
@@ -35,11 +21,16 @@ router.get("/admin/district/data/count", Mid.requiredSignin, Mid.isSuperAdmin,Ct
 */
 
 router.get("/admin/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
-router.get("/admin/school", Valid.schoolCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSchool);
+//router.get("/admin/school",  Ctr.schools);
+router.post("/admin/school", Valid.schoolCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSchool);
 router.get("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.school);
 router.put("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateSchool);
 router.delete("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteSchool);
 router.get("/admin/school/data/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countSchool);
+router.get("/admin/school/data/count/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countSchoolByDistrict);
+router.get("/admin/school/data/count/edulevel", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countSchoolByEduLevel);
+//router.get("/admin/school/data/count/ownership", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countSchoolByOwnerShip);
+router.get("/admin/school/data/count/ownership",  Ctr.countSchoolByOwnerShip);
 
 /**
  *  Student Services 
@@ -56,6 +47,23 @@ router.get("/admin/student/data/count/yearadmission", Mid.requiredSignin, Mid.is
 router.get("/admin/student/data/count/providence", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByProvidence)
 router.get("/admin/student/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentBySearch)
 router.get("/admin/student/data/count", Ctr.countStudent)
+
+
+
+
+
+/**
+ * Admin services
+*/
+router.post("/admin/signin", Auth.signin);
+router.post("/admin/forgetPassword", Auth.forgetPassword);
+router.post("/admin/resetPassword", Auth.resetPassword);
+router.post("/admin", Valid.adminCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.create);
+router.get("/admin", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admins);
+router.get("/admin/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countAdmin);
+router.get("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admin);
+router.put("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.update);
+router.delete("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.delete);
 
 
 
