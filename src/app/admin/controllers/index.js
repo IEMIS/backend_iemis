@@ -578,6 +578,21 @@ export const countSchoolByType= async (req, res) =>{
     })
 }
 
+export const countSchoolByCat= async (req, res) =>{
+    models.School.aggregate([
+        {
+            $group : {
+                _id:"$schoolCat", count:{$sum:1}
+            },
+        },
+        { $sort: { count: -1 } },
+    ])
+    .exec((err, resp)=>{
+        if(err) return res.status(400).json({error:"failed to count school by type"})
+        return res.json({message:"schools counted by Type ",data:resp})
+    })
+}
+
 
 
 
