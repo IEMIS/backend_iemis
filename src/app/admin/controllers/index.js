@@ -563,6 +563,21 @@ export const countSchoolByOwnerShip= async (req, res) =>{
     })
 }
 
+export const countSchoolByType= async (req, res) =>{
+    models.School.aggregate([
+        {
+            $group : {
+                _id:"$schoolType", count:{$sum:1}
+            },
+        },
+        { $sort: { count: -1 } },
+    ])
+    .exec((err, resp)=>{
+        if(err) return res.status(400).json({error:"failed to count school by type"})
+        return res.json({message:"schools counted by Type ",data:resp})
+    })
+}
+
 
 
 
@@ -598,9 +613,6 @@ export const studentInSchool = async (req, res )=>{
         res.status(200).json({"message":"success", data:{student, total}})
     })
 }
-
-
-
 export const schoolByDistrict = async (req, res, next, id)=>{
      //models.District.findById(id).exec((err, district)=>{
         models.District.findById(id)
@@ -618,11 +630,9 @@ export const schoolByDistrict = async (req, res, next, id)=>{
          next()
      })
 }
-
 export const schoolInDistrcit = async(req, res) =>{
     return res.status(200).json({message:"school successfully fetched", data:req.schoolByDistrict})
 }
-
 export const schoolInDistrcitCount = async(req, res) =>{
     //let data = req.schoolByDistrict.countDocuments();
     //data.countDocuments();
@@ -728,7 +738,13 @@ exports.students = async (req, res) =>{
     res.status(200).json({message:"students successfully fetched", data:students})
 }
 
-exports.countStudent= async (req, res)=>{
+exports.countStudent = async (req, res)=>{
+    const count = await models.Student.countDocuments();
+    if(!count) return res.status(400).json({erroe:"failed to count student"})
+    return res.json({message:"Students successfully fetched", count})
+}
+
+exports.countStudentByGender= async (req, res)=>{
     models.Student.aggregate([
         {
             $group: {
@@ -803,8 +819,51 @@ exports.countStudentBySearch = async (req, res)=>{
     })
 }
 
+/***
+ * Admin Session services
+*/
+exports.createSession = async (req, res)=>{
+    const session = new models.Session(req.body);
+    session.save((err, data)=>{
+        if(err) return res.status(400).json({error:"failed to create new session"});
+        return res.status(200).json({message:"session successfully created", data})
+    })
+}
 
+exports.sessionById = async (req, res, next, id)=>{
+    models.Session.findById(id).exec((err, data)=>{
+        if(err || !data) return res.status(400).json({error:"failed to get session", err})
+        req.session =data;
+        next()
+    })
+}
 
+exports.sessions = async (req, res) =>{
+    const data = await models.Session.find();
+    if(!data) return res.status(400).json({error:"failed to fetch the list of the session"})
+    return res.json({message:"session successfully fetched", data})
+}
+
+exports.session = async (req, res)=>{
+    return res.json(req.session)
+}
+
+exports.updateSession = async (req, res)=>{
+    const session = _.extend(req.session, req.body);
+    session.updated_At = Date.now();
+    session.save((err, data)=>{
+        if(err || !data) return res.status(400).json({error:"failed to update session record"})
+        return res.json({message:"session successfully updated", data})
+    })
+}
+
+exports.deleteSession = async (req, res)=>{
+    const session = req.session;
+    session.remove((err, data)=>{
+        if(err) return res.status(400).json({error:"failed to remove the session", err})
+        return res.json({message:"session is successfully delete", data})
+    })
+}
 
 
 
