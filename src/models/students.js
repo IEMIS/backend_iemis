@@ -11,16 +11,18 @@ const studentSchema = mongoose.Schema({
         required: true,
         unique: true
     },
+    /*
     school:{
         type: Schema.Types.ObjectId,
         ref: "School",
-        required: true,
+        //required: true,
     },
     parent:{
         type: Schema.Types.ObjectId,
         ref: "Parent",
         //required: true,
     },
+    */
     exam:{
         type: Schema.Types.ObjectId,
         ref: "Exam",
@@ -71,7 +73,7 @@ const studentSchema = mongoose.Schema({
     religion:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     gender:{
         type: String,
@@ -80,24 +82,24 @@ const studentSchema = mongoose.Schema({
     },
     dob:{
         type:Date,
-        required:true,
+        //required:true,
     },
     //age to be generated based on dob
    // age:Number,
     country:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     ethnicity:{
         type: String,
         trim: true,
-        required: true,
+       // required: true,
     },
     province:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     // address of parent is enough
     /*
@@ -117,12 +119,12 @@ const studentSchema = mongoose.Schema({
     presentClass:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     stream:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     /****
      * HadEce, Please can you explaining the field sir
@@ -132,7 +134,7 @@ const studentSchema = mongoose.Schema({
     HadEce:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     subject:{
         type:Array,
@@ -145,17 +147,17 @@ const studentSchema = mongoose.Schema({
     status:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     session:{
         type: String,
         trim: true,
-        required: true,
+        ///required: true,
     },
     hashed_password:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     salt:String,
 });

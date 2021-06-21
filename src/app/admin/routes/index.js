@@ -26,7 +26,6 @@ router.get("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.
 router.put("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateSchool);
 router.delete("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteSchool);
 router.get("/admin/school/data/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countSchool);
-router.get("/admin/school/data/count/district",  Ctr.countSchoolByDistrict);
 router.get("/admin/school/data/count/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countSchoolByDistrict);
 router.get("/admin/school/data/count/edulevel", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countSchoolByEduLevel);
 router.get("/admin/school/data/count/ownership", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countSchoolByOwnerShip);
@@ -43,9 +42,11 @@ router.get("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr
 router.put("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateStudent)
 router.delete("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteStudent)
 router.get("/admin/student/data/count",  Ctr.countStudent)
-//router.get("/admin/student/data/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudent)
+router.get("/admin/student/data/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudent)
+router.get("/admin/student/data/count/gender",  Ctr.countStudentByGender)
 router.get("/admin/student/data/count/gender", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByGender)
-router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByClass)
+router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdmin,  Ctr.countStudentByClassAll)
+//router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByClass)
 router.get("/admin/student/data/count/yearadmission", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByYear)
 router.get("/admin/student/data/count/providence", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByProvidence)
 router.get("/admin/student/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentBySearch)
