@@ -10,12 +10,12 @@ const classSchema = mongoose.Schema({
     classTeacher:{
         type: ObjectId,
         ref: "Teacher",
-        required: true,
+       // required: true,
     },
     AClassTeacher:{
         type: ObjectId,
         ref: "Teacher",
-        required: true,
+        //required: true,
     },
     names:{
         type:String,
@@ -25,4 +25,4 @@ const classSchema = mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('Class', classSchema);
+module.exports = mongoose.model('Classes', classSchema);
