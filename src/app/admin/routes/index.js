@@ -19,7 +19,7 @@ router.get("/admin/district/data/count", Mid.requiredSignin, Mid.isSuperAdmin,Ct
 /**
   * School services
 */
-router.get("/admin/school", Ctr.schools);
+router.get("/admin/school",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
 router.get("/admin/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
 router.post("/admin/school", Valid.schoolCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSchool);
 router.get("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.school);
@@ -51,11 +51,12 @@ router.get("/admin/student/data/count/yearadmission", Mid.requiredSignin, Mid.is
 router.get("/admin/student/data/count/providence", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByProvidence)
 router.get("/admin/student/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentBySearch)
 
+
+
 /**
  * Admin session services
 */
-
-router.get("/admin/session", Ctr.sessions)
+router.get("/admin/session",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.sessions)
 //router.post("/admin/session", Ctr.createSession)
 router.post("/admin/session",Valid.sessionCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSession)
 router.get("/admin/session/:sessionId", Ctr.session)
@@ -63,11 +64,23 @@ router.put("/admin/session/:sessionId", Ctr.updateSession)
 router.delete("/admin/session/:sessionId", Ctr.deleteSession)
 
 /**
+ * Admin classes services
+*/
+router.get("/admin/classes",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.classesList)
+router.post("/admin/classes",Valid.classCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createClasses)
+router.get("/admin/classes/:classId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.classes)
+router.put("/admin/classes/:classId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateClasses)
+router.delete("/admin/classes/:classId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteClasses)
+
+
+
+/**
  * Admin services
 */
 router.post("/admin/signin", Auth.signin);
 router.post("/admin/forgetPassword", Auth.forgetPassword);
 router.post("/admin/resetPassword", Auth.resetPassword);
+
 router.post("/admin", Valid.adminCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.create);
 router.get("/admin", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admins);
 router.get("/admin/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countAdmin);
@@ -77,7 +90,7 @@ router.delete("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.delet
 
 
 
-
+router.param("classId", Ctr.classesById)
 router.param("sessionId", Ctr.sessionById)
 router.param("studentId", Ctr.studentById)
 router.param("schoolId", Ctr.schoolById)

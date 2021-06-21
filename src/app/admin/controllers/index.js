@@ -836,19 +836,41 @@ exports.countStudentByClassFemale = async (req, res)=>{
     })
 }
 
+/*
+       {
+            $lookup:{
+                from : "Class",
+                let :{name :"$names"},
+                pipeline :[
+                    { $match: { gender: "Male" } },
+                    { $group: { _id: "$class", count: { $sum: 1 } } },
+                    { $lookup: { from: "class", localField: "_id", foreignField: "_id", as: "class"}},
+                ],
+                as: "stockdata"
+            }
+        }
+        */
+
 exports.countStudentByClassAll = async (req, res)=>{
     const male = await models.Student.aggregate([
         { $match: { gender: "Male" } },
         { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        {$replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
     ]).exec();
     const female = await models.Student.aggregate([
         { $match: { gender: "Female" } },
         { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        {$replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
     ]).exec();
     const total = await models.Student.aggregate([
         { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        {$replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
     ]).exec();
-    const datum = [
+  
+    const data = [
         {
             key: "Male",
             color: "#FE8A7D",
@@ -865,7 +887,7 @@ exports.countStudentByClassAll = async (req, res)=>{
             values: total,
         },
     ]
-    return res.json ({message:"students successfully counted by Class",datum })
+    return res.json ({message:"students successfully counted by Class", data })
 }
 
 exports.countStudentByProvidence = async (req, res)=>{
@@ -944,7 +966,50 @@ exports.deleteSession = async (req, res)=>{
     })
 }
 
+/**
+ * Admin Class services
+*/
+exports.createClasses = async (req, res)=>{
+    const classes = new models.Classes(req.body);
+    classes.save((err, data)=>{
+        if(err || !data) return res.status(400).json({error:"Failed to create a new class", err});
+        return res.json({message:"a new class successfully created", data})
+    })
+}
+exports.classesList = async (req, res)=>{
+    models.Classes.find((err, data)=>{
+        if(err) return res.status(400).json({error:"failed to fetch the list of the class"});
+        return res.json({message:"successfully fetched the list of the classes", data})
+    })
+}
+exports.classesById = async (req, res, next, id)=>{
+    models.Classes.findById(id).exec((err, data)=>{
+        if(err || !data) return res.status.json({error:"Class is not exist, error", err}); 
+        req.classes = data;
+        next()
+    })
+}
 
+exports.updateClasses = async (req, res)=>{
+    const classes = _.extend(req.classes, req.body);
+    classes.updated_At = Date.now();
+    classes.save((err, data)=>{
+        if(err || !data) return res.status(400).json({error:"Failed to update class", err});
+        return res.json({message:"class successfully updated", data})
+    })
+}
+
+exports.deleteClasses = async (req, res)=>{
+    const classes = req.classes;
+    classes.remove((err, data)=>{
+        if(err) return res.status(400).json({error:"failed to delete class", err})
+        return res.json({message:"class successfully deleted", data})
+    })
+}
+
+exports.classes = async (req, res)=>{
+    res.json(req.classes)
+}
 
 
 

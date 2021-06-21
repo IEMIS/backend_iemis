@@ -1,5 +1,5 @@
 import Admin from './admin';
-import Class from './class';
+import Classes from './classes';
 import District from './district';
 import Parent from './parent';
 import School from './schools';
@@ -10,7 +10,7 @@ import Exam from './exam';
 import Subject from './subject';
 import Session from './session';
 
-export { Admin, Class, District, Parent, School, Staff, Student, Teacher, Exam, Subject, Session   }
+export { Admin, Classes, District, Parent, School, Staff, Student, Teacher, Exam, Subject, Session   }
 
 
 

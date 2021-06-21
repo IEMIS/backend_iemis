@@ -144,3 +144,16 @@ exports.sessionCreator = (req, res, next) => {
     next();
 };
 
+exports.classCreator = (req, res, next) => {
+    req.check('classCode', 'Class Code required').notEmpty();
+    req.check('names', 'class must have a name').notEmpty();
+    const errors = req.validationErrors();
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+    next();
+};
+
+
+
