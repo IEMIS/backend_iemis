@@ -74,7 +74,7 @@ const teacherSchema = mongoose.Schema({
         type:Array,
         default:[{
             type:ObjectId,
-            ref:"Class"
+            ref:"Classes"
         }]
     }],
     subjectSpecialisation:{
