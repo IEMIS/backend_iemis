@@ -836,38 +836,26 @@ exports.countStudentByClassFemale = async (req, res)=>{
     })
 }
 
-/*
-       {
-            $lookup:{
-                from : "Class",
-                let :{name :"$names"},
-                pipeline :[
-                    { $match: { gender: "Male" } },
-                    { $group: { _id: "$class", count: { $sum: 1 } } },
-                    { $lookup: { from: "class", localField: "_id", foreignField: "_id", as: "class"}},
-                ],
-                as: "stockdata"
-            }
-        }
-        */
-
 exports.countStudentByClassAll = async (req, res)=>{
     const male = await models.Student.aggregate([
         { $match: { gender: "Male" } },
         { $group: { _id: "$class", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-        {$replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
     ]).exec();
     const female = await models.Student.aggregate([
         { $match: { gender: "Female" } },
         { $group: { _id: "$class", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-        {$replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
     ]).exec();
     const total = await models.Student.aggregate([
         { $group: { _id: "$class", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-        {$replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
     ]).exec();
   
     const data = [
