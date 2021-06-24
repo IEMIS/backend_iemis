@@ -4,50 +4,50 @@ const nodeMailer = require("nodemailer");
 exports.sendEmail = emailData  => {
     //let testAccount = await nodemailer.createTestAccount();
     nodeMailer.createTestAccount((er, testAccount)=>{
-      console.log({er, testAccount})
-
-      const transporter = nodeMailer.createTransport({
-        //host: 'mail.nsst.com.ng',
-        host: "mail.nsst.com.ng",
-        port: 578, //578
-        secure: false, // true for 465, false for other ports
-        debug:true,
-        //pool: true,
-        logger:true,
-        //direct: true,
-        auth: {
-          user: 'dev@nsst.com.ng', // your domain email address
-          pass: 'developer@2021_', // your password
-          //user: testAccount.user, // generated ethereal user
-          //pass: testAccount.pass, // generated ethereal password
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-    });
-
-    transporter.verify(function(error, success) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Server is ready to take our messages");
-      }
-    });
-   
-    return transporter
-        .sendMail(emailData)
-        .then(info => {
-            console.log(`Message sent: ${info.response}`);
-            console.log("response from the server")
-            return info
-        })
-        .catch(err => {
-            console.log(`Problem sending email: ${err}`)
-            console.log("catch error here")
-            return err;
-        });
+      //console.log({er, testAccount})
     })
-  
+
+    const transporter = nodeMailer.createTransport({
+      //host: 'mail.nsst.com.ng',
+      host: "mail.nsst.com.ng",
+      port: 465, //578
+      secure: true, // true for 465, false for other ports
+      //debug:true,
+      //pool: true,
+      //logger:true,
+      //direct: true,
+      auth: {
+        user: 'dev@nsst.com.ng', // your domain email address
+        pass: 'developer@2021_+', // your password
+        //user: testAccount.user, // generated ethereal user
+        //pass: testAccount.pass, // generated ethereal password
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+  });
+
+  transporter.verify(function(error, success) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Server is ready to take our messages");
+    }
+  });
+ 
+  return transporter
+    .sendMail(emailData)
+    .then(info => {
+      console.log(`Message sent: ${info.response}`);
+      console.log("response from the server")
+      return info
+    })
+    .catch(err => {
+      console.log(`Problem sending email: ${err}`)
+      console.log("catch error here")
+      return err;
+    });
+
 };
 
 /*
