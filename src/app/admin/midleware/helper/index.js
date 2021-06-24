@@ -1,5 +1,3 @@
-"use strict";
-
 const nodeMailer = require("nodemailer");
 exports.sendEmail = emailData  => {
     //let testAccount = await nodemailer.createTestAccount();
@@ -8,19 +6,17 @@ exports.sendEmail = emailData  => {
     })
 
     const transporter = nodeMailer.createTransport({
-      //host: 'mail.nsst.com.ng',
-      host: "mail.nsst.com.ng",
+      host:process.env.EMAIL_HOST,
       port: 465, //578
       secure: true, // true for 465, false for other ports
-      //debug:true,
-      //pool: true,
-      //logger:true,
+      debug:true,
+      pool: true,
+      logger:true,
       //direct: true,
       auth: {
-        user: 'dev@nsst.com.ng', // your domain email address
-        pass: 'developer@2021_+', // your password
-        //user: testAccount.user, // generated ethereal user
-        //pass: testAccount.pass, // generated ethereal password
+        user:process.env.EMAIL_USER, // your domain email address
+        pass:process.env.EMAIL_PASS, // your password
+
       },
       tls: {
         rejectUnauthorized: false
@@ -50,8 +46,11 @@ exports.sendEmail = emailData  => {
 
 };
 
+
+
 /*
 // async..await is not allowed in global scope, must use a wrapper
+"use strict";
 async function main() {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
