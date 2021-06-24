@@ -92,16 +92,16 @@ router.get("/admin/teachers/data/count/staff", Mid.requiredSignin, Mid.isSuperAd
 /**
  * Admin services
 */
-router.post("/admin/signin", Auth.signin);
-router.post("/admin/forgetPassword", Auth.forgetPassword);
-router.post("/admin/resetPassword", Auth.resetPassword);
+router.post("/admin/auth/signin", Auth.signin);
+router.post("/admin/auth/forgetPassword", Auth.forgetPassword);
+router.post("/admin/auth/resetPassword", Auth.resetPassword);
 
-router.post("/admin", Valid.adminCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.create);
-router.get("/admin", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admins);
-router.get("/admin/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countAdmin);
-router.get("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admin);
-router.put("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.update);
-router.delete("/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.delete);
+router.post("/admin/admin", Valid.adminCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.create);
+router.get("/admin/admin", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admins);
+router.get("/admin/admin/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countAdmin);
+router.get("/admin/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admin);
+router.put("/admin/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.update);
+router.delete("/admin/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.delete);
 
 
 router.param("teacherId", Ctr.teacherById)

@@ -11,7 +11,6 @@ const studentSchema = mongoose.Schema({
         required: true,
         unique: true
     },
-    /*
     school:{
         type: Schema.Types.ObjectId,
         ref: "School",
@@ -22,7 +21,6 @@ const studentSchema = mongoose.Schema({
         ref: "Parent",
         //required: true,
     },
-    */
     exam:{
         type: Schema.Types.ObjectId,
         ref: "Exam",

@@ -10,9 +10,4 @@ const dbConnection = async ()=>{
         consola.error(`DB connection error: ${err.message}`);
     }); 
 }
-
-
-
-
-
 export default dbConnection;
