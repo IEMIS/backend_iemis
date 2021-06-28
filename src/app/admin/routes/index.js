@@ -19,7 +19,7 @@ router.get("/admin/district/data/count", Mid.requiredSignin, Mid.isSuperAdmin,Ct
 /**
   * School services
 */
-router.get("/admin/school",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
+//router.get("/admin/school",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
 router.get("/admin/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
 router.post("/admin/school", Valid.schoolCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSchool);
 router.get("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.school);
