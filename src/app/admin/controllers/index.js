@@ -397,21 +397,14 @@ exports.countDistrict = async (req, res)=>{
  */
  export const createSchool = async (req, res) =>{
     const  {email}= req.body 
-
     const isSchool = await models.School.findOne({email})
     if(isSchool){
-         /***
-          * 
-          */
         return res.status(400).json({"error":"School email already exist"})
     }
     const schoo = new models.School(req.body)
     schoo.save((err, scho)=>{
         consola.success({err, scho})
         if(err || !scho){
-             /**
-              * 
-              */
             return  res.status(405).json({"error":"error in creating a school"})
         }
         res.status(200).json({"message":"school is created", school:scho})
@@ -425,14 +418,17 @@ exports.countDistrict = async (req, res)=>{
  * @returns 
  */
 export const schools = async (req, res)=>{
-   const data = await models.School.find()
-   if(!data){
-       /**
-        * docs
-        */
+    const data = await models.School.aggregate([
+        { $lookup: { from: "District", localField: "60d88b1a6040b7073c8112e0", foreignField: "60d88b1a6040b7073c8112e0", as: "fromDistrict"}},
+        //{ $lookup: { from: "school", localField: "60d8aaa91c542839bc046b0e", foreignField: "60d8aaa91c542839bc046b0e", as: "fromSchool"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 }} 
+    ]).exec()
+    //console.log({data})
+    if(!data){
        return res.status(404).json({error:"fails to get users"})
-   }
-   res.json({message:"schools successfully fetched", data})
+    }
+    res.json({message:"schools successfully fetched", data})
 }
 
 /**
@@ -473,6 +469,7 @@ export const school = async(req, res) =>{
 */
 
 export const updateSchool = async (req, res)=>{
+    console.log(req.school)
     let update = _.extend(req.school,req.body)
     update.save((err, data)=>{
         if(err || !data){
@@ -657,40 +654,25 @@ export const schoolInDistrcitCount = async(req, res) =>{
 
 exports.createStudent = async (req, res) =>{
     const {studentCode} = req.body;
-    /* 
-    *docs
-    */
-
-   const isStudent = await  models.Student.findOne({studentCode});
-   if(isStudent){
-        /*
-        *docs
-        */
-       return res.status(400).json({error:"Students already created"})
+    const isStudent = await  models.Student.findOne({studentCode});
+    if(isStudent){
+            /*
+            *docs
+            */
+        return res.status(400).json({error:"Students already created"})
     }  
-    
     const student = new models.Student(req.body);
     student.save((err, data)=>{
-        //console.log({data, err})
-        //console.log({err, data})
         if(err || !data){
-            /* 
-            */
             return res.status(401).json({error:"error in creating student, please try again",err})
         }
-            /* 
-            */
         res.status(200).json({message:"students successfully created, you can now login", data})
     }) 
 }
 
 exports.studentById= async (req, res, next, id)=>{
     models.Student.findById(id).exec((err, student)=>{
-        //console.log({admin, err})
         if(err || !student){
-            /**
-             * docs
-             */
             return res.status(404).json({error:"Students not found", err});
         }
         req.student = student;
@@ -704,13 +686,8 @@ exports.updateStudent = async (req, res)=>{
     student.save((err, data)=>{
         console.log({err, data})
         if(err){
-            /*
-            */
            return res.status(403).json({error:"fails to update students", err})
         }
-        /**
-         * docs
-         */
         res.status(200).json({message:"students update successful", data})
     })
 }
@@ -719,31 +696,19 @@ exports.deleteStudent = async (req, res)=>{
     let student = req.student;
     student.remove((err, data)=>{
         if(err || !data){
-            /**
-             * 
-             */
             res.status(403).json({error:"fails to delete student", err})
         }
-        /**
-         * docs
-         */
         res.status(200).json({message:"Student succesfully deleted", data})
     })
 }
 
 exports.student = async (req, res) =>{
-    req.admin.salt= undefined
-    req.admin.resetToken = undefined
-    req.admin.hashed_password = undefined
     res.status(200).json(req.student)
 }
 
 exports.students = async (req, res) =>{
     const students =await models.Student.find();
     if(!students){
-        /**
-         * docs 
-         */
         return res.status(404).json({error:"students not founds"})
     }
     res.status(200).json({message:"students successfully fetched", data:students})
@@ -863,6 +828,7 @@ exports.countStudentByClassAll = async (req, res)=>{
             values: total,
         },
     ]
+
     return res.json ({message:"students successfully counted by Class", data })
 }
 

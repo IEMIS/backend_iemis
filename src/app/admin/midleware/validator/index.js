@@ -29,7 +29,7 @@ exports.adminCreator = (req, res, next) => {
 };
 
 exports.districtCreator = (req, res, next) => {
-    req.check('code', 'District Code is required').notEmpty();
+    //req.check('code', 'District Code is required').notEmpty();
     req.check('names', 'District Name is required').notEmpty();
     req.check('email', 'valid emaill address required')
         .matches(/.+\@.+\..+/)
@@ -62,7 +62,7 @@ exports.schoolCreator = (req, res, next) => {
     req.check('code')
     .isLength({min:6}).withMessage('school code must be valid')
     .matches(/\d/).withMessage('school must be a plain number');
-    req.check('district', 'school district is required').notEmpty();
+    req.check('districtId', 'school district is required').notEmpty();
     req.check('names', 'school Name is required').notEmpty();
     req.check('email', 'valid email address required')
         .matches(/.+\@.+\..+/)

@@ -11,30 +11,27 @@ const studentSchema = mongoose.Schema({
         required: true,
         unique: true
     },
-    school:{
+    schoolId:{
         type: Schema.Types.ObjectId,
         ref: "School",
-        //required: true,
+        required: true,
     },
-    parent:{
+    parentId:{
         type: Schema.Types.ObjectId,
         ref: "Parent",
-        //required: true,
     },
     exam:{
         type: Schema.Types.ObjectId,
         ref: "Exam",
-        //required: true,
     },
     result:{
         type: Schema.Types.ObjectId,
         ref: "Result",
-        //required: true,
     },
-    class:{
+    classId:{
         type: Schema.Types.ObjectId,
         ref: "Class",
-        //required: true,
+        required: true,
     },
     history:{
         type: Schema.Types.ObjectId,

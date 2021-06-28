@@ -9,7 +9,8 @@ const districtSchema = mongoose.Schema({
     code:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
+      
     },
     names:{
         type: String,
@@ -33,10 +34,6 @@ const districtSchema = mongoose.Schema({
         trim:true,
         required:true,
     },
-    school:[{
-        type:Schema.Types.ObjectId,
-        ref:"School"
-    }],
     staffs:[{
         type:Schema.Types.ObjectId,
         ref:"Staff"
@@ -58,22 +55,24 @@ const districtSchema = mongoose.Schema({
 );
 
 // virtual field
-districtSchema
-    .virtual('password')
-    .set(function(password) {
+
+districtSchema.virtual('password').set(function(password) {
         this._password = password;
         this.salt = uuidv4();
         this.hashed_password = this.encryptPassword(password);
     })
-    .get(function() {
-        return this._password;
-    });
+.get(function() {
+    return this._password;
+});
+
+//districtSchema.virtual('code').set(function(){}).get(function(){return })
 
 districtSchema.methods = {
+
     authenticate: function(plainText) {
         return this.encryptPassword(plainText) === this.hashed_password;
     },
-
+    
     encryptPassword: function(password) {
         if (!password) return '';
         try {
@@ -84,7 +83,29 @@ districtSchema.methods = {
         } catch (err) {
             return '';
         }
+    },
+
+    /*
+    distCode: (()=>{
+        //if(!this.code) return ''
+        try {
+            let dCode = 'D0007'; //this.code = this.code + 1
+            console.log({dCode, code})
+            return dCode ;
+        } catch (er) { 
+            console.log("error")
+            return 
+        }
+    }),
+    increaseCode: function(){
+        if(!this.code) return ''
+        try {
+            let dCode = this.code = this.code + 1
+            console.log({dCode, code})
+            return dCode ;
+        } catch (e) { return console.log({e})}
     }
+    */
 };
 
 module.exports = mongoose.model('District', districtSchema);
