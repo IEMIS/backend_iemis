@@ -903,7 +903,7 @@ exports.sessions = async (req, res) =>{
 }
 
 exports.session = async (req, res)=>{
-    return res.json(req.session)
+    return res.json({message:"session successfully fetched", data:req.session})
 }
 
 exports.updateSession = async (req, res)=>{
@@ -940,11 +940,10 @@ exports.classesList = async (req, res)=>{
     })
 }
 exports.classesById = async (req, res, next, id)=>{
-    models.Classes.findById(id).exec((err, data)=>{
-        if(err || !data) return res.status.json({error:"Class is not exist, error", err}); 
-        req.classes = data;
-        next()
-    })
+    const data = await models.Classes.findById(id).exec();  //((err, data)=>{})
+    if(!data) return res.status(400).json({error:"Class is not found !!"}); 
+    req.classes = data;
+    next()
 }
 
 exports.updateClasses = async (req, res)=>{
@@ -965,7 +964,7 @@ exports.deleteClasses = async (req, res)=>{
 }
 
 exports.classes = async (req, res)=>{
-    res.json(req.classes)
+    res.json({message:"class successfully fetched", data:req.classes})
 }
 
 /***
