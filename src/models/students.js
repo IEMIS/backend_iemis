@@ -5,21 +5,21 @@ const {ObjectId} = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const studentSchema = mongoose.Schema({
+    /*
     studentCode:{
         type: String,
         trim: true,
         required: true,
         unique: true
     },
-    school:{
-        type: Schema.Types.ObjectId,
-        ref: "School",
-        required: true,
-    },
+    */
+      /*
     parent:{
         type: Schema.Types.ObjectId,
         ref: "Parent",
     },
+    */
+    /*
     exam:{
         type: Schema.Types.ObjectId,
         ref: "Exam",
@@ -28,17 +28,23 @@ const studentSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Result",
     },
+    history:{
+        type: Schema.Types.ObjectId,
+        ref: "History",
+        //required: true,
+    },
+    */
+    school:{
+        type: Schema.Types.ObjectId,
+        ref: "School",
+        required: true,
+    },
     class:{
         type: Schema.Types.ObjectId,
         ref: "Class",
         required: true,
     },
-    history:{
-        type: Schema.Types.ObjectId,
-        ref: "History",
-        //required: true,
 
-    },
     /*
     *student code replicate admission numbers
     *
