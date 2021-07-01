@@ -11,12 +11,12 @@ const studentSchema = mongoose.Schema({
         required: true,
         unique: true
     },
-    schoolId:{
+    school:{
         type: Schema.Types.ObjectId,
         ref: "School",
         required: true,
     },
-    parentId:{
+    parent:{
         type: Schema.Types.ObjectId,
         ref: "Parent",
     },
@@ -28,7 +28,7 @@ const studentSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Result",
     },
-    classId:{
+    class:{
         type: Schema.Types.ObjectId,
         ref: "Class",
         required: true,
@@ -114,12 +114,10 @@ const studentSchema = mongoose.Schema({
     presentClass:{
         type: String,
         trim: true,
-        //required: true,
     },
     stream:{
         type: String,
         trim: true,
-        //required: true,
     },
     /****
      * HadEce, Please can you explaining the field sir
@@ -142,7 +140,7 @@ const studentSchema = mongoose.Schema({
     status:{
         type: String,
         trim: true,
-        //required: true,
+        required: true,
     },
     session:{
         type: String,

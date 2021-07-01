@@ -12,7 +12,7 @@ const schoolSchema = mongoose.Schema({
         required:true,
         unique:true,
     },
-    districtId:{
+    district:{
         type: Schema.Types.ObjectId,
         ref: "District",
         required: true,

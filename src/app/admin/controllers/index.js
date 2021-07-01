@@ -418,13 +418,7 @@ exports.countDistrict = async (req, res)=>{
  * @returns 
  */
 export const schools = async (req, res)=>{
-    const data = await models.School.aggregate([
-        { $lookup: { from: "District", localField: "60d88b1a6040b7073c8112e0", foreignField: "60d88b1a6040b7073c8112e0", as: "fromDistrict"}},
-        //{ $lookup: { from: "school", localField: "60d8aaa91c542839bc046b0e", foreignField: "60d8aaa91c542839bc046b0e", as: "fromSchool"}},
-        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
-        //{ $project: { fromDistrict: 0 }} 
-    ]).exec()
-    //console.log({data})
+    const data = await models.School.find().populate("district") 
     if(!data){
        return res.status(404).json({error:"fails to get users"})
     }
@@ -439,11 +433,8 @@ export const schools = async (req, res)=>{
  * @param {*} id 
  */
 export const schoolById = async (req, res, next, id) =>{
-    models.School.findById(id).exec((err, data)=>{
+    models.School.findById(id).populate("district").exec((err, data)=>{
         if(err || !data){
-            /**
-             * 
-             */
             res.status(404).json({"error":"school not found"})
         }
         req.school = data;
@@ -469,7 +460,6 @@ export const school = async(req, res) =>{
 */
 
 export const updateSchool = async (req, res)=>{
-    console.log(req.school)
     let update = _.extend(req.school,req.body)
     update.save((err, data)=>{
         if(err || !data){
