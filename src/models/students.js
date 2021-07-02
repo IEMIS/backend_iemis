@@ -5,21 +5,21 @@ const {ObjectId} = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const studentSchema = mongoose.Schema({
+    /*
     studentCode:{
         type: String,
         trim: true,
         required: true,
         unique: true
     },
-    schoolId:{
-        type: Schema.Types.ObjectId,
-        ref: "School",
-        required: true,
-    },
-    parentId:{
+    */
+      /*
+    parent:{
         type: Schema.Types.ObjectId,
         ref: "Parent",
     },
+    */
+    /*
     exam:{
         type: Schema.Types.ObjectId,
         ref: "Exam",
@@ -28,17 +28,23 @@ const studentSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Result",
     },
-    classId:{
-        type: Schema.Types.ObjectId,
-        ref: "Class",
-        required: true,
-    },
     history:{
         type: Schema.Types.ObjectId,
         ref: "History",
         //required: true,
-
     },
+    */
+    school:{
+        type: Schema.Types.ObjectId,
+        ref: "School",
+        required: true,
+    },
+    presentClass:{
+        type: Schema.Types.ObjectId,
+        ref: "Classes",
+        required: true,
+    },
+
     /*
     *student code replicate admission numbers
     *
@@ -111,15 +117,9 @@ const studentSchema = mongoose.Schema({
     yearAdmission:{
         type:Date,
     },
-    presentClass:{
-        type: String,
-        trim: true,
-        //required: true,
-    },
     stream:{
         type: String,
         trim: true,
-        //required: true,
     },
     /****
      * HadEce, Please can you explaining the field sir
@@ -142,12 +142,12 @@ const studentSchema = mongoose.Schema({
     status:{
         type: String,
         trim: true,
-        //required: true,
+        required: true,
     },
     session:{
         type: String,
         trim: true,
-        ///required: true,
+        required: true,
     },
     hashed_password:{
         type: String,

@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const {ObjectId} = mongoose.Schema;
 
 const parentSchema = mongoose.Schema({
-   familyName:String,
-   students:[{
+    familyName:String,
+    students:[{
        type:ObjectId,
        ref:"Students"
-   }],
+    }],
     father:[{
         name:String,
         TIN:String,
