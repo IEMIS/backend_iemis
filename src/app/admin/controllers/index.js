@@ -700,18 +700,11 @@ exports.student = async (req, res) =>{
 
 exports.students = async (req, res) =>{
     ///const students =await models.Student.find().populate("school").populate("presetClass").populate("subject").exec();
-    //const students =await 
     models.Student.find().populate("session").populate("school").populate("presentClass").exec((err, data)=>{
         console.log({err, data})
         if(err) return res.status(404).json({error:"students not founds"})
         res.status(200).json({message:"students successfully fetched", data})
     });
-    /*
-    if(!students){
-        return res.status(404).json({error:"students not founds"})
-    }
-    res.status(200).json({message:"students successfully fetched", data:students})
-    */
 }
 
 exports.countStudent = async (req, res)=>{
@@ -760,7 +753,7 @@ exports.countStudentByYear = async (req, res)=>{
 exports.countStudentByClass = async (req, res)=>{
     models.Student.aggregate([
         { $match: { gender: "Female" } },
-        { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by Class"})
@@ -771,7 +764,7 @@ exports.countStudentByClass = async (req, res)=>{
 exports.countStudentByClassMale = async (req, res)=>{
     models.Student.aggregate([
         { $match: { gender: "Male" } },
-        { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by Class"})
@@ -781,7 +774,7 @@ exports.countStudentByClassMale = async (req, res)=>{
 exports.countStudentByClassFemale = async (req, res)=>{
     models.Student.aggregate([
         { $match: { gender: "Female" } },
-        { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by Class"})
@@ -792,20 +785,20 @@ exports.countStudentByClassFemale = async (req, res)=>{
 exports.countStudentByClassAll = async (req, res)=>{
     const male = await models.Student.aggregate([
         { $match: { gender: "Male" } },
-        { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromClass: 0 } }
     ]).exec();
     const female = await models.Student.aggregate([
         { $match: { gender: "Female" } },
-        { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromClass: 0 } }
     ]).exec();
     const total = await models.Student.aggregate([
-        { $group: { _id: "$class", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromClass: 0 } }
@@ -828,7 +821,6 @@ exports.countStudentByClassAll = async (req, res)=>{
             values: total,
         },
     ]
-
     return res.json ({message:"students successfully counted by Class", data })
 }
 
@@ -850,10 +842,7 @@ exports.countStudentByYear = async (req, res)=>{
 exports.countStudentByProvidence = async (req, res)=>{
     models.Student.aggregate([
         {
-            $group: {
-                _id: "$province",
-                count:{$sum:1}
-            }
+            $group: {_id: "$province",count:{$sum:1}},
         }
     ])
     .exec((err, resp)=>{
@@ -876,6 +865,40 @@ exports.countStudentBySearch = async (req, res)=>{
         return res.json({message:"students successfully counted by searching",data:resp })
     })
 }
+
+exports.studentIndicators = async (req, res)=>{
+    // Using query builder, we can latter move
+    const {yearA, pclass} = req.body;
+    const gi = await models.Student.find({/**explicit find by district */}).where('presentClass').equals(pclass).where('yearAdmission').equals(yearA).exec();
+    //{district:"60d88b1a6040b7073c8112e0"}).where('presentClass').equals("60d103c2aa056b4de034ed42").where('yearAdmission').equals("2021").exec()
+    const gir = await models.Student.find().where('presentClass').equals("60d103c2aa056b4de034ed42").where('yearAdmission').equals("2021-07-27T00:00:00.000Z").countDocuments();
+    /**gross intake by district */
+    const grossInTake = await models.Student.aggregate([
+        { $match: { presentClass: "", yearAdmission:"" } },
+        { $group: { _id: "/* deep looking district by school **/", count: { $sum: 1 } } },
+    ]).exec();
+    const netIntake = await models.Student.aggregate([
+        { $match: { presentClass: "", yearAdmission:"", /**accept function against dob field to get year */ } },
+        { $group: { _id: "/* deep looking district by school **/", count: { $sum: 1 } } },
+    ]).exec();
+
+    const aNetinTake = await models.Student.aggregate([
+        { $match: { presentClass: "", yearAdmission:"", /**accept function against dob field to get year */ } },
+        { $group: { _id: "_id", count: { $sum: 1 } } },
+    ]).exec();
+
+    const netEnroll= await models.Student.aggregate([
+        { $match: { yearAdmission:"", /**accept function against dob field to get year */ } },
+        { $group: { _id: "/** deep find by school EduLevel*/", count: { $sum: 1 } } },
+    ]).exec();
+
+    return res.json({message:"indicators", gir,})
+}
+
+
+
+
+
 
 /***
  * Admin Session services

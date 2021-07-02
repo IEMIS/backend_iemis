@@ -49,6 +49,7 @@ router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdm
 router.get("/admin/student/data/count/yearadmission", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByYear)
 router.get("/admin/student/data/count/providence", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByProvidence)
 router.get("/admin/student/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentBySearch)
+router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.studentIndicators)
 
 
 
