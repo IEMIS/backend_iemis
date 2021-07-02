@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import * as models from '../../../models';
+import { populate } from '../../../models/students';
 
 exports.create = async (req, res) =>{
     const {email} = req.body;
@@ -643,16 +644,17 @@ export const schoolInDistrcitCount = async(req, res) =>{
 */
 
 exports.createStudent = async (req, res) =>{
+    /*
     const {studentCode} = req.body;
     const isStudent = await  models.Student.findOne({studentCode});
     if(isStudent){
-            /*
-            *docs
-            */
         return res.status(400).json({error:"Students already created"})
     }  
+    */
+    //console.log(req.body)
     const student = new models.Student(req.body);
     student.save((err, data)=>{
+        //console.log({err, data})
         if(err || !data){
             return res.status(401).json({error:"error in creating student, please try again",err})
         }
@@ -661,7 +663,7 @@ exports.createStudent = async (req, res) =>{
 }
 
 exports.studentById= async (req, res, next, id)=>{
-    models.Student.findById(id).exec((err, student)=>{
+    models.Student.findById(id).populate("school").populate("presentClass").populate("session").exec((err, student)=>{
         if(err || !student){
             return res.status(404).json({error:"Students not found", err});
         }
@@ -693,15 +695,23 @@ exports.deleteStudent = async (req, res)=>{
 }
 
 exports.student = async (req, res) =>{
-    res.status(200).json(req.student)
+    res.status(200).json({message:"", data:req.student})
 }
 
 exports.students = async (req, res) =>{
-    const students =await models.Student.find();
+    ///const students =await models.Student.find().populate("school").populate("presetClass").populate("subject").exec();
+    //const students =await 
+    models.Student.find().populate("session").populate("school").populate("presentClass").exec((err, data)=>{
+        console.log({err, data})
+        if(err) return res.status(404).json({error:"students not founds"})
+        res.status(200).json({message:"students successfully fetched", data})
+    });
+    /*
     if(!students){
         return res.status(404).json({error:"students not founds"})
     }
     res.status(200).json({message:"students successfully fetched", data:students})
+    */
 }
 
 exports.countStudent = async (req, res)=>{

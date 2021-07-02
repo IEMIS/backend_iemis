@@ -39,9 +39,9 @@ const studentSchema = mongoose.Schema({
         ref: "School",
         required: true,
     },
-    class:{
+    presentClass:{
         type: Schema.Types.ObjectId,
-        ref: "Class",
+        ref: "Classes",
         required: true,
     },
 
@@ -117,10 +117,6 @@ const studentSchema = mongoose.Schema({
     yearAdmission:{
         type:Date,
     },
-    presentClass:{
-        type: String,
-        trim: true,
-    },
     stream:{
         type: String,
         trim: true,
@@ -151,7 +147,7 @@ const studentSchema = mongoose.Schema({
     session:{
         type: String,
         trim: true,
-        ///required: true,
+        required: true,
     },
     hashed_password:{
         type: String,
