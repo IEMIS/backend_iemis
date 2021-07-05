@@ -649,10 +649,10 @@ exports.createStudent = async (req, res) =>{
         return res.status(400).json({error:"Students already created"})
     }  
     */
-    //console.log(req.body)
+    console.log(req.body)
     const student = new models.Student(req.body);
     student.save((err, data)=>{
-        //console.log({err, data})
+        console.log({err, data})
         if(err || !data){
             return res.status(401).json({error:"error in creating student, please try again",err})
         }
@@ -1162,6 +1162,22 @@ exports.countTeacherBySchoolAll = async (req, res)=>{
     return res.status(200).json ({message:"Teacher successfully counted by School", data })
 }
 
+
+exports.searchByDistrict = async (req, res) =>{
+    const {ids} = req.body
+    console.log(ids)
+    const countSchoolByEduLevelBySearch = await models.School.aggregate([
+        //{ $match: { district: "60d88b1a6040b7073c8112e0"} },
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        //{ $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    const countStudentInDistrict = await models.Student.aggregate([
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict" }}
+    ]).exec()
+
+    res.status(200).json({message:"search successfully", countSchoolByEduLevelBySearch, countStudentInDistrict})
+}
 
 
 

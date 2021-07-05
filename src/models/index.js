@@ -1,6 +1,6 @@
 import Admin from './admin';
 import Classes from './classes';
-import District from './district';
+import District from './districts';
 import Parent from './parent';
 import School from './schools';
 import Staff from './staff';
