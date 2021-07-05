@@ -4,12 +4,14 @@ const { v4: uuidv4 } = require('uuid');
 const {ObjectId} = mongoose.Schema;
 
 const teacherSchema = mongoose.Schema({
+    /*
     teacherCode:{
         type: String,
         trim: true,
         required: true,
         unique: true
     },
+    */
     school:{
         type: ObjectId,
         ref: "School",
@@ -33,7 +35,7 @@ const teacherSchema = mongoose.Schema({
     title:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     gender:{
         type: String,
@@ -59,9 +61,11 @@ const teacherSchema = mongoose.Schema({
         required: true,
     },
     phone:{
-        type:Array,
-        default:["Mathematices",],
+        type: String,
+        trim: true,
+        //required: true,
     },
+    /*
     subjectTaught:{
         type:Array,
         //default: ["Mathematices","English Language","Basic Science", "Social Science","Commercial Study"]
@@ -70,6 +74,7 @@ const teacherSchema = mongoose.Schema({
             ref:"Subject"
         }]
     },
+    */
     classTaking:[{
         type:Array,
         default:[{
@@ -80,7 +85,7 @@ const teacherSchema = mongoose.Schema({
     subjectSpecialisation:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     level: Number,
 
@@ -90,11 +95,11 @@ const teacherSchema = mongoose.Schema({
     typeOfstaff:{
         type: String,
         trim: true,
-        required: true,
+       // required: true,
     },
     firstappt:{
         type:Date,
-        required:true,
+        ///required:true,
     },
     lastPosting:{
         type:Date,
@@ -110,17 +115,17 @@ const teacherSchema = mongoose.Schema({
         
     gradeLevel:{
         type: Number,
-        required:true,
+        //required:true,
     },
     designation:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     serviceStatus:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     
     teachingTypes:{
@@ -142,7 +147,7 @@ const teacherSchema = mongoose.Schema({
     session:{
         type: String,
         trim: true,
-        required: true,
+        //required: true,
     },
     //Date of Last Workshop attended, it should be an array or subdocument
     lastWorkshop:{
