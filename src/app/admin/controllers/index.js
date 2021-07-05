@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import * as models from '../../../models';
-import { populate } from '../../../models/students';
 
 exports.create = async (req, res) =>{
     const {email} = req.body;
@@ -423,7 +422,7 @@ export const schools = async (req, res)=>{
     if(!data){
        return res.status(404).json({error:"fails to get users"})
     }
-    res.json({message:"schools successfully fetched", data})
+    res.status(200).json({message:"schools successfully fetched", data})
 }
 
 /**
@@ -513,7 +512,7 @@ export const countSchoolByDistrict = async (req, res) =>{
     ])
     .exec((err, resp)=>{
         if(err) return res.status(400).json({error:"failed to count school by district"})
-        return res.json({message:"schools counted by district",data:resp})
+        return res.status(200).json({message:"schools counted by district",data:resp})
     })
 }
 
@@ -528,7 +527,7 @@ export const countSchoolByEduLevel = async (req, res) =>{
     ])
     .exec((err, resp)=>{
         if(err) return res.status(400).json({error:"failed to count school by Edu Level"})
-        return res.json({message:"schools counted by edu level ",data:resp})
+        return res.status(200).json({message:"schools counted by edu level ",data:resp})
     })
 }
 
@@ -543,7 +542,7 @@ export const countSchoolByOwnerShip= async (req, res) =>{
     ])
     .exec((err, resp)=>{
         if(err) return res.status(400).json({error:"failed to count school by Ownership"})
-        return res.json({message:"schools counted by OwnerShip ",data:resp})
+        return res.status(200).json({message:"schools counted by OwnerShip ",data:resp})
     })
 }
 
@@ -558,7 +557,7 @@ export const countSchoolByType= async (req, res) =>{
     ])
     .exec((err, resp)=>{
         if(err) return res.status(400).json({error:"failed to count school by type"})
-        return res.json({message:"schools counted by Type ",data:resp})
+        return res.status(200).json({message:"schools counted by Type ",data:resp})
     })
 }
 
@@ -573,10 +572,9 @@ export const countSchoolByCat= async (req, res) =>{
     ])
     .exec((err, resp)=>{
         if(err) return res.status(400).json({error:"failed to count school by type"})
-        return res.json({message:"schools counted by Type ",data:resp})
+        return res.status(200).json({message:"schools counted by Type ",data:resp})
     })
 }
-
 
 
 
@@ -651,10 +649,10 @@ exports.createStudent = async (req, res) =>{
         return res.status(400).json({error:"Students already created"})
     }  
     */
-    //console.log(req.body)
+    console.log(req.body)
     const student = new models.Student(req.body);
     student.save((err, data)=>{
-        //console.log({err, data})
+        console.log({err, data})
         if(err || !data){
             return res.status(401).json({error:"error in creating student, please try again",err})
         }
@@ -710,7 +708,7 @@ exports.students = async (req, res) =>{
 exports.countStudent = async (req, res)=>{
     const count = await models.Student.countDocuments();
     if(!count) return res.status(400).json({erroe:"failed to count student"})
-    return res.json({message:"Students successfully fetched", count})
+    return res.status(200).json({message:"Students successfully fetched", count})
 }
 
 
@@ -730,7 +728,7 @@ exports.countStudentByGender= async (req, res)=>{
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by gender"})
-        return res.json({message:"students successfully counted by gender",data:resp })
+        return res.status(200).json({message:"students successfully counted by gender",data:resp })
     })
 }
 
@@ -746,7 +744,7 @@ exports.countStudentByYear = async (req, res)=>{
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by year of Admission"})
-        return res.json({message:"students successfully counted by year of Admission",data:resp })
+        return res.status(200).json({message:"students successfully counted by year of Admission",data:resp })
     })
 }
 
@@ -757,7 +755,7 @@ exports.countStudentByClass = async (req, res)=>{
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by Class"})
-        return res.json({message:"students successfully counted by Class",data:resp })
+        return res.status(200).json({message:"students successfully counted by Class",data:resp })
     })
 }
 
@@ -768,7 +766,7 @@ exports.countStudentByClassMale = async (req, res)=>{
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by Class"})
-        return res.json({message:"students successfully counted by Class",data:resp })
+        return res.status(200).json({message:"students successfully counted by Class",data:resp })
     })
 }
 exports.countStudentByClassFemale = async (req, res)=>{
@@ -778,7 +776,7 @@ exports.countStudentByClassFemale = async (req, res)=>{
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by Class"})
-        return res.json({message:"students successfully counted by Class",data:resp })
+        return res.status(200).json({message:"students successfully counted by Class",data:resp })
     })
 }
 
@@ -821,7 +819,7 @@ exports.countStudentByClassAll = async (req, res)=>{
             values: total,
         },
     ]
-    return res.json ({message:"students successfully counted by Class", data })
+    return res.status(200).json ({message:"students successfully counted by Class", data })
 }
 
 exports.countStudentByYear = async (req, res)=>{
@@ -835,7 +833,7 @@ exports.countStudentByYear = async (req, res)=>{
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by year of addmission"})
-        return res.json({message:"students successfully counted by year of admission",data:resp })
+        return res.status(200).json({message:"students successfully counted by year of admission",data:resp })
     })
 }
 
@@ -847,7 +845,7 @@ exports.countStudentByProvidence = async (req, res)=>{
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by Providence"})
-        return res.json({message:"students successfully counted by Providence",data:resp })
+        return res.status(200).json({message:"students successfully counted by Providence",data:resp })
     })
 }
 
@@ -862,7 +860,7 @@ exports.countStudentBySearch = async (req, res)=>{
     ])
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by Search"})
-        return res.json({message:"students successfully counted by searching",data:resp })
+        return res.status(200).json({message:"students successfully counted by searching",data:resp })
     })
 }
 
@@ -892,7 +890,7 @@ exports.studentIndicators = async (req, res)=>{
         { $group: { _id: "/** deep find by school EduLevel*/", count: { $sum: 1 } } },
     ]).exec();
 
-    return res.json({message:"indicators", gir,})
+    return res.status(200).json({message:"indicators", gir,})
 }
 
 
@@ -922,11 +920,11 @@ exports.sessionById = async (req, res, next, id)=>{
 exports.sessions = async (req, res) =>{
     const data = await models.Session.find();
     if(!data) return res.status(400).json({error:"failed to fetch the list of the session"})
-    return res.json({message:"session successfully fetched", data})
+    return res.status(200).json({message:"session successfully fetched", data})
 }
 
 exports.session = async (req, res)=>{
-    return res.json({message:"session successfully fetched", data:req.session})
+    return res.status(200).json({message:"session successfully fetched", data:req.session})
 }
 
 exports.updateSession = async (req, res)=>{
@@ -934,7 +932,7 @@ exports.updateSession = async (req, res)=>{
     session.updated_At = Date.now();
     session.save((err, data)=>{
         if(err || !data) return res.status(400).json({error:"failed to update session record"})
-        return res.json({message:"session successfully updated", data})
+        return res.status(200).json({message:"session successfully updated", data})
     })
 }
 
@@ -942,7 +940,7 @@ exports.deleteSession = async (req, res)=>{
     const session = req.session;
     session.remove((err, data)=>{
         if(err) return res.status(400).json({error:"failed to remove the session", err})
-        return res.json({message:"session is successfully delete", data})
+        return res.status(200).json({message:"session is successfully delete", data})
     })
 }
 
@@ -953,13 +951,13 @@ exports.createClasses = async (req, res)=>{
     const classes = new models.Classes(req.body);
     classes.save((err, data)=>{
         if(err || !data) return res.status(400).json({error:"Failed to create a new class", err});
-        return res.json({message:"a new class successfully created", data})
+        return res.status(200).json({message:"a new class successfully created", data})
     })
 }
 exports.classesList = async (req, res)=>{
     models.Classes.find((err, data)=>{
         if(err) return res.status(400).json({error:"failed to fetch the list of the class"});
-        return res.json({message:"successfully fetched the list of the classes", data})
+        return res.status(200).json({message:"successfully fetched the list of the classes", data})
     })
 }
 exports.classesById = async (req, res, next, id)=>{
@@ -974,7 +972,7 @@ exports.updateClasses = async (req, res)=>{
     classes.updated_At = Date.now();
     classes.save((err, data)=>{
         if(err || !data) return res.status(400).json({error:"Failed to update class", err});
-        return res.json({message:"class successfully updated", data})
+        return res.status(200).json({message:"class successfully updated", data})
     })
 }
 
@@ -982,18 +980,19 @@ exports.deleteClasses = async (req, res)=>{
     const classes = req.classes;
     classes.remove((err, data)=>{
         if(err) return res.status(400).json({error:"failed to delete class", err})
-        return res.json({message:"class successfully deleted", data})
+        return res.status(200).json({message:"class successfully deleted", data})
     })
 }
 
 exports.classes = async (req, res)=>{
-    res.json({message:"class successfully fetched", data:req.classes})
+    res.status(200).json({message:"class successfully fetched", data:req.classes})
 }
 
 /***
  * Admin Teachers services 
 */
 exports.createTeacher = async (req, res)=>{
+    console.log(req.body)
     const {email} = req.body;
     /* 
     *
@@ -1007,6 +1006,7 @@ exports.createTeacher = async (req, res)=>{
     }  
     const teacher = new models.Teacher(req.body);
     teacher.save((err, data)=>{
+        console.log({err, data})
         if(err || !data){
             /*
             */
@@ -1014,9 +1014,10 @@ exports.createTeacher = async (req, res)=>{
         }
         /* 
         */
-        res.status(200).json({message:"Teacher is successfully created", data})
+        res.status(200).status(200).json({message:"Teacher is successfully created", data})
     })
 }
+
 exports.teachers= async (req, res)=>{
     /* 
     */
@@ -1028,7 +1029,7 @@ exports.teachers= async (req, res)=>{
         }
         /*
         */
-       return res.status(200).json({"mesage":"Teacher is successfully fetched",data})
+       return res.status(200).status(200).json({"mesage":"Teacher is successfully fetched",data})
    })
 }
 exports.teacherById= async (req, res, next,id)=>{
@@ -1062,7 +1063,7 @@ exports.updateTeacher = async (req, res) => {
         }
         /* 
         */
-        res.json({data,message:"Teacher is succesfully updated"})
+        res.status(200).json({data,message:"Teacher is succesfully updated"})
     })
 };
 exports.deleteTeacher = async (req, res) => {
@@ -1077,7 +1078,7 @@ exports.deleteTeacher = async (req, res) => {
         }
         /* 
         */
-        return res.json({message:"teacher is successfully deleted", data})
+        return res.status(200).json({message:"teacher is successfully deleted", data})
     })
 };
 exports.countTeacher = async (req, res)=>{
@@ -1097,6 +1098,7 @@ exports.countTeacher = async (req, res)=>{
         res.status(200).json({message:"Teachers is successfully counted", data})
     })
 }
+
 exports.countTeacherByTypeOfstaff = async (req, res)=>{
     models.Teacher.aggregate([
         {
@@ -1104,9 +1106,10 @@ exports.countTeacherByTypeOfstaff = async (req, res)=>{
         }
     ]).exec((err, data)=>{
         if(err || !data) return res.status(400).json({error : "Failed to count teacher by type of staff"})
-        return res.json({message:"teachers successfully count by type of staff", data})
+        return res.status(200).json({message:"teachers successfully count by type of staff", data})
     })
 }
+
 exports.countTeacherByGender = async (req, res)=>{
     models.Teacher.aggregate([
         {
@@ -1114,27 +1117,27 @@ exports.countTeacherByGender = async (req, res)=>{
         }
     ]).exec((err, data)=>{
         if(err || !data) return res.status(400).json({error : "Failed to count teacher by gender"})
-        return res.json({message:"teachers successfully count by gender", data})
+        return res.status(200).json({message:"teachers successfully count by gender", data})
     })
 }
 exports.countTeacherBySchoolAll = async (req, res)=>{
     const male = await models.Teacher.aggregate([
         { $match: { gender: "Male" } },
         { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "school", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromSchool: 0 } }
     ]).exec();
     const female = await models.Teacher.aggregate([
         { $match: { gender: "Female" } },
         { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "school", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromSchool: 0 } }
     ]).exec();
     const total = await models.Teacher.aggregate([
         { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "school", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromSchool: 0 } }
     ]).exec();
@@ -1156,9 +1159,25 @@ exports.countTeacherBySchoolAll = async (req, res)=>{
             values: total,
         },
     ]
-    return res.json ({message:"Teacher successfully counted by School", data })
+    return res.status(200).json ({message:"Teacher successfully counted by School", data })
 }
 
+
+exports.searchByDistrict = async (req, res) =>{
+    const {ids} = req.body
+    console.log(ids)
+    const countSchoolByEduLevelBySearch = await models.School.aggregate([
+        //{ $match: { district: "60d88b1a6040b7073c8112e0"} },
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        //{ $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    const countStudentInDistrict = await models.Student.aggregate([
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict" }}
+    ]).exec()
+
+    res.status(200).json({message:"search successfully", countSchoolByEduLevelBySearch, countStudentInDistrict})
+}
 
 
 

@@ -15,6 +15,7 @@ router.delete("/admin/district/:districtId", Mid.requiredSignin, Mid.isSuperAdmi
 router.get("/admin/district/:districtId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.district);
 router.put("/admin/district/:districtId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateDistrict);
 router.get("/admin/district/data/count", Mid.requiredSignin, Mid.isSuperAdmin,Ctr.countDistrict);
+router.get("/admin/district/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin,Ctr.searchByDistrict);
 
 /**
   * School services
