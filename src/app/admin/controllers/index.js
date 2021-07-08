@@ -1179,6 +1179,10 @@ exports.searchByDistrict = async (req, res) =>{
     res.status(200).json({message:"search successfully", countSchoolByEduLevelBySearch, countStudentInDistrict})
 }
 
+exports.indicators = async (req, res) =>{
+    
+}
+
 
 
 
