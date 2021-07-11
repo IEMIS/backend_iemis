@@ -1183,7 +1183,7 @@ exports.searchByDistrict = async (req, res) =>{
 exports.indicators = async (req, res) =>{
     const {year, classid, dob } = req.body;
     //result: { $and: [ { $gt: [ "$qty", 100 ] }, { $lt: [ "$qty", 250 ] } ] }
-    const grossIntake = await models.School.aggregate([
+    const grossIntake = await models.Student.aggregate([
         { $match: { $and: [ {presentClass: "60d88b1a6040b7073c8112e0", yearAdmission:"2020"}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
@@ -1205,11 +1205,13 @@ exports.indicators = async (req, res) =>{
 
     const netEnroll = await models.School.aggregate([
         { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:7}]}]} },
+        //male and female 
         { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
     ]).exec();
 
     const ageSpec = await models.School.aggregate([
-        { $match: { session:""}},
+        //{ $match: { session:""}},
+        //generate age by male and female
         { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
 
