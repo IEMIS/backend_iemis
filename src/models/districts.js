@@ -6,12 +6,13 @@ const { ObjectId } = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const districtSchema = mongoose.Schema({
-    code:{
+    /*code:{
         type: String,
         trim: true,
         //required: true,
       
     },
+    */
     names:{
         type: String,
         trim: true,

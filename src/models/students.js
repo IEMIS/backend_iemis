@@ -44,6 +44,17 @@ const studentSchema = mongoose.Schema({
         ref: "Classes",
         required: true,
     },
+    age:{
+        type:Number
+    },
+    edulevel:{
+        type:String,
+        trim: true,
+    },
+    district:{
+        type:String,
+        trim: true,
+    },
 
     /*
     *student code replicate admission numbers

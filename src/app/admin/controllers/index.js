@@ -418,11 +418,16 @@ exports.countDistrict = async (req, res)=>{
  * @returns 
  */
 export const schools = async (req, res)=>{
-    const data = await models.School.find().populate("district") 
+    const data = await models.School.aggregate([
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 } }
+    ]).exec();
     if(!data){
        return res.status(404).json({error:"fails to get users"})
     }
     res.status(200).json({message:"schools successfully fetched", data})
+
 }
 
 /**
@@ -1188,49 +1193,49 @@ exports.indicators = async (req, res) =>{
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
-    const netIntake = await models.School.aggregate([
+    const netIntake = await models.Student.aggregate([
         { $match: { $and: [ {presentClass: "60d88b1a6040b7073c8112e0", yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
-    const aNetIntake = await models.School.aggregate([
+    const aNetIntake = await models.Student.aggregate([
         { $match: { $and: [ { yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
-    const grossEnroll = await models.School.aggregate([
+    const grossEnroll = await models.Student.aggregate([
         { $match: { session:""}},
         { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
     ]).exec();
 
-    const netEnroll = await models.School.aggregate([
+    const netEnroll = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:7}]}]} },
         //male and female 
         { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
     ]).exec();
 
-    const ageSpec = await models.School.aggregate([
+    const ageSpec = await models.Student.aggregate([
         //{ $match: { session:""}},
         //generate age by male and female
         { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
 
-    const outOfSchool = await models.School.aggregate([
-        { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:7}]}]} },
+    const outOfSchool = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:14}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
-    const transition = await models.School.aggregate([
+    const transition = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", status:"graduated"}]} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
     ]).exec();
 
-    const repetition = await models.School.aggregate([
+    const repetition = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", status:"repeater"}]} },
         { $group: { _id: "/**deep look for present class**/", count: { $sum: 1 } } },
     ]).exec();
 
-    const survival = await models.School.aggregate([
+    const survival = await models.Student.aggregate([
         { $match: { status:"promoted"} },
         { $group: { _id: "/* deep look by class*/", count: { $sum: 1 } } },
     ]).exec();
