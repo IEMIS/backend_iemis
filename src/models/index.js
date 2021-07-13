@@ -8,7 +8,7 @@ import Student from './students';
 import Teacher from './teacher';
 import Exam from './exam';
 import Subject from './subject';
-import Session from './session';
+import Session from './sessions';
 
 export { Admin, Classes, District, Parent, School, Staff, Student, Teacher, Exam, Subject, Session   }
 

@@ -702,12 +702,25 @@ exports.student = async (req, res) =>{
 }
 
 exports.students = async (req, res) =>{
-    ///const students =await models.Student.find().populate("school").populate("presetClass").populate("subject").exec();
+    const data = await models.Student.aggregate([
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
+        { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 } }
+    ]).exec();
+    if(!data){
+       return res.status(404).json({error:"fails to get users"})
+    }
+    res.status(200).json({message:"students successfully fetched", data})
+    /*const students =await models.Student.find().populate("school").populate("presetClass").populate("subject").exec();
     models.Student.find().populate("session").populate("school").populate("presentClass").exec((err, data)=>{
         console.log({err, data})
         if(err) return res.status(404).json({error:"students not founds"})
         res.status(200).json({message:"students successfully fetched", data})
     });
+    */
 }
 
 exports.countStudent = async (req, res)=>{
