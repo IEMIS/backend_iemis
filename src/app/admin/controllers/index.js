@@ -1033,16 +1033,9 @@ exports.classes = async (req, res)=>{
  * Admin Teachers services 
 */
 exports.createTeacher = async (req, res)=>{
-    console.log(req.body)
     const {email} = req.body;
-    /* 
-    *
-    */
    const isTeacher = await  models.Teacher.findOne({email});
    if(isTeacher){
-        /* 
-        *
-        */
        return res.status(400).json({error:"Teacher already created"})
     }  
     const teacher = new models.Teacher(req.body);
@@ -1060,18 +1053,22 @@ exports.createTeacher = async (req, res)=>{
 }
 
 exports.teachers= async (req, res)=>{
+    models.Teacher.aggregate([
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool" }},
+        { $lookup: { from: "districts", localField: "fromSchool.district", foreignField: "_id", as: "fromDistrict" }}
+    ]).exec((err, data)=>{
+        if(err || !data)return res.status(404).json({error:"Teacher is not available",err})
+        return res.status(200).status(200).json({"message":"Teacher is successfully fetched",data})
+    })
+
     /* 
-    */
    models.Teacher.find((err, data)=>{
-       if(err || !data){
-        /* 
-        */
+    if(err || !data){
            return res.status(404).json({error:"Teacher is not available",err})
         }
-        /*
-        */
        return res.status(200).status(200).json({"mesage":"Teacher is successfully fetched",data})
    })
+   */
 }
 exports.teacherById= async (req, res, next,id)=>{
     /* 
