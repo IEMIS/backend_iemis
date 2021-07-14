@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const {ObjectId} = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const teacherSchema = mongoose.Schema({
     /*
@@ -13,7 +14,7 @@ const teacherSchema = mongoose.Schema({
     },
     */
     school:{
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "School",
         required: true,
     },
@@ -78,7 +79,7 @@ const teacherSchema = mongoose.Schema({
     classTaking:[{
         type:Array,
         default:[{
-            type:ObjectId,
+            type: Schema.Types.ObjectId,
             ref:"Classes"
         }]
     }],

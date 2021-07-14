@@ -54,6 +54,10 @@ router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmi
 
 
 
+router.get("/admin/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.indicators);
+
+
+
 /**
  * Admin session services
 */

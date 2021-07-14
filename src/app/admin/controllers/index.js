@@ -1,4 +1,5 @@
 import _ from 'lodash';
+const mongoose = require("mongoose");
 import * as models from '../../../models';
 
 exports.create = async (req, res) =>{
@@ -418,11 +419,16 @@ exports.countDistrict = async (req, res)=>{
  * @returns 
  */
 export const schools = async (req, res)=>{
-    const data = await models.School.find().populate("district") 
+    const data = await models.School.aggregate([
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 } }
+    ]).exec();
     if(!data){
        return res.status(404).json({error:"fails to get users"})
     }
     res.status(200).json({message:"schools successfully fetched", data})
+
 }
 
 /**
@@ -661,6 +667,26 @@ exports.createStudent = async (req, res) =>{
 }
 
 exports.studentById= async (req, res, next, id)=>{
+    //ids = ids.map(function(el) { return mongoose.Types.ObjectId(el) })
+    let ids = mongoose.Types.ObjectId(id);
+    const data = await models.Student.aggregate([
+        { $match: { _id: ids}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
+        { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 } }
+    ]).exec();
+
+    //console.log({ data})
+    if(!data){
+        return res.status(404).json({error:"Students not found", err});
+    }
+    req.student = data;
+    next();
+    
+    /*
     models.Student.findById(id).populate("school").populate("presentClass").populate("session").exec((err, student)=>{
         if(err || !student){
             return res.status(404).json({error:"Students not found", err});
@@ -668,6 +694,7 @@ exports.studentById= async (req, res, next, id)=>{
         req.student = student;
         next();
     })
+    */
 }
 
 exports.updateStudent = async (req, res)=>{
@@ -693,16 +720,30 @@ exports.deleteStudent = async (req, res)=>{
 }
 
 exports.student = async (req, res) =>{
-    res.status(200).json({message:"", data:req.student})
+    res.status(200).json({message:"student sucessfully fetched", data:req.student})
 }
 
 exports.students = async (req, res) =>{
-    ///const students =await models.Student.find().populate("school").populate("presetClass").populate("subject").exec();
+    const data = await models.Student.aggregate([
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
+        { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 } }
+    ]).exec();
+    if(!data){
+       return res.status(404).json({error:"fails to get users"})
+    }
+    res.status(200).json({message:"students successfully fetched", data})
+
+    /*const students =await models.Student.find().populate("school").populate("presetClass").populate("subject").exec();
     models.Student.find().populate("session").populate("school").populate("presentClass").exec((err, data)=>{
         console.log({err, data})
         if(err) return res.status(404).json({error:"students not founds"})
         res.status(200).json({message:"students successfully fetched", data})
     });
+    */
 }
 
 exports.countStudent = async (req, res)=>{
@@ -992,16 +1033,9 @@ exports.classes = async (req, res)=>{
  * Admin Teachers services 
 */
 exports.createTeacher = async (req, res)=>{
-    console.log(req.body)
     const {email} = req.body;
-    /* 
-    *
-    */
    const isTeacher = await  models.Teacher.findOne({email});
    if(isTeacher){
-        /* 
-        *
-        */
        return res.status(400).json({error:"Teacher already created"})
     }  
     const teacher = new models.Teacher(req.body);
@@ -1019,18 +1053,22 @@ exports.createTeacher = async (req, res)=>{
 }
 
 exports.teachers= async (req, res)=>{
+    models.Teacher.aggregate([
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool" }},
+        { $lookup: { from: "districts", localField: "fromSchool.district", foreignField: "_id", as: "fromDistrict" }}
+    ]).exec((err, data)=>{
+        if(err || !data)return res.status(404).json({error:"Teacher is not available",err})
+        return res.status(200).status(200).json({"message":"Teacher is successfully fetched",data})
+    })
+
     /* 
-    */
    models.Teacher.find((err, data)=>{
-       if(err || !data){
-        /* 
-        */
+    if(err || !data){
            return res.status(404).json({error:"Teacher is not available",err})
         }
-        /*
-        */
        return res.status(200).status(200).json({"mesage":"Teacher is successfully fetched",data})
    })
+   */
 }
 exports.teacherById= async (req, res, next,id)=>{
     /* 
@@ -1188,49 +1226,49 @@ exports.indicators = async (req, res) =>{
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
-    const netIntake = await models.School.aggregate([
+    const netIntake = await models.Student.aggregate([
         { $match: { $and: [ {presentClass: "60d88b1a6040b7073c8112e0", yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
-    const aNetIntake = await models.School.aggregate([
+    const aNetIntake = await models.Student.aggregate([
         { $match: { $and: [ { yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
-    const grossEnroll = await models.School.aggregate([
+    const grossEnroll = await models.Student.aggregate([
         { $match: { session:""}},
         { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
     ]).exec();
 
-    const netEnroll = await models.School.aggregate([
+    const netEnroll = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:7}]}]} },
         //male and female 
         { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
     ]).exec();
 
-    const ageSpec = await models.School.aggregate([
+    const ageSpec = await models.Student.aggregate([
         //{ $match: { session:""}},
         //generate age by male and female
         { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
 
-    const outOfSchool = await models.School.aggregate([
-        { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:7}]}]} },
+    const outOfSchool = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:14}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
-    const transition = await models.School.aggregate([
+    const transition = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", status:"graduated"}]} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
     ]).exec();
 
-    const repetition = await models.School.aggregate([
+    const repetition = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", status:"repeater"}]} },
         { $group: { _id: "/**deep look for present class**/", count: { $sum: 1 } } },
     ]).exec();
 
-    const survival = await models.School.aggregate([
+    const survival = await models.Student.aggregate([
         { $match: { status:"promoted"} },
         { $group: { _id: "/* deep look by class*/", count: { $sum: 1 } } },
     ]).exec();
