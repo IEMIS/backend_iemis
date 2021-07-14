@@ -52,7 +52,7 @@ const studentSchema = mongoose.Schema({
         trim: true,
     },
     district:{
-        type:String,
+        type: Schema.Types.ObjectId,
         trim: true,
     },
 
@@ -156,7 +156,7 @@ const studentSchema = mongoose.Schema({
         required: true,
     },
     session:{
-        type: String,
+        type: Schema.Types.ObjectId,
         trim: true,
         required: true,
     },

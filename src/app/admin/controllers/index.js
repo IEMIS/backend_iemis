@@ -1,4 +1,5 @@
 import _ from 'lodash';
+const mongoose = require("mongoose");
 import * as models from '../../../models';
 
 exports.create = async (req, res) =>{
@@ -666,6 +667,26 @@ exports.createStudent = async (req, res) =>{
 }
 
 exports.studentById= async (req, res, next, id)=>{
+    //ids = ids.map(function(el) { return mongoose.Types.ObjectId(el) })
+    let ids = mongoose.Types.ObjectId(id);
+    const data = await models.Student.aggregate([
+        { $match: { _id: ids}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
+        { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 } }
+    ]).exec();
+
+    //console.log({ data})
+    if(!data){
+        return res.status(404).json({error:"Students not found", err});
+    }
+    req.student = data;
+    next();
+    
+    /*
     models.Student.findById(id).populate("school").populate("presentClass").populate("session").exec((err, student)=>{
         if(err || !student){
             return res.status(404).json({error:"Students not found", err});
@@ -673,6 +694,7 @@ exports.studentById= async (req, res, next, id)=>{
         req.student = student;
         next();
     })
+    */
 }
 
 exports.updateStudent = async (req, res)=>{
@@ -698,7 +720,7 @@ exports.deleteStudent = async (req, res)=>{
 }
 
 exports.student = async (req, res) =>{
-    res.status(200).json({message:"", data:req.student})
+    res.status(200).json({message:"student sucessfully fetched", data:req.student})
 }
 
 exports.students = async (req, res) =>{
@@ -714,6 +736,7 @@ exports.students = async (req, res) =>{
        return res.status(404).json({error:"fails to get users"})
     }
     res.status(200).json({message:"students successfully fetched", data})
+
     /*const students =await models.Student.find().populate("school").populate("presetClass").populate("subject").exec();
     models.Student.find().populate("session").populate("school").populate("presentClass").exec((err, data)=>{
         console.log({err, data})
