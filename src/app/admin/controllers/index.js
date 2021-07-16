@@ -421,9 +421,8 @@ exports.countDistrict = async (req, res)=>{
 export const schools = async (req, res)=>{
     const data = await models.School.aggregate([
         { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
-        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
-        //{ $project: { fromDistrict: 0 } }
     ]).exec();
+
     if(!data){
        return res.status(404).json({error:"fails to get users"})
     }
@@ -439,6 +438,17 @@ export const schools = async (req, res)=>{
  * @param {*} id 
  */
 export const schoolById = async (req, res, next, id) =>{
+    let ids = mongoose.Types.ObjectId(id);
+    const data = await models.School.aggregate([
+        { $match: {_id:ids}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    if(!data){
+        res.status(404).json({"error":"school not found"})
+    }
+    req.school = data;
+    next();
+    /*
     models.School.findById(id).populate("district").exec((err, data)=>{
         if(err || !data){
             res.status(404).json({"error":"school not found"})
@@ -446,6 +456,7 @@ export const schoolById = async (req, res, next, id) =>{
         req.school = data;
         next();
     });
+    */
 }
 
 /**
@@ -582,66 +593,33 @@ export const countSchoolByCat= async (req, res) =>{
     })
 }
 
+export const schoolData = async (req, res) =>{
+    let countSchool = await models.School.countDocuments();
+    let countSchoolByDistrict = await models.School.aggregate([
+        { $group : { _id:"$district", count:{$sum:1}}},
+        { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByEduLevel = await models.School.aggregate([
+        { $group : {_id:"$eduLevel", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByownership = await models.School.aggregate([
+        {$group : {_id:"$ownership", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByType = await models.School.aggregate([
+        {$group : {_id:"$schoolType", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
 
+    let countSchoolByCat = await models.School.aggregate([
+        {$group : {_id:"$schoolCat", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
 
-/**
- * get district a school by long to via school by Id
- * @param {*} req 
- * @param {*} res 
- */
-export const schoolbelongtoDistrict = async (req, res)=>{
-    let {_id} = req.school;
-    models.School.find().populate('district').exec((err, data)=>{
-        console.log({data, err})
-        /**
-         * docs
-         */
-        if(err || !data){
-            return res.status(403).json({error:"fail to get district", err})
-        }
-        res.status(200).json({message:"successfully fetched district school belong to", data})
-    })
+    res.status(404).json({message:"school data", countSchool, countSchoolByDistrict, countSchoolByEduLevel, countSchoolByownership, countSchoolByType, countSchoolByCat  })
 }
-
-export const studentInSchool = async (req, res )=>{
-    const schol = req.school;
-    schol.populate('student').exec((err, student)=>{
-        if(err || !student){
-            /**
-             * 
-             */
-            return res.status(400).json({"error":"fail", err})
-        }
-        let total = student.countDocuments()
-        res.status(200).json({"message":"success", data:{student, total}})
-    })
-}
-export const schoolByDistrict = async (req, res, next, id)=>{
-     //models.District.findById(id).exec((err, district)=>{
-        models.District.findById(id)
-        .populate('school')
-        .sort({ district: -1, school:-1 })
-        .exec((err, district)=>{
-         if(err || !district){
-             /**
-              * 
-              * 
-              */
-             res.status(404).json({"error":"District not exist"})
-         }
-         req.schoolByDistrict = district;
-         next()
-     })
-}
-export const schoolInDistrcit = async(req, res) =>{
-    return res.status(200).json({message:"school successfully fetched", data:req.schoolByDistrict})
-}
-export const schoolInDistrcitCount = async(req, res) =>{
-    //let data = req.schoolByDistrict.countDocuments();
-    //data.countDocuments();
-    return res.status(200).json({message:"school successfully fetched", data:req.schoolByDistrict,})
-}
-
 
 /**
  * Admin Students services  
@@ -655,7 +633,7 @@ exports.createStudent = async (req, res) =>{
         return res.status(400).json({error:"Students already created"})
     }  
     */
-    console.log(req.body)
+    //console.log(req.body)
     const student = new models.Student(req.body);
     student.save((err, data)=>{
         console.log({err, data})
@@ -701,7 +679,7 @@ exports.updateStudent = async (req, res)=>{
     let student = _.extend(req.student, req.body)
     student.update_at = Date.now();
     student.save((err, data)=>{
-        console.log({err, data})
+        //console.log({err, data})
         if(err){
            return res.status(403).json({error:"fails to update students", err})
         }
@@ -755,7 +733,6 @@ exports.countStudent = async (req, res)=>{
 
 exports.countStudentByGender= async (req, res)=>{
     models.Student.aggregate([
-      
         {
             $group: { 
                 _id: "$gender", "count": { $sum: 1 }, total :{$sum:"$count"}
@@ -786,38 +763,6 @@ exports.countStudentByYear = async (req, res)=>{
     .exec((err, resp)=>{
         if(err ) return res.status(400).json({error:"error in count students by year of Admission"})
         return res.status(200).json({message:"students successfully counted by year of Admission",data:resp })
-    })
-}
-
-exports.countStudentByClass = async (req, res)=>{
-    models.Student.aggregate([
-        { $match: { gender: "Female" } },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ])
-    .exec((err, resp)=>{
-        if(err ) return res.status(400).json({error:"error in count students by Class"})
-        return res.status(200).json({message:"students successfully counted by Class",data:resp })
-    })
-}
-
-exports.countStudentByClassMale = async (req, res)=>{
-    models.Student.aggregate([
-        { $match: { gender: "Male" } },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ])
-    .exec((err, resp)=>{
-        if(err ) return res.status(400).json({error:"error in count students by Class"})
-        return res.status(200).json({message:"students successfully counted by Class",data:resp })
-    })
-}
-exports.countStudentByClassFemale = async (req, res)=>{
-    models.Student.aggregate([
-        { $match: { gender: "Female" } },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ])
-    .exec((err, resp)=>{
-        if(err ) return res.status(400).json({error:"error in count students by Class"})
-        return res.status(200).json({message:"students successfully counted by Class",data:resp })
     })
 }
 
@@ -863,21 +808,6 @@ exports.countStudentByClassAll = async (req, res)=>{
     return res.status(200).json ({message:"students successfully counted by Class", data })
 }
 
-exports.countStudentByYear = async (req, res)=>{
-    models.Student.aggregate([
-        {
-            $group: {
-                _id: "$yearAdmission",
-                count:{$sum:1}
-            }
-        }
-    ])
-    .exec((err, resp)=>{
-        if(err ) return res.status(400).json({error:"error in count students by year of addmission"})
-        return res.status(200).json({message:"students successfully counted by year of admission",data:resp })
-    })
-}
-
 exports.countStudentByProvidence = async (req, res)=>{
     models.Student.aggregate([
         {
@@ -890,20 +820,52 @@ exports.countStudentByProvidence = async (req, res)=>{
     })
 }
 
-exports.countStudentBySearch = async (req, res)=>{
-    models.Student.aggregate([
-        {
-            $group: {
-                _id: req.body,
-                count:{$sum:1}
-            }
-        }
-    ])
-    .exec((err, resp)=>{
-        if(err ) return res.status(400).json({error:"error in count students by Search"})
-        return res.status(200).json({message:"students successfully counted by searching",data:resp })
-    })
+exports.StudentData = async (req, res) =>{
+    const countStudent = await models.Student.countDocuments();
+    const countStudentByGender = await models.Student.aggregate([
+        {$group: {  _id: "$gender", "count": { $sum: 1 }, total :{$sum:"$count"}}},
+        {$addFields: { totalScore:{ $sum: "$count"} }},
+    ]).exec();
+    const countStudentByYear = await models.Student.aggregate([
+        {$group: {_id: "$yearAdmission",count:{$sum:1},total:{$sum:+1}}}
+    ]).exec();
+    //const countStudentByClass = await this.countStudentByClassAll();
+    const countStudentByClass = ({a:"hello", data:"data"})
+    const countStudentBySchool = await models.Student.aggregate([
+        {$group: {  _id: "$school", "count": { $sum: 1 } }},
+        {$lookup: {from: "schools", localField:"_id", foreignField:"_id", as:"fromSchool"}}
+    ]).exec();
+    const countStudentByAge = await models.Student.aggregate([
+        {$group :{ _id:"$age", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByEduLevel = await models.Student.aggregate([
+        {$group :{ _id:"$eduLevel", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByDistrict = await models.Student.aggregate([
+        {$group :{ _id:"$district", count:{$sum:1}}},
+        { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    const countStudentByReligion = await models.Student.aggregate([
+        {$group :{ _id:"$religion", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByCountry = await models.Student.aggregate([
+        {$group :{ _id:"$country", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByEthnicity = await models.Student.aggregate([
+        {$group :{ _id:"$ethnicity", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByProvince = await models.Student.aggregate([
+        {$group :{ _id:"$province", count:{$sum:1}}},
+    ]).exec();
+    const countStudentBySession= await models.Student.aggregate([
+        {$group :{ _id:"$session", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByStatus= await models.Student.aggregate([
+        {$group :{ _id:"$status", count:{$sum:1}}},
+    ]).exec();
+    res.status(200).json({message:"school data successfully fetched",countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus })
 }
+
 
 exports.studentIndicators = async (req, res)=>{
     // Using query builder, we can latter move
@@ -1042,12 +1004,8 @@ exports.createTeacher = async (req, res)=>{
     teacher.save((err, data)=>{
         console.log({err, data})
         if(err || !data){
-            /*
-            */
             return res.status(401).json({error:"error in creating Teacher, please try again",err})
         }
-        /* 
-        */
         res.status(200).status(200).json({message:"Teacher is successfully created", data})
     })
 }

@@ -402,11 +402,7 @@ exports.forgetPassword = async (req, res)=>{
                     }
                 } 
             */
-                /**
-                 * to do 
-                 * ++++++
-                 * email notifications here
-                 */
+    
       
                 res.status(200).json({message:`Dear ${result.firstName} password reset request is successful, check your email for details`, result})
             })

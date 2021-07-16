@@ -6,7 +6,7 @@ import * as Ctr from '../controllers';
 import * as Valid from '../midleware/validator';
 import * as Mid from '../midleware';
 
-/***
+/*
  * District Services
 */
 router.get("/admin/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.districts);
@@ -49,12 +49,15 @@ router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdm
 //router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByClass)
 router.get("/admin/student/data/count/yearadmission", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByYear)
 router.get("/admin/student/data/count/providence", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByProvidence)
-router.get("/admin/student/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentBySearch)
+//router.get("/admin/student/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentBySearch)
 router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.studentIndicators)
 
 
 
+router.get("/admin/student/data/student", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentData);
+router.get("/admin/school/data/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schoolData);
 router.get("/admin/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.indicators);
+
 
 
 
