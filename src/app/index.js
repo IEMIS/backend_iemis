@@ -8,6 +8,7 @@ import staffRouter from './staff';
 import studentRouter from './students';
 import subjectRouter from './subject';
 import teacherRouter from './teacher';
+import populationRouter from './population'
 
 
-export {adminRouter, districtRouter,examRouter, parentRouter, schoolRouter, sessionRouter, staffRouter, studentRouter, subjectRouter, teacherRouter}
+export {adminRouter, districtRouter,examRouter, parentRouter, schoolRouter, sessionRouter, staffRouter, studentRouter, subjectRouter, teacherRouter, populationRouter}
