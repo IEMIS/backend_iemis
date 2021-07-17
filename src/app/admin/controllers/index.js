@@ -1024,18 +1024,24 @@ exports.updatePopulation = async (req, res)=>{
     })
 }
 
-/*
+
+/****
 comflict with others file names
 exports.deleteClasses = async (req, res)=>{
     const classes = req.classes;
     classes.remove((err, data)=>{
         if(err) return res.status(400).json({error:"failed to delete class", err})
         return res.status(200).json({message:"class successfully deleted", data})
+exports.deletePopulation = async (req, res)=>{
+    const population = req.population;
+    population.remove((err, data)=>{
+        if(err) return res.status(400).json({error:"failed to delete population", err})
+        return res.status(200).json({message:"population successfully deleted", data})
     })
 }
 
-exports.classes = async (req, res)=>{
-    res.status(200).json({message:"class successfully fetched", data:req.classes})
+exports.population = async (req, res)=>{
+    res.status(200).json({message:"population successfully fetched", data:req.population})
 }
 */
 
