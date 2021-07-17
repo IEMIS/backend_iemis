@@ -991,6 +991,50 @@ exports.classes = async (req, res)=>{
     res.status(200).json({message:"class successfully fetched", data:req.classes})
 }
 
+/**
+ * Admin Population services
+*/
+exports.createPopulation = async (req, res)=>{
+    const population = new models.Population(req.body);
+    population.save((err, data)=>{
+        if(err || !data) return res.status(400).json({error:"Failed to create a new population", err});
+        return res.status(200).json({message:"a new population successfully created", data})
+    })
+}
+exports.populationList = async (req, res)=>{
+    models.Population.find((err, data)=>{
+        if(err) return res.status(400).json({error:"failed to fetch the population list"});
+        return res.status(200).json({message:"successfully fetched the population list", data})
+    })
+}
+exports.populationById = async (req, res, next, id)=>{
+    const data = await models.Population.findById(id).exec();  //((err, data)=>{})
+    if(!data) return res.status(400).json({error:"Population is not found !!"}); 
+    req.population = data;
+    next()
+}
+
+exports.updatePopulation = async (req, res)=>{
+    const population = _.extend(req.population, req.body);
+    population.updated_At = Date.now();
+    population.save((err, data)=>{
+        if(err || !data) return res.status(400).json({error:"Failed to update population", err});
+        return res.status(200).json({message:"population successfully updated", data})
+    })
+}
+
+exports.deleteClasses = async (req, res)=>{
+    const classes = req.classes;
+    classes.remove((err, data)=>{
+        if(err) return res.status(400).json({error:"failed to delete class", err})
+        return res.status(200).json({message:"class successfully deleted", data})
+    })
+}
+
+exports.classes = async (req, res)=>{
+    res.status(200).json({message:"class successfully fetched", data:req.classes})
+}
+
 /***
  * Admin Teachers services 
 */

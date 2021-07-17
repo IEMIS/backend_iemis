@@ -39,6 +39,14 @@ const studentSchema = mongoose.Schema({
         ref: "School",
         required: true,
     },
+    //=========add this field to ease generation of indicators from education level=====
+     /*
+    eduLevel:{
+       type: String,
+        trim: true,
+        required: true,
+    },
+    */
     presentClass:{
         type: Schema.Types.ObjectId,
         ref: "Classes",

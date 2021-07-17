@@ -9,8 +9,9 @@ import Teacher from './teacher';
 import Exam from './exam';
 import Subject from './subject';
 import Session from './sessions';
+import Population from './population';
 
-export { Admin, Classes, District, Parent, School, Staff, Student, Teacher, Exam, Subject, Session   }
+export { Admin, Classes, District, Parent, School, Staff, Student, Teacher, Exam, Subject, Session, Population   }
 
 
 

@@ -81,6 +81,15 @@ router.put("/admin/classes/:classId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.
 router.delete("/admin/classes/:classId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteClasses)
 
 /**
+ * Admin population services
+*/
+//router.get("/admin/population",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.PopulationList)
+router.post("/admin/population",Valid.classCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createPopulation)
+router.get("/admin/population/:populationId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.Population)
+router.put("/admin/population/:populationId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updatePopulation)
+router.delete("/admin/population/:population", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deletePopulation)
+
+/**
  * Admin Teacher Services 
 */
 router.get("/admin/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.teachers)
