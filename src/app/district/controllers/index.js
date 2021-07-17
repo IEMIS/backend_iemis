@@ -292,7 +292,6 @@ exports.countSchoolInDistrict = async (req, res)=>{
 }
 
 exports.countstaffInDistrict = async (req, res)=>{
-    //const {_id} = req.district
     req.district.populate('staff').countDocuments().exec((err, data)=>{
         if(err || !data){
             /**

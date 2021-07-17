@@ -1,4 +1,8 @@
 import mongoose from 'mongoose';
+const crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
+const {ObjectId} = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const populationSchema = mongoose.Schema({
     year:{
@@ -277,4 +281,4 @@ const populationSchema = mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('Population',populationSchema)
+module.exports = mongoose.model('Population', populationSchema)

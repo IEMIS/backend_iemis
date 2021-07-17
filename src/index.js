@@ -36,7 +36,7 @@ app.use("/api/v1", subjectRouter);
 app.use("/api/v1", schoolRouter);
 app.use("/api/v1", studentRouter);
 app.use("/api/v1", teacherRouter);
-app.use("/api/v1", populationRouter);
+//app.use("/api/v1", populationRouter);
 
 
 app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swagerFile));
