@@ -618,7 +618,7 @@ export const schoolData = async (req, res) =>{
         { $sort: { count: -1 } },
     ]).exec();
 
-    res.status(404).json({message:"school data", countSchool, countSchoolByDistrict, countSchoolByEduLevel, countSchoolByownership, countSchoolByType, countSchoolByCat  })
+    res.status(404).json({message:"school data", data:{countSchool, countSchoolByDistrict, countSchoolByEduLevel, countSchoolByownership, countSchoolByType, countSchoolByCat}})
 }
 
 /**
@@ -839,7 +839,7 @@ exports.StudentData = async (req, res) =>{
         {$group :{ _id:"$age", count:{$sum:1}}}
     ]).exec();
     const countStudentByEduLevel = await models.Student.aggregate([
-        {$group :{ _id:"$eduLevel", count:{$sum:1}}}
+        {$group :{ _id:"$edulevel", count:{$sum:1}}}
     ]).exec();
     const countStudentByDistrict = await models.Student.aggregate([
         {$group :{ _id:"$district", count:{$sum:1}}},
@@ -859,11 +859,12 @@ exports.StudentData = async (req, res) =>{
     ]).exec();
     const countStudentBySession= await models.Student.aggregate([
         {$group :{ _id:"$session", count:{$sum:1}}},
+        { $lookup: { from: "sessions", localField: "_id", foreignField: "_id", as: "fromSession"}},
     ]).exec();
     const countStudentByStatus= await models.Student.aggregate([
         {$group :{ _id:"$status", count:{$sum:1}}},
     ]).exec();
-    res.status(200).json({message:"school data successfully fetched",countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus })
+    res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} })
 }
 
 

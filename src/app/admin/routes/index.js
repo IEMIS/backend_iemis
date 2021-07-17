@@ -56,6 +56,7 @@ router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmi
 
 router.get("/admin/student/data/student", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentData);
 router.get("/admin/school/data/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schoolData);
+
 router.get("/admin/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.indicators);
 
 
