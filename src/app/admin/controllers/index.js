@@ -1023,6 +1023,8 @@ exports.updatePopulation = async (req, res)=>{
     })
 }
 
+/*
+comflict with others file names
 exports.deleteClasses = async (req, res)=>{
     const classes = req.classes;
     classes.remove((err, data)=>{
@@ -1034,6 +1036,7 @@ exports.deleteClasses = async (req, res)=>{
 exports.classes = async (req, res)=>{
     res.status(200).json({message:"class successfully fetched", data:req.classes})
 }
+*/
 
 /***
  * Admin Teachers services 
