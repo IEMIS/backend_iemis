@@ -860,6 +860,8 @@ exports.StudentData = async (req, res) =>{
     const countStudentBySession= await models.Student.aggregate([
         {$group :{ _id:"$session", count:{$sum:1}}},
         { $lookup: { from: "sessions", localField: "_id", foreignField: "_id", as: "fromSession"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSession", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSession: 0 } }
     ]).exec();
     const countStudentByStatus= await models.Student.aggregate([
         {$group :{ _id:"$status", count:{$sum:1}}},
