@@ -844,6 +844,8 @@ exports.StudentData = async (req, res) =>{
     const countStudentByDistrict = await models.Student.aggregate([
         {$group :{ _id:"$district", count:{$sum:1}}},
         { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromDistrict: 0 } }
     ]).exec();
     const countStudentByReligion = await models.Student.aggregate([
         {$group :{ _id:"$religion", count:{$sum:1}}},
@@ -860,6 +862,65 @@ exports.StudentData = async (req, res) =>{
     const countStudentBySession= await models.Student.aggregate([
         {$group :{ _id:"$session", count:{$sum:1}}},
         { $lookup: { from: "sessions", localField: "_id", foreignField: "_id", as: "fromSession"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSession", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSession: 0 } }
+    ]).exec();
+    const countStudentByStatus= await models.Student.aggregate([
+        {$group :{ _id:"$status", count:{$sum:1}}},
+    ]).exec();
+    res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} })
+}
+
+exports.StudentDataByDistrict = async (req, res) =>{
+    const {district, session} = req.body
+    if(!district){
+        return res.status(404).json({error:"District required"})
+    }
+    if(!session){
+        return res.status(404).json({error:"Session required"})
+    }
+
+    const countStudent = await models.Student.countDocuments();
+    const countStudentByGender = await models.Student.aggregate([
+        {$group: {  _id: "$gender", "count": { $sum: 1 }, total :{$sum:"$count"}}},
+        {$addFields: { totalScore:{ $sum: "$count"} }},
+    ]).exec();
+    const countStudentByYear = await models.Student.aggregate([
+        {$group: {_id: "$yearAdmission",count:{$sum:1},total:{$sum:+1}}}
+    ]).exec();
+    //const countStudentByClass = await this.countStudentByClassAll();
+    const countStudentByClass = ({a:"hello", data:"data"})
+    const countStudentBySchool = await models.Student.aggregate([
+        {$group: {  _id: "$school", "count": { $sum: 1 } }},
+        {$lookup: {from: "schools", localField:"_id", foreignField:"_id", as:"fromSchool"}}
+    ]).exec();
+    const countStudentByAge = await models.Student.aggregate([
+        {$group :{ _id:"$age", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByEduLevel = await models.Student.aggregate([
+        {$group :{ _id:"$edulevel", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByDistrict = await models.Student.aggregate([
+        {$group :{ _id:"$district", count:{$sum:1}}},
+        { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    const countStudentByReligion = await models.Student.aggregate([
+        {$group :{ _id:"$religion", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByCountry = await models.Student.aggregate([
+        {$group :{ _id:"$country", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByEthnicity = await models.Student.aggregate([
+        {$group :{ _id:"$ethnicity", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByProvince = await models.Student.aggregate([
+        {$group :{ _id:"$province", count:{$sum:1}}},
+    ]).exec();
+    const countStudentBySession= await models.Student.aggregate([
+        {$group :{ _id:"$session", count:{$sum:1}}},
+        { $lookup: { from: "sessions", localField: "_id", foreignField: "_id", as: "fromSession"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSession", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSession: 0 } }
     ]).exec();
     const countStudentByStatus= await models.Student.aggregate([
         {$group :{ _id:"$status", count:{$sum:1}}},
