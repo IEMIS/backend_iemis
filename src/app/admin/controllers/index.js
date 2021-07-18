@@ -598,7 +598,9 @@ export const schoolData = async (req, res) =>{
     let countSchoolByDistrict = await models.School.aggregate([
         { $group : { _id:"$district", count:{$sum:1}}},
         { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
-        { $sort: { count: -1 } },
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromDistrict: 0 } },
+        //{ $sort: { count: -1 } },
     ]).exec();
     let countSchoolByEduLevel = await models.School.aggregate([
         { $group : {_id:"$eduLevel", count:{$sum:1}}},
