@@ -912,7 +912,7 @@ exports.StudentData = async (req, res) =>{
 exports.countStudentByClassAllByDistrict = async (req, res)=>{
     let district = mongoose.Types.ObjectId(req.body.district);
     const male = await models.Student.aggregate([
-        { $match: { gender: "Male" } },
+        { $match: { $and: [{ gender: "Male" }, {district}]} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
@@ -920,12 +920,14 @@ exports.countStudentByClassAllByDistrict = async (req, res)=>{
     ]).exec();
     const female = await models.Student.aggregate([
         { $match: { gender: "Female" } },
+        { $match: { $and: [{ gender: "Female" }, {district}]} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromClass: 0 } }
     ]).exec();
     const total = await models.Student.aggregate([
+        { $match: { gender: district } },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
@@ -1361,20 +1363,21 @@ exports.teacherData = async (req, res) =>{
 exports.countTeacherBySchoolAllByDistrict = async (req, res)=>{
     let district = mongoose.Types.ObjectId(req.body.district);
     const male = await models.Teacher.aggregate([
-        { $match: { gender: "Male" } },
+        { $match: { $and: [{ gender: "Male" }, {district}]} },
         { $group: { _id: "$school", count: { $sum: 1 } } },
         { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromSchool: 0 } }
     ]).exec();
     const female = await models.Teacher.aggregate([
-        { $match: { gender: "Female" } },
+        { $match: { $and: [{ gender: "Female" }, {district}]} },
         { $group: { _id: "$school", count: { $sum: 1 } } },
         { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromSchool: 0 } }
     ]).exec();
     const total = await models.Teacher.aggregate([
+        { $match: {district:district} },
         { $group: { _id: "$school", count: { $sum: 1 } } },
         { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
@@ -1392,9 +1395,11 @@ exports.countTeacherBySchoolAllByDistrict = async (req, res)=>{
 exports.teacherDataByDistrict = async (req, res) =>{
     const countTeacher = await models.Teacher.countDocuments().exec()
     const countTeacherByTypeOfstaff = await models.Teacher.aggregate([
+        { $match: { district: district } },
         {$group : {_id:"$typeOfStaff",count:{$sum:1}}}
     ]).exec()
     const countTeacherByGender = await models.Teacher.aggregate([
+        { $match: { district: district } },
         {$group : {_id:"$gender",count:{$sum:1}}}
     ]).exec()
 }
@@ -1419,14 +1424,15 @@ exports.searchByDistrict = async (req, res) =>{
 
 exports.indicators = async (req, res) =>{
     const {year, classid, dob } = req.body;
+    let classId = mongoose.Types.ObjectId(classid);
     //result: { $and: [ { $gt: [ "$qty", 100 ] }, { $lt: [ "$qty", 250 ] } ] }
     const grossIntake = await models.Student.aggregate([
-        { $match: { $and: [ {presentClass: "60d88b1a6040b7073c8112e0", yearAdmission:"2020"}]} },
+        { $match: { $and: [ {presentClass:classId, yearAdmission:"2020"}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
     const netIntake = await models.Student.aggregate([
-        { $match: { $and: [ {presentClass: "60d88b1a6040b7073c8112e0", yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
+        { $match: { $and: [ {presentClass: classId, yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
 
