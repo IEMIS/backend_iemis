@@ -593,7 +593,7 @@ export const countSchoolByCat= async (req, res) =>{
     })
 }
 
-export const schoolData = async (req, res) =>{
+exports.schoolData = async (req, res) =>{
     let countSchool = await models.School.countDocuments();
     let countSchoolByDistrict = await models.School.aggregate([
         { $group : { _id:"$district", count:{$sum:1}}},
@@ -623,7 +623,7 @@ export const schoolData = async (req, res) =>{
     res.status(404).json({message:"school data", data:{countSchool, countSchoolByDistrict, countSchoolByEduLevel, countSchoolByownership, countSchoolByType, countSchoolByCat}})
 }
 
-export const schoolDataByDistrict = async (req, res) =>{
+exports.schoolDataByDistrict = async (req, res) =>{
     let district = mongoose.Types.ObjectId(req.body.district);
     let countSchool = await models.School.countDocuments();
     let countSchoolByDistrict = await models.School.aggregate([
@@ -1405,21 +1405,7 @@ exports.teacherDataByDistrict = async (req, res) =>{
 }
 
 
-exports.searchByDistrict = async (req, res) =>{
-    const {ids} = req.body
-    console.log(ids)
-    const countSchoolByEduLevelBySearch = await models.School.aggregate([
-        //{ $match: { district: "60d88b1a6040b7073c8112e0"} },
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
-        //{ $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
-    ]).exec();
-    const countStudentInDistrict = await models.Student.aggregate([
-        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
-        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict" }}
-    ]).exec()
 
-    res.status(200).json({message:"search successfully", countSchoolByEduLevelBySearch, countStudentInDistrict})
-}
 
 
 exports.indicators = async (req, res) =>{
@@ -1470,15 +1456,31 @@ exports.indicators = async (req, res) =>{
 
     const repetition = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", status:"repeater"}]} },
-        { $group: { _id: "/**deep look for present class**/", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
 
     const survival = await models.Student.aggregate([
         { $match: { status:"promoted"} },
-        { $group: { _id: "/* deep look by class*/", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
     console.log({transition,repetition,survival, grossIntake, netIntake, aNetIntake,grossEnroll, netEnroll, ageSpec, outOfSchool,})
     return res.status(200).json({message:"indicator",transition,repetition,survival, grossIntake, netIntake, aNetIntake,grossEnroll, netEnroll, ageSpec, outOfSchool, })
+}
+
+exports.searchByDistrict = async (req, res) =>{
+    const {ids} = req.body
+    console.log(ids)
+    const countSchoolByEduLevelBySearch = await models.School.aggregate([
+        //{ $match: { district: "60d88b1a6040b7073c8112e0"} },
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        //{ $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    const countStudentInDistrict = await models.Student.aggregate([
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict" }}
+    ]).exec()
+
+    res.status(200).json({message:"search successfully", countSchoolByEduLevelBySearch, countStudentInDistrict})
 }
 
 
