@@ -7,7 +7,7 @@ import * as models from '../../../models'
  * @param {*} req 
  * @param {*} res 
  */
-export const create = async (req, res) =>{
+exports.create = async (req, res) =>{
     const  {email}= req.body 
 
     const isSchool = await models.School.findOne({email})
