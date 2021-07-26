@@ -19,7 +19,7 @@ exports.create = async (req, res) =>{
     }
     const schoo = new models.School(req.body)
     schoo.save((err, scho)=>{
-        consola.success({err, scho})
+        //consola.success({err, scho})
         if(err || !scho){
              /**
               * 
