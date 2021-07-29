@@ -624,8 +624,11 @@ exports.schoolData = async (req, res) =>{
 }
 
 exports.schoolDataByDistrict = async (req, res) =>{
+    if(!req.body.district){
+        return res.status(404).json({error:"District required"})
+    }
     let district = mongoose.Types.ObjectId(req.body.district);
-    let countSchool = await models.School.countDocuments();
+    let countSchool = await models.School.countDocuments({district});
     let countSchoolByDistrict = await models.School.aggregate([
         { $match : {district}},
         { $group : { _id:"$district", count:{$sum:1}}},
@@ -865,7 +868,8 @@ exports.StudentData = async (req, res) =>{
         {$addFields: { totalScore:{ $sum: "$count"} }},
     ]).exec();
     const countStudentByYear = await models.Student.aggregate([
-        {$group: {_id: "$yearAdmission",count:{$sum:1},total:{$sum:+1}}}
+        {$project : {year:{$year:"$yearAdmission"}}},
+        {$group: {_id: "$year", count:{$sum:1},total:{$sum:+1}}}
     ]).exec();
     //const countStudentByClass = await this.countStudentByClassAll();
     const countStudentByClass = ({a:"hello", data:"data"})
@@ -955,17 +959,18 @@ exports.countStudentByClassAllByDistrict = async (req, res)=>{
 }
 
 exports.StudentDataByDistrict = async (req, res) =>{
-    const { session} = req.body
+    //const { session} = req.body
     if(!req.body.district){
         return res.status(404).json({error:"District required"})
     }
-    if(!session){
-        return res.status(404).json({error:"Session required"})
-    }
+    // if(!session){
+    //     return res.status(404).json({error:"Session required"})
+    // }
 
     let district = mongoose.Types.ObjectId(req.body.district);
+    console.log(district)
 
-    const countStudent = await models.Student.countDocuments();
+    const countStudent = await models.Student.countDocuments({district});
     const countStudentByGender = await models.Student.aggregate([
         {$match: {district}},
         {$group: {  _id: "$gender", "count": { $sum: 1 }, total :{$sum:"$count"}}},
@@ -973,7 +978,8 @@ exports.StudentDataByDistrict = async (req, res) =>{
     ]).exec();
     const countStudentByYear = await models.Student.aggregate([
         {$match: {district}},
-        {$group: {_id: "$yearAdmission",count:{$sum:1},total:{$sum:+1}}}
+        {$project : {year:{$year:"$yearAdmission"}}},
+        {$group: {_id: "$year",count:{$sum:1},total:{$sum:+1}}}
     ]).exec();
     //const countStudentByClass = await this.countStudentByClassAll();
     const countStudentByClass = ({a:"hello", data:"data"})
