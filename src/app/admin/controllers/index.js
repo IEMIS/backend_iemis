@@ -742,15 +742,17 @@ exports.student = async (req, res) =>{
 }
 
 exports.students = async (req, res) =>{
-    const data = await models.Student.aggregate(
+    const data = await models.Student.aggregate([
         { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
         { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
         { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
         { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+
         //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
         //{ $project: { fromDistrict: 0 } }
-    ).exec();
-    console.log({data:data[0]})
+    ]).exec();
+    
+    //console.log({data})
     if(!data){
        return res.status(404).json({error:"fails to get users"})
     }
