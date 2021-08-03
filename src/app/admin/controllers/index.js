@@ -1329,10 +1329,9 @@ exports.indicators = async (req, res) =>{
         },
     ]
 
-
-    console.log({transition,repetition,survival, grossIntake, netIntake, aNetIntake,grossEnroll, netEnroll, ageSpec, outOfSchool,})
+    console.log({transition,repetition,survival, aNetIntake,grossEnroll, netEnroll, ageSpec, outOfSchool,})
     return res.status(200).json({
-        message:"indicator",
+        message:"Fetched indicator",
         data:{
             survival,
             repetition,
@@ -1343,8 +1342,6 @@ exports.indicators = async (req, res) =>{
             grossEnroll, 
             aNetIntake, 
         },
-        
-        //grossIntake, netIntake,  
     })
 }
 
