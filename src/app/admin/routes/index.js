@@ -15,7 +15,7 @@ router.delete("/admin/district/:districtId", Mid.requiredSignin, Mid.isSuperAdmi
 router.get("/admin/district/:districtId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.district);
 router.put("/admin/district/:districtId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateDistrict);
 router.get("/admin/district/data/count", Mid.requiredSignin, Mid.isSuperAdmin,Ctr.countDistrict);
-router.get("/admin/district/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin,Ctr.searchByDistrict);
+//router.get("/admin/district/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin,Ctr.searchByDistrict);
 
 /**
   * School services
@@ -52,19 +52,20 @@ router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdm
 // router.get("/admin/student/data/count/yearadmission", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByYear)
 // router.get("/admin/student/data/count/providence", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByProvidence)
 //router.get("/admin/student/data/count/search", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentBySearch)
-router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.studentIndicators)
+//router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.studentIndicators)
 
 
 
 router.get("/admin/student/data/student", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentData);
 router.post("/admin/student/data/student/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentDataByDistrict);
 router.post("/admin/student/data/student/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentDataBySchool);
+router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.indicators);
 
 router.get("/admin/school/data/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schoolData);
 router.post("/admin/school/data/school/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schoolDataByDistrict);
 router.post("/admin/school/data/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schoolByDistrict);
 
-router.get("/admin/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.indicators);
+//router.get("/admin/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.indicators);
 
 
 
