@@ -1124,6 +1124,10 @@ exports.indicators = async (req, res) =>{
         { $match: { $and: [ { yearAdmission:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
+    const aNetIntakeTotal = await models.Student.aggregate([
+        { $match: { $and: [ { yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
+        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    ]).exec();
 
     const aNetIntake = [
         {
@@ -1139,7 +1143,7 @@ exports.indicators = async (req, res) =>{
         {
             key: "Total",
             color: "#3ebfea",
-            values: aNetIntakeMale + aNetIntakeFemale,
+            values: aNetIntakeTotal,
         },
     ]
 
@@ -1149,6 +1153,10 @@ exports.indicators = async (req, res) =>{
     ]).exec();
     const grossEnrollFemale = await models.Student.aggregate([
         { $match: { $and: [{session:"2020", gender:"Female"}]}},
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    ]).exec();
+    const grossEnrollTotal = await models.Student.aggregate([
+        { $match: { $and: [{session:"2020"}]}},
         { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
     ]).exec();
 
@@ -1166,7 +1174,7 @@ exports.indicators = async (req, res) =>{
         {
             key: "Total",
             color: "#3ebfea",
-            values: grossEnrollMale + grossEnrollFemale,
+            values: grossEnrollTotal,
         },
     ]
 
@@ -1175,6 +1183,10 @@ exports.indicators = async (req, res) =>{
         { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
     ]).exec();
     const netEnrollFemale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    ]).exec();
+    const netEnrollTotal= await models.Student.aggregate([
         { $match: { $and: [ { session:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
         { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
     ]).exec();
@@ -1193,7 +1205,7 @@ exports.indicators = async (req, res) =>{
         {
             key: "Total",
             color: "#3ebfea",
-            values: netEnrollMale + netEnrollFemale,
+            values: netEnrollTotal,
         },
     ]
 
@@ -1202,6 +1214,10 @@ exports.indicators = async (req, res) =>{
         { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
     const ageSpecFemale = await models.Student.aggregate([
+        { $match: { gender:"Female"}},
+        { $group: { _id: "$age", count: { $sum: 1 } } },
+    ]).exec();
+    const ageSpecTotal = await models.Student.aggregate([
         { $match: { gender:"Female"}},
         { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
@@ -1219,7 +1235,7 @@ exports.indicators = async (req, res) =>{
         {
             key: "Total",
             color: "#3ebfea",
-            values: ageSpecMale + ageSpecFemale,
+            values: ageSpecTotal,
         },
     ]
 
@@ -1229,6 +1245,10 @@ exports.indicators = async (req, res) =>{
     ]).exec();
     const outOfSchoolFemale = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", gender:"Female", age:[{ $lt:6, $gt:14}]}]} },
+        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    ]).exec();
+    const outOfSchoolTotal = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:14}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
     ]).exec();
     const outOfSchool = [
@@ -1245,7 +1265,7 @@ exports.indicators = async (req, res) =>{
         {
             key: "Total",
             color: "#3ebfea",
-            values: outOfSchoolMale + outOfSchoolFemale,
+            values: outOfSchoolTotal,
         },
     ]
 
@@ -1255,6 +1275,10 @@ exports.indicators = async (req, res) =>{
     ]).exec();
     const transitionFemale = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", status:"graduated", gender:"Female"}]} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+    ]).exec();
+    const transitionTotal = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", status:"graduated"}]} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
     ]).exec();
     const transition = [
@@ -1271,7 +1295,7 @@ exports.indicators = async (req, res) =>{
         {
             key: "Total",
             color: "#3ebfea",
-            values: transitionMale + transitionFemale,
+            values: transitionTotal,
         },
     ]
 
@@ -1281,6 +1305,10 @@ exports.indicators = async (req, res) =>{
     ]).exec();
     const repetitionFemale = await models.Student.aggregate([
         { $match: { $and: [ { session:"2020", status:"repeater", gender:"Female"}]} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+    ]).exec();
+    const repetitionTotal = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", status:"repeater",}]} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
 
@@ -1298,7 +1326,7 @@ exports.indicators = async (req, res) =>{
         {
             key: "Total",
             color: "#3ebfea",
-            values: repetitionMale + repetitionFemale,
+            values: repetitionTotal,
         },
     ]
 
@@ -1307,6 +1335,10 @@ exports.indicators = async (req, res) =>{
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
     const survivalFemale = await models.Student.aggregate([
+        { $match: { status:"promoted"} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+    ]).exec();
+    const survivalTotal = await models.Student.aggregate([
         { $match: { status:"promoted"} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
@@ -1325,7 +1357,7 @@ exports.indicators = async (req, res) =>{
         {
             key: "Total",
             color: "#3ebfea",
-            values: survivalMale + survivalFemale,
+            values: survivalTotal,
         },
     ]
 
