@@ -1218,7 +1218,6 @@ exports.indicators = async (req, res) =>{
         { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
     const ageSpecTotal = await models.Student.aggregate([
-        { $match: { gender:"Female"}},
         { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
     const ageSpec = [
