@@ -398,13 +398,13 @@ export const createSchool = async (req, res) =>{
     }
     const schoo = new models.School(req.body)
     schoo.save((err, scho)=>{
-        consola.success({err, scho})
         if(err || !scho){
             return  res.status(405).json({"error":"error in creating a school"})
         }
         res.status(200).json({"message":"school is created", school:scho})
     })
 }
+
 export const schools = async (req, res)=>{
     const data = await models.School.aggregate([
         { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
@@ -442,16 +442,19 @@ export const school = async(req, res) =>{
     return res.status(200).json({message:"school successfully fetched", data:req.school})
 }
 
-export const updateSchool = async (req, res)=>{
-    let update = _.extend(req.school,req.body)
-    update.save((err, data)=>{
-        if(err || !data){
-            return res.status(403).json({error:"error in updating school detail", err})
-        }
-        res.status(200).json({message:"school successfully updated", data})
-
-    })
-
+exports.updateSchool = async (req, res)=>{
+    //let updateSch = req.school[0]
+    //console.log(updateSch,req.body)
+    //updateSch = _.extend(updateSch,req.body)
+    //console.log(updateSch)
+    res.status(200).json({message:"school successfully updated"})
+    // updateSch.updatedAt = Date.now();
+    // updateSch.save((err,data)=>{
+    //     if(err || !data){
+    //         return res.status(403).json({error:"error in updating school detail", err})
+    //     }
+    //     res.status(200).json({message:"school successfully updated", data})
+    // })
 }
 
 exports.schoolByDistrict = async (req, res)=>{
@@ -468,14 +471,17 @@ exports.schoolByDistrict = async (req, res)=>{
     res.status(200).json({message:"school fetched", data})
 }
 
-export const deleteSchool = async (req, res)=>{
-     let schol = req.school;
-     schol.remove((err, data)=>{
-         if(err || !data){
-             return res.status(403).json({error:"fails to delete school", err})
-         }
-         res.status(200).json({message:"school succesfully deleted", data})
-     })
+exports.deleteSchool = async (req, res)=>{
+    let schol = req.school[0];
+    //console.log(schol)
+    return res.status(403).json({error:"fails to delete school"})
+    // schol.remove((err, data)=>{
+    //     if(err || !data){
+    //         return res.status(403).json({error:"fails to delete school", err})
+    //     }
+
+    //     res.status(200).json({message:"school succesfully deleted", data})
+    // })
 }
 
 // /**
@@ -690,22 +696,24 @@ exports.studentById= async (req, res, next, id)=>{
 exports.updateStudent = async (req, res)=>{
     let student = _.extend(req.student, req.body)
     student.update_at = Date.now();
-    student.save((err, data)=>{
-        if(err){
-           return res.status(403).json({error:"fails to update students", err})
-        }
-        res.status(200).json({message:"students update successful", data})
-    })
+    // student.save((err, data)=>{
+    //     if(err){
+    //        return res.status(403).json({error:"fails to update students", err})
+    //     }
+    //     res.status(200).json({message:"students update successful", data})
+    // })
+    return res.status(200).json({message:"students update successful"})
 }
 
 exports.deleteStudent = async (req, res)=>{
-    let student = req.student;
-    student.remove((err, data)=>{
-        if(err || !data){
-            res.status(403).json({error:"fails to delete student", err})
-        }
-        res.status(200).json({message:"Student succesfully deleted", data})
-    })
+    let student = req.student[0];
+    // student.remove((err, data)=>{
+    //     if(err || !data){
+    //         return res.status(403).json({error:"fails to delete student", err})
+    //     }
+    //     res.status(200).json({message:"Student succesfully deleted", data})
+    // })
+    return res.status(403).json({error:"fails to delete student"})
 }
 
 exports.student = async (req, res) =>{
