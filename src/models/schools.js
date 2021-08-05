@@ -6,14 +6,10 @@ const { ObjectId } = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const schoolSchema = mongoose.Schema({
-    /*
     code:{
         type:String,
         trim:true,
-        required:true,
-        unique:true,
     },
-    */
     district:{
         type: Schema.Types.ObjectId,
         ref: "District",
