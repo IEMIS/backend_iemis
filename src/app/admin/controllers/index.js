@@ -1549,12 +1549,9 @@ exports.teachers= async (req, res)=>{
    */
 }
 exports.teacherById= async (req, res, next,id)=>{
-    /* 
-    */
-    models.Teacher.findById(id).exec((err, teacher)=>{
+    //let ids = mongoose.Types.ObjectId(id);
+    models.Teacher.findById(id).populate("school").exec((err, teacher)=>{
         if(err || !teacher){ 
-            /*
-            */
             return res.status(404).json({error: "Teacher not found"})
         }
         req.teacher = teacher;
@@ -1562,8 +1559,7 @@ exports.teacherById= async (req, res, next,id)=>{
     })
 }
 exports.teacher = async (req, res)=>{
-    /* 
-    */
+    //console.log(req.teacher)
     res.status(200).json({message:"teacher is succesfully fetched", data:req.teacher})
 }
 exports.updateTeacher = async (req, res) => {
@@ -1572,6 +1568,7 @@ exports.updateTeacher = async (req, res) => {
     let teacher = _.extend(req.teacher,req.body);
     teacher.update_at = Date.now();
     teacher.save((err,data)=>{
+        console.log({err, data})
         if(err ||!data) {
           /*
             */
