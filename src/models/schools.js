@@ -9,6 +9,7 @@ const schoolSchema = mongoose.Schema({
     code:{
         type:String,
         trim:true,
+        unique: true
     },
     district:{
         type: Schema.Types.ObjectId,
