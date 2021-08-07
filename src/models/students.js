@@ -5,14 +5,18 @@ const {ObjectId} = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const studentSchema = mongoose.Schema({
-    /*
+    
     studentCode:{
         type: String,
         trim: true,
         required: true,
         unique: true
     },
-    */
+    cohortA:{
+        type: String,
+        trim: true,
+        //required: true,
+    },
       /*
     parent:{
         type: Schema.Types.ObjectId,
