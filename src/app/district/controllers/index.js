@@ -1,111 +1,6 @@
-
-
-import * as models from "../../../models";
-import _ from 'lodash';
-
-exports.create = async (req, res)=>{
-    const {email} = req.body;
-    /* 
-      #swagger.tags = ['Admin services']
-      #swagger.description = 'Endpoint to create a new district' 
-  
-        #swagger.parameters['obj'] = {
-        in: 'body',
-        description: 'create a new admin',
-        required: true,
-        type: 'object',
-        schema: {
-                    "email": "admin@gmail.com",
-                    "password": "password",
-                    "name" : "ade",
-                    "phone" : "09045677",
-                }
-       } 
-    */
-   const isDistrict = await  models.District.findOne({email});
-   if(isDistrict){
-        /* #swagger.responses[400] = {
-                description: "district already created",
-                schema: { 
-                    "error ":"District already created",
-                 }
-            } 
-        */
-       return res.status(400).json({error:"District already created"})
-    }  
-    const district = new models.District(req.body);
-    district.save((err, data)=>{
-        //console.log({err, data})
-        if(err || !data){
-
-            /* 
-               #swagger.responses[401] = {
-                description: "error in creating district",
-                schema: { 
-                    "error ":"error in creating district",
-                }
-            } 
-            */
-            return res.status(401).json({error:"error in creating district, please try again",err})
-        }
-
-            /* #swagger.responses[200] = {
-                description: "district succesfully created",
-                schema: { 
-                    "message ":"district succesfully created",
-                    "data":{
-                        "_id":"002whhe",
-                        "firstName":"adem",
-                        "lastName":"Oluyemi",
-                        "email":"adin@gmail.com"
-                    }
-                 }
-            } 
-            */
-        res.status(200).json({message:"District successfully created", data})
-    })
-}
-
-exports.districts = async (req, res)=>{
-    /* 
-    *
-    */
-    models.District.find((err, data)=>{
-       if(err || !data){
-           /* #swagger.responses[404] = {
-                description: "Find all the district",
-                schema: { 
-                    "error ":"Disrict is not available",
-                }
-            } 
-            */
-           return res.status(404).json({error:"District is not available",err})
-        }
-        /*
-            #swagger.responses[200] = {
-                description: "All district list",
-                schema: { 
-                    "mesage":"Disrict is successfully fetched",
-                    "data":[
-                        {
-                        "_id":"88888888888888",
-                        "name":"ggaga",
-                        "phone":"090888",
-                        "email":"ass@dd.vb"
-                        },
-                        {
-                        "_id":"88888888888888",
-                        "name":"ggaga",
-                        "phone":"090888",
-                        "email":"ass@dd.vb"
-                        },
-                    ]
-                }
-            } 
-        */
-       return res.status(200).json({"message":"District is successfully fetched",data})
-    })
-}
+const _ = require('lodash');
+const mongoose = require("mongoose");
+const models = require('../../../models/index');
 
 exports.districtById= async (req, res, next,id)=>{
     // #swagger.start
@@ -133,7 +28,6 @@ exports.districtById= async (req, res, next,id)=>{
 
 exports.district = async (req, res)=>{
     // #swagger.start
-
     /* 
        #swagger.tags = ['Admin services']
        #swagger.description = 'Endpoint to create a new district'  
@@ -154,7 +48,7 @@ exports.district = async (req, res)=>{
     res.status(200).json({message:"district succesfully fetched", data:req.district})
 }
 
-exports.update = async (req, res) => {
+exports.updateDistrict = async (req, res) => {
     /* 
       #swagger.tags = ['Admin services']
       #swagger.description = 'Endpoint to create a new district' 
@@ -192,138 +86,1030 @@ exports.update = async (req, res) => {
     })
 };
 
-
-exports.delete = async (req, res) => {
-    /* 
-      #swagger.tags = ['Admin services']
-      #swagger.description = 'Endpoint to create a new district' 
-    */
-    const district = req.district
-    district.remove((err, data)=>{
-        if(err){
-             /* #swagger.responses[400] = {
-                description: "Error in deleting district",
-                schema: { 
-                    "error ":"Error in deleting district",
-                }
-            } 
-            */
-            return res.status(400).json({error:"Error in deleting district"});
+//   Admin School services 
+export const createSchool = async (req, res) =>{
+    const  {email}= req.body 
+    const isSchool = await models.School.findOne({email})
+    if(isSchool){
+        return res.status(400).json({"error":"School email already exist"})
+    }
+    const schoo = new models.School(req.body)
+    schoo.save((err, scho)=>{
+        if(err || !scho){
+            return  res.status(405).json({"error":"error in creating a school"})
         }
-         /* 
-            #swagger.responses[200] = {
-                description: "district successfully deleted",
-                schema: { 
-                    "message ":"district successfully deleted",
-                    "data":{
-                        "_id":"002whhe",
-                        "firstName":"adem",
-                        "lastName":"Oluyemi",
-                        "email":"adin@gmail.com"
-                    }
-                 }
-            } 
-        */
-        return res.json({message:"district successfully deleted", data})
+        res.status(200).json({"message":"school is created", school:scho})
+    })
+}
+
+export const schools = async (req, res)=>{
+    const data = await models.School.aggregate([
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+
+    if(!data){
+       return res.status(404).json({error:"fails to get users"})
+    }
+    res.status(200).json({message:"schools successfully fetched", data})
+
+}
+
+export const schoolById = async (req, res, next, id) =>{
+    let ids = mongoose.Types.ObjectId(id);
+    const data = await models.School.aggregate([
+        { $match: {_id:ids}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    if(!data){
+        res.status(404).json({"error":"school not found"})
+    }
+    req.school = data;
+    next();
+    
+    // models.School.findById(id).populate("district").exec((err, data)=>{
+    //     if(err || !data){
+    //         res.status(404).json({"error":"school not found"})
+    //     }
+    //     req.school = data;
+    //     next();
+    // });
+    
+}
+export const school = async(req, res) =>{
+    return res.status(200).json({message:"school successfully fetched", data:req.school})
+}
+
+exports.updateSchool = async (req, res)=>{
+    //let updateSch = req.school[0]
+    //console.log(updateSch,req.body)
+    //updateSch = _.extend(updateSch,req.body)
+    //console.log(updateSch)
+    res.status(200).json({message:"school successfully updated"})
+    // updateSch.updatedAt = Date.now();
+    // updateSch.save((err,data)=>{
+    //     if(err || !data){
+    //         return res.status(403).json({error:"error in updating school detail", err})
+    //     }
+    //     res.status(200).json({message:"school successfully updated", data})
+    // })
+}
+
+exports.schoolByDistrict = async (req, res)=>{
+    if(!req.body.district){
+        return res.status(404).json({error:"District required"})
+    }
+    let district = mongoose.Types.ObjectId(req.body.district);
+    const data = await models.School.aggregate([
+        { $match : {district}}
+    ]).exec();
+    if(!data){
+        res.status(404).json({"error":"school not found"})
+    }
+    res.status(200).json({message:"school fetched", data})
+}
+
+exports.deleteSchool = async (req, res)=>{
+    let schol = req.school[0];
+    //console.log(schol)
+    return res.status(403).json({error:"fails to delete school"})
+    // schol.remove((err, data)=>{
+    //     if(err || !data){
+    //         return res.status(403).json({error:"fails to delete school", err})
+    //     }
+
+    //     res.status(200).json({message:"school succesfully deleted", data})
+    // })
+}
+
+exports.schoolData = async (req, res) =>{
+    //count school data only within a district
+    let district = mongoose.Types.ObjectId(req.body.district);    
+    //let countSchool = await models.School.countDocuments();
+    let countSchool = await models.School.aggregate([
+        { $match : {district}},
+        { $group : { _id:"$_id", count:{$sum:1}}},
+    ]).exec();
+    let countSchoolByDistrict = await models.School.aggregate([
+        { $match : {district}},
+        { $group : { _id:"$district", count:{$sum:1}}},
+        { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromDistrict: 0 } },
+        //{ $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByEduLevel = await models.School.aggregate([
+        { $match : {district}},
+        { $group : {_id:"$eduLevel", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByownership = await models.School.aggregate([
+        { $match : {district}},
+        {$group : {_id:"$ownership", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByType = await models.School.aggregate([
+        { $match : {district}},
+        {$group : {_id:"$schoolType", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByCat = await models.School.aggregate([
+        { $match : {district}},
+        {$group : {_id:"$schoolCat", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    res.status(404).json({message:"school data", data:{countSchool, countSchoolByDistrict, countSchoolByEduLevel, countSchoolByownership, countSchoolByType, countSchoolByCat}})
+}
+
+exports.schoolDataByDistrict = async (req, res) =>{
+    if(!req.body.district){
+        return res.status(404).json({error:"District required"})
+    }
+    let district = mongoose.Types.ObjectId(req.body.district);
+    let countSchool = await models.School.countDocuments({district});
+    let countSchoolByDistrict = await models.School.aggregate([
+        { $match : {district}},
+        { $group : { _id:"$district", count:{$sum:1}}},
+        { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromDistrict: 0 } },
+        //{ $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByEduLevel = await models.School.aggregate([
+        { $match : {district}},
+        { $group : {_id:"$eduLevel", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByownership = await models.School.aggregate([
+        { $match : {district}},
+        {$group : {_id:"$ownership", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+    let countSchoolByType = await models.School.aggregate([
+        { $match : {district}},
+        {$group : {_id:"$schoolType", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+
+    let countSchoolByCat = await models.School.aggregate([
+        { $match : {district}},
+        {$group : {_id:"$schoolCat", count:{$sum:1}}},
+        { $sort: { count: -1 } },
+    ]).exec();
+
+    res.status(404).json({message:"school data", data:{countSchool, countSchoolByDistrict, countSchoolByEduLevel, countSchoolByownership, countSchoolByType, countSchoolByCat}})
+}
+
+// Admin Students services  
+
+exports.createStudent = async (req, res) =>{
+    
+    // const {studentCode} = req.body;
+    // const isStudent = await  models.Student.findOne({studentCode});
+    // if(isStudent){
+    //     return res.status(400).json({error:"Students already created"})
+    // }  
+    
+    //console.log(req.body)
+    const student = new models.Student(req.body);
+    student.save((err, data)=>{
+        //console.log({err, data})
+        if(err || !data){
+            return res.status(401).json({error:"error in creating student, please try again",err})
+        }
+        res.status(200).json({message:"students successfully created, you can now login", data})
+    }) 
+}
+
+exports.studentById= async (req, res, next, id)=>{
+    let ids = mongoose.Types.ObjectId(id);
+    const data = await models.Student.aggregate([
+        { $match: { _id: ids}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
+        { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 } }
+    ]).exec();
+
+    //console.log({ data})
+    if(!data){
+        return res.status(404).json({error:"Students not found", err});
+    }
+    req.student = data;
+    next();
+    
+    /*
+    models.Student.findById(id).populate("school").populate("presentClass").populate("session").exec((err, student)=>{
+        if(err || !student){
+            return res.status(404).json({error:"Students not found", err});
+        }
+        req.student = student;
+        next();
+    })
+    */
+}
+
+exports.updateStudent = async (req, res)=>{
+    let student = _.extend(req.student, req.body)
+    student.update_at = Date.now();
+    // student.save((err, data)=>{
+    //     if(err){
+    //        return res.status(403).json({error:"fails to update students", err})
+    //     }
+    //     res.status(200).json({message:"students update successful", data})
+    // })
+    return res.status(200).json({message:"students update successful"})
+}
+
+exports.deleteStudent = async (req, res)=>{
+    let student = req.student[0];
+    // student.remove((err, data)=>{
+    //     if(err || !data){
+    //         return res.status(403).json({error:"fails to delete student", err})
+    //     }
+    //     res.status(200).json({message:"Student succesfully deleted", data})
+    // })
+    return res.status(403).json({error:"fails to delete student"})
+}
+
+exports.student = async (req, res) =>{
+    res.status(200).json({message:"student sucessfully fetched", data:req.student})
+}
+
+exports.students = async (req, res) =>{
+    let district = mongoose.Types.ObjectId(req.body.district);
+    const data = await models.Student.aggregate([
+        { $match : {district}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
+        { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromDistrict: 0 } }
+    ]).exec();
+    
+    //console.log({data})
+    if(!data){
+       return res.status(404).json({error:"fails to get users"})
+    }
+    res.status(200).json({message:"students successfully fetched", data})
+
+    // const students =await models.Student.find().populate("school").populate("presetClass").populate("subject").exec();
+    // models.Student.find().populate("session").populate("school").populate("presentClass").exec((err, data)=>{
+    //     console.log({err, data})
+    //     if(err) return res.status(404).json({error:"students not founds"})
+    //     res.status(200).json({message:"students successfully fetched", data})
+    // });
+    
+}
+
+exports.countStudentByClassAll = async (req, res)=>{
+    const male = await models.Student.aggregate([
+        { $match: { gender: "Male" } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
+    ]).exec();
+    const female = await models.Student.aggregate([
+        { $match: { gender: "Female" } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
+    ]).exec();
+    const total = await models.Student.aggregate([
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
+    ]).exec();
+  
+    const data = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: male,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: female,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: total,
+        },
+    ]
+    return res.status(200).json ({message:"students successfully counted by Class", data })
+}
+
+exports.StudentData = async (req, res) =>{
+    const countStudent = await models.Student.countDocuments();
+    const countStudentByGender = await models.Student.aggregate([
+        {$group: {  _id: "$gender", "count": { $sum: 1 }, total :{$sum:"$count"}}},
+        {$addFields: { totalScore:{ $sum: "$count"} }},
+    ]).exec();
+    const countStudentByYear = await models.Student.aggregate([
+        {$project : {year:{$year:"$yearAdmission"}}},
+        {$group: {_id: "$year", count:{$sum:1},total:{$sum:+1}}}
+    ]).exec();
+    //const countStudentByClass = await this.countStudentByClassAll();
+    const countStudentByClass = ({a:"hello", data:"data"})
+    const countStudentBySchool = await models.Student.aggregate([
+        {$group: {  _id: "$school", "count": { $sum: 1 } }},
+        {$lookup: {from: "schools", localField:"_id", foreignField:"_id", as:"fromSchool"}}
+    ]).exec();
+    const countStudentByAge = await models.Student.aggregate([
+        {$group :{ _id:"$age", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByEduLevel = await models.Student.aggregate([
+        {$group :{ _id:"$edulevel", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByDistrict = await models.Student.aggregate([
+        {$group :{ _id:"$district", count:{$sum:1}}},
+        { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromDistrict: 0 } }
+    ]).exec();
+    const countStudentByReligion = await models.Student.aggregate([
+        {$group :{ _id:"$religion", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByCountry = await models.Student.aggregate([
+        {$group :{ _id:"$country", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByEthnicity = await models.Student.aggregate([
+        {$group :{ _id:"$ethnicity", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByProvince = await models.Student.aggregate([
+        {$group :{ _id:"$province", count:{$sum:1}}},
+    ]).exec();
+    const countStudentBySession= await models.Student.aggregate([
+        {$group :{ _id:"$session", count:{$sum:1}}},
+        { $lookup: { from: "sessions", localField: "_id", foreignField: "_id", as: "fromSession"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSession", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSession: 0 } }
+    ]).exec();
+    const countStudentByStatus= await models.Student.aggregate([
+        {$group :{ _id:"$status", count:{$sum:1}}},
+    ]).exec();
+    res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} })
+}
+
+exports.countStudentByClassAllByDistrict = async (req, res)=>{
+    let district = mongoose.Types.ObjectId(req.body.district);
+    const male = await models.Student.aggregate([
+        { $match: { $and: [{ gender: "Male" }, {district}]} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
+    ]).exec();
+    const female = await models.Student.aggregate([
+        //{ $match: { gender: "Female" } },
+        { $match: { $and: [{ gender: "Female" }, {district}]} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
+    ]).exec();
+    const total = await models.Student.aggregate([
+        //{ $match: { gender: district } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } }
+    ]).exec();
+  
+    const data = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: male,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: female,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: total,
+        },
+    ]
+    return res.status(200).json ({message:"students successfully counted by Class", data })
+}
+
+exports.StudentDataByDistrict = async (req, res) =>{
+    //const { session} = req.body
+    if(!req.body.district){
+        return res.status(404).json({error:"District required"})
+    }
+    // if(!session){
+    //     return res.status(404).json({error:"Session required"})
+    // }
+
+    let district = mongoose.Types.ObjectId(req.body.district);
+    console.log(district)
+
+    const countStudent = await models.Student.countDocuments({district});
+    const countStudentByGender = await models.Student.aggregate([
+        {$match: {district}},
+        {$group: {  _id: "$gender", "count": { $sum: 1 }, total :{$sum:"$count"}}},
+        {$addFields: { totalScore:{ $sum: "$count"} }},
+    ]).exec();
+    const countStudentByYear = await models.Student.aggregate([
+        {$match: {district}},
+        {$project : {year:{$year:"$yearAdmission"}}},
+        {$group: {_id: "$year",count:{$sum:1},total:{$sum:+1}}}
+    ]).exec();
+    //const countStudentByClass = await this.countStudentByClassAll();
+    const countStudentByClass = ({a:"hello", data:"data"})
+    const countStudentBySchool = await models.Student.aggregate([
+        {$match: {district}},
+        {$group: {  _id: "$school", "count": { $sum: 1 } }},
+        {$lookup: {from: "schools", localField:"_id", foreignField:"_id", as:"fromSchool"}}
+    ]).exec();
+    const countStudentByAge = await models.Student.aggregate([
+        {$match: {district}},
+        {$group :{ _id:"$age", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByEduLevel = await models.Student.aggregate([
+        {$match: {district}},
+        {$group :{ _id:"$edulevel", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByDistrict = await models.Student.aggregate([
+        {$match: {district}},
+        {$group :{ _id:"$district", count:{$sum:1}}},
+        { $lookup: { from: "districts", localField: "_id", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    const countStudentByReligion = await models.Student.aggregate([
+        {$match: {district}},
+        {$group :{ _id:"$religion", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByCountry = await models.Student.aggregate([
+        {$match: {district}},
+        {$group :{ _id:"$country", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByEthnicity = await models.Student.aggregate([
+        {$match: {district}},
+        {$group :{ _id:"$ethnicity", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByProvince = await models.Student.aggregate([
+        {$match: {district}},
+        {$group :{ _id:"$province", count:{$sum:1}}},
+    ]).exec();
+    const countStudentBySession= await models.Student.aggregate([
+        { $match: {district}},
+        { $group :{ _id:"$session", count:{$sum:1}}},
+        { $lookup: { from: "sessions", localField: "_id", foreignField: "_id", as: "fromSession"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSession", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSession: 0 } }
+    ]).exec();
+    const countStudentByStatus= await models.Student.aggregate([
+        {$match: {district}},
+        {$group :{ _id:"$status", count:{$sum:1}}},
+    ]).exec();
+    res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} })
+}
+
+
+exports.StudentDataBySchool = async (req, res) =>{
+    if(!req.body.school){
+        return res.status(404).json({error:"School required"})
+    }
+    let school= mongoose.Types.ObjectId(req.body.school);
+    console.log({school})
+
+    const countStudent = await models.Student.countDocuments({school});
+    const countStudentByGender = await models.Student.aggregate([
+        {$match: {school}},
+        {$group: {  _id: "$gender", "count": { $sum: 1 }, total :{$sum:"$count"}}},
+        {$addFields: { totalScore:{ $sum: "$count"} }},
+    ]).exec();
+    const countStudentByYear = await models.Student.aggregate([
+        {$match: {school}},
+        {$project : {year:{$year:"$yearAdmission"}}},
+        {$group: {_id: "$year",count:{$sum:1},total:{$sum:+1}}}
+    ]).exec();
+    //const countStudentByClass = await this.countStudentByClassAll();
+    // const countStudentByClass = ({a:"hello", data:"data"})
+    // const countStudentBySchool = await models.Student.aggregate([
+    //     {$match: {school}},
+    //     {$group: {  _id: "$school", "count": { $sum: 1 } }},
+    //     {$lookup: {from: "schools", localField:"_id", foreignField:"_id", as:"fromSchool"}}
+    // ]).exec();
+    const countStudentByAge = await models.Student.aggregate([
+        {$match: {school}},
+        {$group :{ _id:"$age", count:{$sum:1}}}
+    ]).exec();
+    const countStudentByEduLevel = await models.Student.aggregate([
+        {$match: {school}},
+        {$group :{ _id:"$edulevel", count:{$sum:1}}}
+    ]).exec();
+    // const countStudentByDistrict = await models.Student.aggregate([
+    //     {$match: {school}},
+    //     {$group :{ _id:"$school", count:{$sum:1}}},
+    //     { $lookup: { from: "school", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+    // ]).exec();
+    const countStudentByReligion = await models.Student.aggregate([
+        {$match: {school}},
+        {$group :{ _id:"$religion", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByCountry = await models.Student.aggregate([
+        {$match: {school}},
+        {$group :{ _id:"$country", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByEthnicity = await models.Student.aggregate([
+        {$match: {school}},
+        {$group :{ _id:"$ethnicity", count:{$sum:1}}},
+    ]).exec();
+    const countStudentByProvince = await models.Student.aggregate([
+        {$match: {school}},
+        {$group :{ _id:"$province", count:{$sum:1}}},
+    ]).exec();
+    const countStudentBySession= await models.Student.aggregate([
+        { $match: {school}},
+        { $group :{ _id:"$session", count:{$sum:1}}},
+        { $lookup: { from: "sessions", localField: "_id", foreignField: "_id", as: "fromSession"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSession", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSession: 0 } }
+    ]).exec();
+    const countStudentByStatus= await models.Student.aggregate([
+        {$match: {school}},
+        {$group :{ _id:"$status", count:{$sum:1}}},
+    ]).exec();
+    res.status(200).json({
+        message:"school data successfully fetched",
+        data:{countStudent,countStudentByGender,countStudentByYear,countStudentByAge,countStudentByEduLevel,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} 
+    })
+}
+
+
+exports.studentIndicators = async (req, res)=>{
+    // Using query builder, we can latter move
+    const {yearA, pclass} = req.body;
+    const gi = await models.Student.find({/**explicit find by district */}).where('presentClass').equals(pclass).where('yearAdmission').equals(yearA).exec();
+    //{district:"60d88b1a6040b7073c8112e0"}).where('presentClass').equals("60d103c2aa056b4de034ed42").where('yearAdmission').equals("2021").exec()
+    const gir = await models.Student.find().where('presentClass').equals("60d103c2aa056b4de034ed42").where('yearAdmission').equals("2021-07-27T00:00:00.000Z").countDocuments();
+    /**gross intake by district */
+    const grossInTake = await models.Student.aggregate([
+        { $match: { presentClass: "", yearAdmission:"" } },
+        { $group: { _id: "/* deep looking district by school **/", count: { $sum: 1 } } },
+    ]).exec();
+    const netIntake = await models.Student.aggregate([
+        { $match: { presentClass: "", yearAdmission:"", /**accept function against dob field to get year */ } },
+        { $group: { _id: "/* deep looking district by school **/", count: { $sum: 1 } } },
+    ]).exec();
+
+    const aNetinTake = await models.Student.aggregate([
+        { $match: { presentClass: "", yearAdmission:"", /**accept function against dob field to get year */ } },
+        { $group: { _id: "_id", count: { $sum: 1 } } },
+    ]).exec();
+
+    const netEnroll= await models.Student.aggregate([
+        { $match: { yearAdmission:"", /**accept function against dob field to get year */ } },
+        { $group: { _id: "/** deep find by school EduLevel*/", count: { $sum: 1 } } },
+    ]).exec();
+
+    return res.status(200).json({message:"indicators", gir,})
+}
+
+exports.indicators = async (req, res) =>{
+    // const {year, classid, dob } = req.body;
+    // let classId = mongoose.Types.ObjectId(classid);
+    // result: { $and: [ { $gt: [ "$qty", 100 ] }, { $lt: [ "$qty", 250 ] } ] }
+    // const grossIntake = await models.Student.aggregate([
+    //     { $match: { $and: [ {presentClass:classId, yearAdmission:"2020"}]} },
+    //     { $group: { _id: "$_id", count: { $sum: 1 } } },
+    // ]).exec();
+
+    // const netIntake = await models.Student.aggregate([
+    //     { $match: { $and: [ {presentClass: classId, yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
+    //     { $group: { _id: "$_id", count: { $sum: 1 } } },
+    // ]).exec();
+
+    const aNetIntakeMale = await models.Student.aggregate([
+        { $match: { $and: [ { yearAdmission:"2020",gender:"Male", age:[{ $lt:6, $gt:7}]}]} },
+        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    ]).exec();
+    const aNetIntakeFemale = await models.Student.aggregate([
+        { $match: { $and: [ { yearAdmission:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
+        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    ]).exec();
+    const aNetIntakeTotal = await models.Student.aggregate([
+        { $match: { $and: [ { yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
+        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    ]).exec();
+
+    const aNetIntake = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: aNetIntakeMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: aNetIntakeFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: aNetIntakeTotal,
+        },
+    ]
+
+    const grossEnrollMale = await models.Student.aggregate([
+        { $match: { $and: [{session:"2020", gender:"Male"}]}},
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    ]).exec();
+    const grossEnrollFemale = await models.Student.aggregate([
+        { $match: { $and: [{session:"2020", gender:"Female"}]}},
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    ]).exec();
+    const grossEnrollTotal = await models.Student.aggregate([
+        { $match: { $and: [{session:"2020"}]}},
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    ]).exec();
+
+    const grossEnroll = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: grossEnrollMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: grossEnrollFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: grossEnrollTotal,
+        },
+    ]
+
+    const netEnrollMale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", gender:"Male", age:[{ $lt:6, $gt:7}]}]} },
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    ]).exec();
+    const netEnrollFemale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    ]).exec();
+    const netEnrollTotal= await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
+        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    ]).exec();
+
+    const netEnroll = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: netEnrollMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: netEnrollFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: netEnrollTotal,
+        },
+    ]
+
+    const ageSpecMale = await models.Student.aggregate([
+        { $match: { gender:"Male"}},
+        { $group: { _id: "$age", count: { $sum: 1 } } },
+    ]).exec();
+    const ageSpecFemale = await models.Student.aggregate([
+        { $match: { gender:"Female"}},
+        { $group: { _id: "$age", count: { $sum: 1 } } },
+    ]).exec();
+    const ageSpecTotal = await models.Student.aggregate([
+        { $group: { _id: "$age", count: { $sum: 1 } } },
+    ]).exec();
+    const ageSpec = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: ageSpecMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: ageSpecFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: ageSpecTotal,
+        },
+    ]
+
+    const outOfSchoolMale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", gender:"Male", age:[{ $lt:6, $gt:14}]}]} },
+        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    ]).exec();
+    const outOfSchoolFemale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", gender:"Female", age:[{ $lt:6, $gt:14}]}]} },
+        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    ]).exec();
+    const outOfSchoolTotal = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:14}]}]} },
+        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    ]).exec();
+    const outOfSchool = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: outOfSchoolMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: outOfSchoolFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: outOfSchoolTotal,
+        },
+    ]
+
+    const transitionMale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", status:"graduated", gender:"Male"}]} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+    ]).exec();
+    const transitionFemale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", status:"graduated", gender:"Female"}]} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+    ]).exec();
+    const transitionTotal = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", status:"graduated"}]} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+    ]).exec();
+    const transition = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: transitionMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: transitionFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: transitionTotal,
+        },
+    ]
+
+    const repetitionMale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", status:"repeater", gender:"Male"}]} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+    ]).exec();
+    const repetitionFemale = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", status:"repeater", gender:"Female"}]} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+    ]).exec();
+    const repetitionTotal = await models.Student.aggregate([
+        { $match: { $and: [ { session:"2020", status:"repeater",}]} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+    ]).exec();
+
+    const repetition = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: repetitionMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: repetitionFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: repetitionTotal,
+        },
+    ]
+
+    const survivalMale = await models.Student.aggregate([
+        { $match: { status:"promoted"} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+    ]).exec();
+    const survivalFemale = await models.Student.aggregate([
+        { $match: { status:"promoted"} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+    ]).exec();
+    const survivalTotal = await models.Student.aggregate([
+        { $match: { status:"promoted"} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+    ]).exec();
+
+    const survival = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: survivalMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: survivalFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: survivalTotal,
+        },
+    ]
+
+    console.log({transition,repetition,survival, aNetIntake,grossEnroll, netEnroll, ageSpec, outOfSchool,})
+    return res.status(200).json({
+        message:"Fetched indicator",
+        data:{
+            survival,
+            repetition,
+            transition,
+            outOfSchool, 
+            ageSpec,
+            netEnroll,
+            grossEnroll, 
+            aNetIntake, 
+        },
+    })
+}
+
+exports.teachers= async (req, res)=>{
+    let district = mongoose.Types.ObjectId(req.body.district);
+    models.Teacher.aggregate([
+        { $match : {district}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool" }},
+        { $lookup: { from: "districts", localField: "fromSchool.district", foreignField: "_id", as: "fromDistrict" }}
+    ]).exec((err, data)=>{
+        if(err || !data)return res.status(404).json({error:"Teacher is not available",err})
+        return res.status(200).status(200).json({"message":"Teacher is successfully fetched",data})
+    })
+}
+exports.teacherById= async (req, res, next,id)=>{
+    //let ids = mongoose.Types.ObjectId(id);
+    models.Teacher.findById(id).populate("school").exec((err, teacher)=>{
+        if(err || !teacher){ 
+            return res.status(404).json({error: "Teacher not found"})
+        }
+        req.teacher = teacher;
+        next()
+    })
+}
+exports.teacher = async (req, res)=>{
+    //console.log(req.teacher)
+    res.status(200).json({message:"teacher is succesfully fetched", data:req.teacher})
+}
+exports.updateTeacher = async (req, res) => {
+    let teacher = _.extend(req.teacher,req.body);
+    teacher.update_at = Date.now();
+    teacher.save((err,data)=>{
+        console.log({err, data})
+        if(err ||!data) {
+            return res.json({error: "error in update Teacher"})
+        }
+        res.status(200).json({data,message:"Teacher is succesfully updated"})
     })
 };
 
-exports.countDistrict = async (req, res)=>{
-    models.District.countDocuments().exec((err, data)=>{
-        /**
-         * docs
-         */
-        if(err || !data){
-            /**
-             * docs
-             */
-            return res.status(404).json({error:"error to count document", err})
+
+exports.countTeacher = async (req, res)=>{
+    //count teacher in district
+
+}
+
+exports.countTeacherByTypeOfstaff = async (req, res)=>{
+    models.Teacher.aggregate([
+        {
+            $group : {_id:"$typeOfStaff",count:{$sum:1}}
         }
-        /**
-         * docs
-         */
-        res.status(200).json({message:"District successfully counted", data})
+    ]).exec((err, data)=>{
+        if(err || !data) return res.status(400).json({error : "Failed to count teacher by type of staff"})
+        return res.status(200).json({message:"teachers successfully count by type of staff", data})
     })
 }
 
-exports.schoolInDistrict = async (req, res)=>{
-    let d = req.district
-    let {names, email, phone, _id} = d;
-    let total = await models.School.find().where('district').equals(_id).countDocuments()
-    await models.School.find().where('district').equals(_id).sort('names').exec((err, data)=>{
-        if(err || !data){
-            /**
-             * docs
-             */
-            return res.status(404).json({error:`fail to fetch school under ${names} district`, err})
+exports.countTeacherByGender = async (req, res)=>{
+    models.Teacher.aggregate([
+        {
+            $group : {_id:"$gender",count:{$sum:1}}
         }
-        res.status(200).json({message:`Succesffuly fetch schools under ${names} district`, data, total, district:{names, email, phone, _id}})
+    ]).exec((err, data)=>{
+        if(err || !data) return res.status(400).json({error : "Failed to count teacher by gender"})
+        return res.status(200).json({message:"teachers successfully count by gender", data})
     })
 }
-
-exports.studentInDistrict = async (req, res)=>{
-    let d = req.district
-    let {names, email, phone, _id} = d;
-    let count = await models.School.find().where('district').equals(_id).countDocuments()
-    let student = await models.School.find().where('district').equals(_id).populate('student').exec()
-    console.log({student})
-    models.School.find().where('district').equals(_id)
-    .exec((err, data)=>{
-        return res.json({data, count, district:{_id, names, email, phone} })
-    })
+exports.countTeacherBySchoolAll = async (req, res)=>{
+    const male = await models.Teacher.aggregate([
+        { $match: { gender: "Male" } },
+        { $group: { _id: "$school", count: { $sum: 1 } } },
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSchool: 0 } }
+    ]).exec();
+    const female = await models.Teacher.aggregate([
+        { $match: { gender: "Female" } },
+        { $group: { _id: "$school", count: { $sum: 1 } } },
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSchool: 0 } }
+    ]).exec();
+    const total = await models.Teacher.aggregate([
+        { $group: { _id: "$school", count: { $sum: 1 } } },
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSchool: 0 } }
+    ]).exec();
+  
+    const data = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: male,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: female,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: total,
+        },
+    ]
+    return res.status(200).json ({message:"Teacher successfully counted by School", data })
 }
 
-
-
-exports.countSchoolInDistrict = async (req, res)=>{
-    //const {_id} = req.district
-    req.district.populate('school').exec((err, data)=>{
-        if(err || !data){
-            /**
-             * docs
-             */
-            return res.status(404).json({error:"fails to count school", err})
-        }
-        /**
-         * 
-         */
-        res.status(200).json({message:"schools successfully counted", data})
-    })
-}
-
-exports.countstaffInDistrict = async (req, res)=>{
-    req.district.populate('staff').countDocuments().exec((err, data)=>{
-        if(err || !data){
-            /**
-             * docs
-             */
-            return res.status(404).json({error:"fails to count school", err})
-        }
-        /**
-         * 
-         */
-        res.status(200).json({message:"schools successfully counted", data})
-    })
-}
-
-exports.countstudentInDistrict = async (req, res)=>{
-    //const {_id} = req.district
-    req.district.populate('school').populate('student').countDocuments().exec((err, data)=>{
-        console.log({err, data})
-        if(err || !data){
-            /**
-             * docs
-             */
-            return res.status(404).json({error:"fails to count school", err})
-        }
-        /**
-         * 
-         */
-        res.status(200).json({message:"schools successfully counted", data})
-    })
+exports.teacherData = async (req, res) =>{
+    const countTeacher = await models.Teacher.countDocuments().exec()
+    const countTeacherByTypeOfstaff = await models.Teacher.aggregate([
+        {$group : {_id:"$typeOfStaff",count:{$sum:1}}}
+    ]).exec()
+    const countTeacherByGender = await models.Teacher.aggregate([
+        {$group : {_id:"$gender",count:{$sum:1}}}
+    ]).exec()
 }
 
 
-exports.schoolInDistrictaa = async (req, res)=>{
-    console.log("looking")
+exports.countTeacherBySchoolAllByDistrict = async (req, res)=>{
+    let district = mongoose.Types.ObjectId(req.body.district);
+    const male = await models.Teacher.aggregate([
+        { $match: { $and: [{ gender: "Male" }, {district}]} },
+        { $group: { _id: "$school", count: { $sum: 1 } } },
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSchool: 0 } }
+    ]).exec();
+    const female = await models.Teacher.aggregate([
+        { $match: { $and: [{ gender: "Female" }, {district}]} },
+        { $group: { _id: "$school", count: { $sum: 1 } } },
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSchool: 0 } }
+    ]).exec();
+    const total = await models.Teacher.aggregate([
+        { $match: {district:district} },
+        { $group: { _id: "$school", count: { $sum: 1 } } },
+        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromSchool: 0 } }
+    ]).exec();
+  
+    const data = [
+        {key: "Male",color: "#FE8A7D",values: male,},
+        {key: "Female",color: "#1de9b6", values: female,},
+        {key: "Total",color: "#3ebfea",values: total,},
+    ]
+    return res.status(200).json ({message:"Teacher successfully counted by School", data })
+}
+
+exports.teacherDataByDistrict = async (req, res) =>{
+    const countTeacher = await models.Teacher.countDocuments().exec()
+    const countTeacherByTypeOfstaff = await models.Teacher.aggregate([
+        { $match: { district: district } },
+        {$group : {_id:"$typeOfStaff",count:{$sum:1}}}
+    ]).exec()
+    const countTeacherByGender = await models.Teacher.aggregate([
+        { $match: { district: district } },
+        {$group : {_id:"$gender",count:{$sum:1}}}
+    ]).exec()
 }
