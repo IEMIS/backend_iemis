@@ -6,9 +6,9 @@ import * as Ctr from '../controllers';
 import * as Valid from '../midleware/validator';
 import * as Mid from '../midleware';
 
-// router.post("/district/signin", Auth.signin);
-// router.post("/district/forgetPassword", Auth.forgetPassword);
-// router.post("/district/resetPassword", Auth.resetPassword);
+router.post("/district/signin", Auth.signin);
+router.post("/district/forgetPassword", Auth.forgetPassword);
+router.post("/district/resetPassword", Auth.resetPassword);
 
 // router.get("/district/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.district);
 // // router.put("/district/district/:districtId", Mid.requiredSignin, Mid.isDistrict, Ctr.update);
