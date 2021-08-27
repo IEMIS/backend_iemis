@@ -3,6 +3,7 @@ const _ = require("lodash");
 const { v4: uuidv4 } = require('uuid');
 require("dotenv").config();
 import * as models from '../../../../models';
+const {sendEmail} = require("../../midleware/helper")
 
 exports.signin = async (req, res)=>{
     const {email, password} = req.body;
@@ -30,11 +31,8 @@ exports.forgetPassword = async (req, res)=>{
            return res.status(404).json({error:"invalid email"});
         }
             const updatedFields = {resetToken:uuidv4()};
-            console.log({school, updatedFields})
-            
             school = _.extend(school, updatedFields);
             school.save((er, result)=>{
-                console.log({er, result})
                 if(er || !result){
                     return res.status(407).json({error:"error in reseting password", er})
                 }
@@ -342,10 +340,9 @@ exports.resetPassword = async (req, res)=>{
           if(er || !result){
               return res.status(407).json({error:"error in reseting password", er})
           }
-
           const resetEmail = {
             from : "noreply@iemis.org",
-            to:district.email,
+            to:school.email,
             subject: "Password Reset",
             html:`<!DOCTYPE html>
             <html lang="en">
