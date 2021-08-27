@@ -336,38 +336,11 @@ exports.resetPassword = async (req, res)=>{
             return res.status(404).json({error:"Invalid token"});
         }
        if(district.resetToken !== resetToken){
-           /* #swagger.responses[405] = {
-               description: "Invalid token",
-               schema: { 
-                   error:"invalid reset token",
-                }
-           } 
-           */
            return res.status(405).json({error:"invalid reset token"});
         }
         if(password !== passwordConfirmation){
-            /* #swagger.responses[406] = {
-                description: "Password error",
-                schema: { 
-                    error:"Password must match each other",
-                 }
-            } 
-            */
             return res.status(406).json({error:"Password must match each other"});
         }
-       /**
-        * send email notification to the School authorities
-       */
-
-       /*
-        #swagger.responses[200] = {
-            description: "reset password",
-            schema: { 
-                message:"password successfully reset, you can now login",
-            }
-        } 
-       */
-
       const updatedFields = {resetToken:'',password};
       district = _.extend(district, updatedFields);
       district.save((er, result)=>{
