@@ -164,6 +164,7 @@ const teacherSchema = mongoose.Schema({
         trim: true,
         //required: true,
     },
+    resetToken:String,
 });
 
 

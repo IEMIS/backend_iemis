@@ -12,7 +12,6 @@ exports.signin = async (req, res)=>{
        return res.status(404).json({error:"Invalid email address"})
     }
     const user = await isTeacher.authenticate(password);
-    console.log({user})
     if(!user){
        return res.status(405).json({error:"email and Password not match, incorrect password "})
     }
