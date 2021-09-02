@@ -112,8 +112,14 @@ const schoolSchema = mongoose.Schema({
             //required: true,
         }]
     }],
-    created:Date,
-    updated_at:Date,
+    created_at:{
+        type:Date,
+        default:Date.now()
+    },
+    updated_at:{
+        type:Date,
+        default:Date.now()
+    },
     salt:String,
     resetToken:String,
     hashed_password:{
