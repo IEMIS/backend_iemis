@@ -34,11 +34,18 @@ const adminSchema = mongoose.Schema({
         type:Number,
         default:1,
     },
+    designation:{
+        type: String,
+        trim: true,
+    },
     created_at:{
         type:Date,
         default:Date.now()
     },
-    updated_at:Date,
+    updated_at:{
+        type:Date,
+        default:Date.now()
+    },
     salt:String,
     hashed_password:{
         type: String,

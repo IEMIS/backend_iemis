@@ -144,11 +144,7 @@ const studentSchema = mongoose.Schema({
         type: String,
         trim: true,
     },
-    /****
-     * HadEce, Please can you explaining the field sir
-     * 
-     * Please this section is only for Primary Section and it is yes or no checkbox input
-     */
+    
     HadEce:{
         type: String,
         trim: true,
@@ -176,6 +172,14 @@ const studentSchema = mongoose.Schema({
         type: String,
         trim: true,
         //required: true,
+    },
+    created_at:{
+        type:Date,
+        default:Date.now()
+    },
+    updated_at:{
+        type:Date,
+        default:Date.now()
     },
     salt:String,
 });
