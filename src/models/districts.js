@@ -6,13 +6,12 @@ const { ObjectId } = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const districtSchema = mongoose.Schema({
-    /*code:{
+    code:{
         type: String,
         trim: true,
         //required: true,
       
     },
-    */
     names:{
         type: String,
         trim: true,
@@ -40,8 +39,9 @@ const districtSchema = mongoose.Schema({
         ref:"Staff"
     }],
     status:{
-        type:Boolean,
-        default:false,
+        type:String,
+        trim:true,
+        //required:true
     },
     created:Date,
     salt:String,
