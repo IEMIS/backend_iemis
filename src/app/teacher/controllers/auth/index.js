@@ -324,7 +324,7 @@ exports.forgetPassword = async (req, res)=>{
 }
 
 exports.resetPassword = async (req, res)=>{
-   const { resetToken,password, passwordConfirmation} = req.body;
+   const { resetToken, password, passwordConfirmation} = req.body;
     models.Teacher.findOne({resetToken}, (err, teacher)=>{
       if(err || !teacher){
           return res.status(404).json({error:"Invalid token"});
@@ -523,7 +523,7 @@ exports.resetPassword = async (req, res)=>{
                       <!-- start copy -->
                       <tr>
                         <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                          <p style="margin: 0;">Dear ${teacher.firstName},you have successfully reset your password with your account with email id ${teacher.email}, <br /> If you are not perform this action on your account kindly conatct IEMIS support by click on the email below.</p>
+                          <p style="margin: 0;">Dear ${``},you have successfully reset your password with your account with email id ${teacher.email}, <br /> If you are not perform this action on your account kindly conatct IEMIS support by click on the email below.</p>
                         </td>
                       </tr>
                       <!-- end copy -->
@@ -618,9 +618,8 @@ exports.resetPassword = async (req, res)=>{
             </body>
             </html>`,
           }
-
           sendEmail(resetEmail)
-          res.status(200).json({message:`Dear ${result.names} password reset successful, you can now login`, data:result})
+          res.status(200).json({message:`Dear ${result.firstName} password reset successful, you can now login`, data:result})
       })
     })
 }
