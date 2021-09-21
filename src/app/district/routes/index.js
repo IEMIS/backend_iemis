@@ -28,83 +28,76 @@ router.post("/district/auth/resetPassword", Auth.resetPassword);
 /**
   * School services
 */
-
-// router.get("/district/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
-// router.post("/district/school", Valid.schoolCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSchool);
-// router.get("/district/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.school);
-// router.put("/district/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateSchool);
-// router.delete("/district/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteSchool);
-// router.post("/district/school", Valid.schoolCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSchool);
-
+router.get("/district/schools/:district", Mid.requiredSignin, Ctr.schools);
+router.post("/district/school", Mid.requiredSignin,  Ctr.createSchool);
+router.get("/district/school/:schoolId", Mid.requiredSignin,  Ctr.school);
+router.put("/district/school/:schoolId", Mid.requiredSignin,  Ctr.updateSchool);
+router.delete("/district/school/:schoolId", Mid.requiredSignin, Ctr.deleteSchool);
+router.post("/district/school/data/school", Mid.requiredSignin,  Ctr.schoolData);
 
 
 /**
- *  Student Services 
+ * Student Services 
 */
-// router.get("/district/student",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.students)
-// router.post("/district/student",Valid.studentCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createStudent)
-// router.get("/district/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.student)
-// router.put("/district/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateStudent)
-// router.delete("/district/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteStudent)
-// router.get("/district/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdmin,  Ctr.countStudentByClassAll)
+router.post("/district/student", Mid.requiredSignin,  Ctr.createStudent)
+router.get("/district/students/:district",Mid.requiredSignin, Ctr.students)
+router.get("/district/student/:studentId",Mid.requiredSignin, Ctr.student)
+router.put("/district/student/:studentId",Mid.requiredSignin,  Ctr.updateStudent)
+router.delete("/district/student/:studentId",Mid.requiredSignin,  Ctr.deleteStudent)
 
-
-
-// router.get("/district/student/data/student", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentData);
-// router.post("/district/student/data/student/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentDataByDistrict);
-// router.post("/district/student/data/student/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentDataBySchool);
-// router.get("/district/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.indicators);
-
-// router.get("/district/school/data/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schoolData);
-// router.post("/district/school/data/school/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schoolDataByDistrict);
-// router.post("/district/school/data/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schoolByDistrict);
-
-
-
-/**
- * Admin session services
-*/
-// router.get("/district/session",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.sessions)
-// router.post("/district/session",Valid.sessionCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSession)
-// router.get("/district/session/:sessionId", Ctr.session)
-// router.put("/district/session/:sessionId", Ctr.updateSession)
-// router.delete("/district/session/:sessionId", Ctr.deleteSession)
-
-/**
- * Admin classes services
-*/
-
-// router.get("/district/classes",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.classesList)
-// router.post("/district/classes",Valid.classCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createClasses)
-// router.get("/district/classes/:classId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.classes)
-// router.put("/district/classes/:classId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateClasses)
-// router.delete("/district/classes/:classId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteClasses)
-
-
+router.post("/district/student/data/student", Mid.requiredSignin, Ctr.StudentData);
+router.post("/district/student/data/class", Mid.requiredSignin, Ctr.countStudentByClassAll)
+router.post("/district/student/data/school", Mid.requiredSignin, Ctr.StudentDataBySchool);
+router.get("/district/student/data/indicators", Mid.requiredSignin, Ctr.indicators);
 
 /**
  * Teacher Services 
 */
-// router.get("/district/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.teachers)
-// router.post("/district/teachers",Valid.teacherCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createTeacher)
-// router.get("/district/teachers/:teacherId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.teacher)
-// router.put("/district/teachers/:teacherId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateTeacher)
-// router.delete("/district/teachers/:teacherId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteTeacher)
-// router.get("/district/teachers/data/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacher)
-// router.get("/district/teachers/data/count/gender", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByGender)
-// router.get("/district/teachers/data/count/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolAll )
-// router.get("/district/teachers/data/count/staff", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByTypeOfstaff)
+router.post("/district/teacher", Mid.requiredSignin,  Ctr.createTeacher)
+router.get("/district/teachers", Mid.requiredSignin,  Ctr.teachers)
+router.get("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.teacher)
+router.put("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.updateTeacher)
+router.delete("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.deleteTeacher)
 
 
-// router.param("teacherId", Ctr.teacherById)
-// router.param("classId", Ctr.classesById)
-// router.param("sessionId", Ctr.sessionById)
-// router.param("studentId", Ctr.studentById)
-// router.param("schoolId", Ctr.schoolById)
-// router.param("adminId", Ctr.adminById)
-// router.param("districtId",Ctr.districtById)
+router.get("/district/teacher/data/school", Mid.requiredSignin,  Ctr.countTeacherBySchoolAll )
+
+
+
+router.param("teacherId", Ctr.teacherById)
+router.param("studentId", Ctr.studentById)
+router.param("schoolId", Ctr.schoolById)
+router.param("districtId",Ctr.districtById)
 
 export default router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
