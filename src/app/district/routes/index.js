@@ -59,8 +59,14 @@ router.get("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.teacher)
 router.put("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.updateTeacher)
 router.delete("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.deleteTeacher)
 
-
 router.get("/district/teacher/data/school", Mid.requiredSignin,  Ctr.countTeacherBySchoolAll )
+
+//
+router.post("/district/class", Mid.requiredSignin,  Ctr.classesList)
+router.post("/district/session", Mid.requiredSignin,  Ctr.sessions)
+
+
+
 
 
 

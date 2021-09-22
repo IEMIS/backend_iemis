@@ -44,10 +44,10 @@ exports.createSchool = async (req, res) =>{
 }
 
 exports.schools = async (req, res)=>{
-    if(!req.param.district){
+    if(!req.params.district){
         return res.status(404).json({error:"District required"})
     }
-    let district = mongoose.Types.ObjectId(req.param.district);
+    let district = mongoose.Types.ObjectId(req.params.district);
     // { $match : {district}}
     const data = await models.School.aggregate([
         { $match : {district}},
@@ -154,10 +154,10 @@ exports.createStudent = async (req, res) =>{
 }
 
 exports.students = async (req, res) =>{
-    if(!req.param.district){
+    if(!req.params.district){
         return res.status(404).json({error:"District required"})
     }
-    let district = mongoose.Types.ObjectId(req.param.district);
+    let district = mongoose.Types.ObjectId(req.params.district);
     const data = await models.Student.aggregate([
         { $match : {district}},
         { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
@@ -214,6 +214,7 @@ exports.deleteStudent = async (req, res)=>{
     // })
     return res.status(403).json({error:"fails to delete student"})
 }
+
 
 exports.countStudentByClassAll= async (req, res)=>{
     let district = mongoose.Types.ObjectId(req.body.district);
@@ -725,10 +726,10 @@ exports.createTeacher = async (req, res)=>{
 }
 
 exports.teachers= async (req, res)=>{
-    if(!req.param.district){
+    if(!req.params.district){
         return res.status(404).json({error:"District required"})
     }
-    let district = mongoose.Types.ObjectId(req.param.district);
+    let district = mongoose.Types.ObjectId(req.params.district);
     // { $match : {district}}
     models.Teacher.aggregate([
         { $match : {district}},
@@ -848,6 +849,22 @@ exports.countTeacherBySchoolAllByDistrict = async (req, res)=>{
     ]
     return res.status(200).json ({message:"Teacher successfully counted by School", data })
 }
+
+
+exports.classesList = async (req, res)=>{
+    models.Classes.find((err, data)=>{
+        if(err) return res.status(400).json({error:"failed to fetch the list of the class"});
+        return res.status(200).json({message:"successfully fetched the list of the classes", data})
+    })
+}
+
+exports.sessions = async (req, res) =>{
+    const data = await models.Session.find();
+    if(!data) return res.status(400).json({error:"failed to fetch the list of the session"})
+    return res.status(200).json({message:"session successfully fetched", data})
+}
+
+
 
 
 
