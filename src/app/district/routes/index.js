@@ -45,10 +45,10 @@ router.get("/district/student/:studentId",Mid.requiredSignin, Ctr.student)
 router.put("/district/student/:studentId",Mid.requiredSignin,  Ctr.updateStudent)
 router.delete("/district/student/:studentId",Mid.requiredSignin,  Ctr.deleteStudent)
 
-router.post("/district/student/data/student", Mid.requiredSignin, Ctr.StudentData);
-router.post("/district/student/data/class", Mid.requiredSignin, Ctr.countStudentByClassAll)
-router.post("/district/student/data/school", Mid.requiredSignin, Ctr.StudentDataBySchool);
-router.get("/district/student/data/indicators", Mid.requiredSignin, Ctr.indicators);
+router.get("/district/student/data/student/:district", Mid.requiredSignin, Ctr.StudentData);
+router.get("/district/student/data/class/:district", Mid.requiredSignin, Ctr.countStudentByClassAll)
+router.get("/district/student/data/school/:district", Mid.requiredSignin, Ctr.StudentDataBySchool);
+router.get("/district/student/data/indicators/:district", Mid.requiredSignin, Ctr.indicators);
 
 /**
  * Teacher Services 

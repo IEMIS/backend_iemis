@@ -262,14 +262,14 @@ exports.countStudentByClassAll= async (req, res)=>{
 }
 exports.StudentData = async (req, res) =>{
     //const { session} = req.body
-    if(!req.body.district){
+    if(!req.params.district){
         return res.status(404).json({error:"District required"})
     }
     // if(!session){
     //     return res.status(404).json({error:"Session required"})
     // }
 
-    let district = mongoose.Types.ObjectId(req.body.district);
+    let district = mongoose.Types.ObjectId(req.params.district);
     console.log(district)
 
     const countStudent = await models.Student.countDocuments({district});
