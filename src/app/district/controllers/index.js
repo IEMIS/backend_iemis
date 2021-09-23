@@ -217,7 +217,14 @@ exports.deleteStudent = async (req, res)=>{
 
 
 exports.countStudentByClassAll= async (req, res)=>{
-    let district = mongoose.Types.ObjectId(req.body.district);
+    if(!req.params.district){
+        return res.status(404).json({error:"District required"})
+    }
+    // if(!session){
+    //     return res.status(404).json({error:"Session required"})
+    // }
+
+    let district = mongoose.Types.ObjectId(req.params.district);
     const male = await models.Student.aggregate([
         { $match: { $and: [{ gender: "Male" }, {district}]} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
@@ -262,14 +269,14 @@ exports.countStudentByClassAll= async (req, res)=>{
 }
 exports.StudentData = async (req, res) =>{
     //const { session} = req.body
-    if(!req.body.district){
+    if(!req.params.district){
         return res.status(404).json({error:"District required"})
     }
     // if(!session){
     //     return res.status(404).json({error:"Session required"})
     // }
 
-    let district = mongoose.Types.ObjectId(req.body.district);
+    let district = mongoose.Types.ObjectId(req.params.district);
     console.log(district)
 
     const countStudent = await models.Student.countDocuments({district});
@@ -334,10 +341,10 @@ exports.StudentData = async (req, res) =>{
 }
 
 exports.StudentDataBySchool = async (req, res) =>{
-    if(!req.body.school){
+    if(!req.params.school){
         return res.status(404).json({error:"School required"})
     }
-    let school= mongoose.Types.ObjectId(req.body.school);
+    let school= mongoose.Types.ObjectId(req.params.school);
     console.log({school})
 
     const countStudent = await models.Student.countDocuments({school});
