@@ -214,8 +214,6 @@ exports.deleteStudent = async (req, res)=>{
     // })
     return res.status(403).json({error:"fails to delete student"})
 }
-
-
 exports.countStudentByClassAll= async (req, res)=>{
     if(!req.params.district){
         return res.status(404).json({error:"District required"})
@@ -731,13 +729,11 @@ exports.createTeacher = async (req, res)=>{
         res.status(200).status(200).json({message:"Teacher is successfully created", data})
     })
 }
-
 exports.teachers= async (req, res)=>{
     if(!req.params.district){
         return res.status(404).json({error:"District required"})
     }
     let district = mongoose.Types.ObjectId(req.params.district);
-    // { $match : {district}}
     models.Teacher.aggregate([
         { $match : {district}},
         { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool" }},
@@ -782,51 +778,17 @@ exports.deleteTeacher = async (req, res) => {
     })
 };
 
+exports.countTeacherBySchoolAll= async (req, res)=>{
+     //const { session} = req.body
+     if(!req.params.district){
+        return res.status(404).json({error:"District required"})
+    }
+    // if(!session){
+    //     return res.status(404).json({error:"Session required"})
+    // }
 
-exports.countTeacherBySchoolAll = async (req, res)=>{
-    const male = await models.Teacher.aggregate([
-        { $match: { gender: "Male" } },
-        { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
-        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
-        { $project: { fromSchool: 0 } }
-    ]).exec();
-    const female = await models.Teacher.aggregate([
-        { $match: { gender: "Female" } },
-        { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
-        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
-        { $project: { fromSchool: 0 } }
-    ]).exec();
-    const total = await models.Teacher.aggregate([
-        { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
-        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
-        { $project: { fromSchool: 0 } }
-    ]).exec();
-  
-    const data = [
-        {
-            key: "Male",
-            color: "#FE8A7D",
-            values: male,
-        },
-        {
-            key: "Female",
-            color: "#1de9b6",
-            values: female,
-        },
-        {
-            key: "Total",
-            color: "#3ebfea",
-            values: total,
-        },
-    ]
-    return res.status(200).json ({message:"Teacher successfully counted by School", data })
-}
-
-exports.countTeacherBySchoolAllByDistrict = async (req, res)=>{
-    let district = mongoose.Types.ObjectId(req.body.district);
+    let district = mongoose.Types.ObjectId(req.params.district);
+    console.log(district)
     const male = await models.Teacher.aggregate([
         { $match: { $and: [{ gender: "Male" }, {district}]} },
         { $group: { _id: "$school", count: { $sum: 1 } } },
@@ -856,7 +818,6 @@ exports.countTeacherBySchoolAllByDistrict = async (req, res)=>{
     ]
     return res.status(200).json ({message:"Teacher successfully counted by School", data })
 }
-
 
 exports.classesList = async (req, res)=>{
     models.Classes.find((err, data)=>{
