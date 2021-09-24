@@ -729,13 +729,11 @@ exports.createTeacher = async (req, res)=>{
         res.status(200).status(200).json({message:"Teacher is successfully created", data})
     })
 }
-
 exports.teachers= async (req, res)=>{
     if(!req.params.district){
         return res.status(404).json({error:"District required"})
     }
     let district = mongoose.Types.ObjectId(req.params.district);
-    // { $match : {district}}
     models.Teacher.aggregate([
         { $match : {district}},
         { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool" }},
@@ -820,10 +818,6 @@ exports.countTeacherBySchoolAll= async (req, res)=>{
     ]
     return res.status(200).json ({message:"Teacher successfully counted by School", data })
 }
-
-
-
-
 
 exports.classesList = async (req, res)=>{
     models.Classes.find((err, data)=>{

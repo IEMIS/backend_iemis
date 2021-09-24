@@ -54,7 +54,7 @@ router.get("/district/student/data/indicators/:district", Mid.requiredSignin, Ct
  * Teacher Services 
 */
 router.post("/district/teacher", Mid.requiredSignin,  Ctr.createTeacher)
-router.get("/district/teachers", Mid.requiredSignin,  Ctr.teachers)
+router.get("/district/teachers/:district", Mid.requiredSignin,  Ctr.teachers)
 router.get("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.teacher)
 router.put("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.updateTeacher)
 router.delete("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.deleteTeacher)
