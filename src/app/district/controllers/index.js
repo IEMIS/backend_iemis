@@ -739,6 +739,7 @@ exports.teachers= async (req, res)=>{
         { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool" }},
         { $lookup: { from: "districts", localField: "fromSchool.district", foreignField: "_id", as: "fromDistrict" }}
     ]).exec((err, data)=>{
+        console.log({err, data})
         if(err || !data)return res.status(404).json({error:"Teacher is not available",err})
         return res.status(200).status(200).json({"message":"Teacher is successfully fetched",data})
     })
