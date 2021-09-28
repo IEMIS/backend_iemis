@@ -1,6 +1,6 @@
-import _ from 'lodash';
-const mongoose = require("mongoose");
-import * as models from '../../../models';
+const  _ = require('lodash')
+const mongoose = require("mongoose")
+const models = require('../../../models')
 
 exports.districtById= async (req, res, next,id)=>{
     models.District.findById(id).exec((err, dist)=>{
@@ -716,9 +716,9 @@ exports.indicators = async (req, res) =>{
 
 exports.createTeacher = async (req, res)=>{
     const {email} = req.body;
-   const isTeacher = await  models.Teacher.findOne({email});
-   if(isTeacher){
-       return res.status(400).json({error:"Teacher already created"})
+    const isTeacher = await  models.Teacher.findOne({email});
+    if(isTeacher){
+        return res.status(400).json({error:"Teacher already created"})
     }  
     const teacher = new models.Teacher(req.body);
     teacher.save((err, data)=>{
