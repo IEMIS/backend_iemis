@@ -722,7 +722,7 @@ exports.createTeacher = async (req, res)=>{
     }  
     const teacher = new models.Teacher(req.body);
     teacher.save((err, data)=>{
-        console.log({err, data})
+        // console.log({err, data})
         if(err || !data){
             return res.status(401).json({error:"error in creating Teacher, please try again",err})
         }
@@ -789,7 +789,7 @@ exports.countTeacherBySchoolAll= async (req, res)=>{
     // }
 
     let district = mongoose.Types.ObjectId(req.params.district);
-    console.log(district)
+    // console.log(district)
     const male = await models.Teacher.aggregate([
         { $match: { $and: [{ gender: "Male" }, {district}]} },
         { $group: { _id: "$school", count: { $sum: 1 } } },
