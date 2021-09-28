@@ -1,6 +1,6 @@
-import _ from 'lodash';
-const mongoose = require("mongoose");
-import * as models from '../../../models';
+const  _ = require('lodash')
+const mongoose = require("mongoose")
+const models = require('../../../models')
 
 exports.districtById= async (req, res, next,id)=>{
     models.District.findById(id).exec((err, dist)=>{
@@ -716,13 +716,13 @@ exports.indicators = async (req, res) =>{
 
 exports.createTeacher = async (req, res)=>{
     const {email} = req.body;
-   const isTeacher = await  models.Teacher.findOne({email});
-   if(isTeacher){
-       return res.status(400).json({error:"Teacher already created"})
+    const isTeacher = await  models.Teacher.findOne({email});
+    if(isTeacher){
+        return res.status(400).json({error:"Teacher already created"})
     }  
     const teacher = new models.Teacher(req.body);
     teacher.save((err, data)=>{
-        console.log({err, data})
+        // console.log({err, data})
         if(err || !data){
             return res.status(401).json({error:"error in creating Teacher, please try again",err})
         }
@@ -739,6 +739,7 @@ exports.teachers= async (req, res)=>{
         { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool" }},
         { $lookup: { from: "districts", localField: "fromSchool.district", foreignField: "_id", as: "fromDistrict" }}
     ]).exec((err, data)=>{
+        console.log({err, data})
         if(err || !data)return res.status(404).json({error:"Teacher is not available",err})
         return res.status(200).status(200).json({"message":"Teacher is successfully fetched",data})
     })
@@ -788,7 +789,7 @@ exports.countTeacherBySchoolAll= async (req, res)=>{
     // }
 
     let district = mongoose.Types.ObjectId(req.params.district);
-    console.log(district)
+    // console.log(district)
     const male = await models.Teacher.aggregate([
         { $match: { $and: [{ gender: "Male" }, {district}]} },
         { $group: { _id: "$school", count: { $sum: 1 } } },

@@ -9,17 +9,16 @@ exports.signin = async (req, res)=>{
     const {email, password} = req.body;
     const isDistrict = await  models.District.findOne({email});
     if(!isDistrict){
-        return res.status(404).json({error:"Invalid email address"})
+      return res.status(404).json({error:"Invalid email address"})
     }
     
     const user = await isDistrict.authenticate(password);
     if(!user){
-        return res.status(405).json({error:"email and Password not match, incorrect password "})
+      return res.status(405).json({error:"email and Password not match, incorrect password "})
     }
-
     const token = jwt.sign(
-        { _id: isDistrict._id, role:"superDistrict" },
-        process.env.JWT_SECRET
+      { _id: isDistrict._id, role:"superDistrict" },
+      process.env.JWT_SECRET
     );
     
     res.cookie("t", token, { expire: new Date() + 9999 });

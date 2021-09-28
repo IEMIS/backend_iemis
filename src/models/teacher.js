@@ -13,6 +13,11 @@ const teacherSchema = mongoose.Schema({
         unique: true
     },
     */
+    district:{
+        type: Schema.Types.ObjectId,
+        ref: "District",
+        required: true,
+    },
     school:{
         type: Schema.Types.ObjectId,
         ref: "School",
