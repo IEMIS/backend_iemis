@@ -50,6 +50,9 @@ router.get("/district/student/data/class/:district", Mid.requiredSignin, Ctr.cou
 router.get("/district/student/data/school/:school", Mid.requiredSignin, Ctr.StudentDataBySchool);
 router.get("/district/student/data/indicators/:district", Mid.requiredSignin, Ctr.indicators);
 
+router.get("/district/school/data/:district", Mid.requiredSignin, Ctr.schoolData);
+
+
 /**
  * Teacher Services 
 */
