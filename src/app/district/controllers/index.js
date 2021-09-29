@@ -104,10 +104,11 @@ exports.deleteSchool = async (req, res)=>{
 }
 
 exports.schoolData = async (req, res) =>{
-    if(!req.body.district){
+    if(!req.params.district){
         return res.status(404).json({error:"District required"})
     }
-    let district = mongoose.Types.ObjectId(req.body.district);
+    let district = mongoose.Types.ObjectId(req.params.district);
+
     let countSchool = await models.School.countDocuments({district});
     let countSchoolByDistrict = await models.School.aggregate([
         { $match : {district}},
@@ -231,7 +232,7 @@ exports.countStudentByClassAll= async (req, res)=>{
         { $project: { fromClass: 0 } }
     ]).exec();
     const female = await models.Student.aggregate([
-        { $match: { gender: "Female" } },
+        // { $match: { gender: "Female" } },
         { $match: { $and: [{ gender: "Female" }, {district}]} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
@@ -239,7 +240,7 @@ exports.countStudentByClassAll= async (req, res)=>{
         { $project: { fromClass: 0 } }
     ]).exec();
     const total = await models.Student.aggregate([
-        { $match: { gender: district } },
+        { $match: { district: district } },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
         { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
@@ -273,7 +274,6 @@ exports.StudentData = async (req, res) =>{
     // if(!session){
     //     return res.status(404).json({error:"Session required"})
     // }
-
     let district = mongoose.Types.ObjectId(req.params.district);
     console.log(district)
 
