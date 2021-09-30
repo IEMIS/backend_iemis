@@ -819,6 +819,51 @@ exports.countTeacherBySchoolAll= async (req, res)=>{
     return res.status(200).json ({message:"Teacher successfully counted by School", data })
 }
 
+exports.countTeacherInSchoolByClass= async (req, res)=>{
+    //const { session} = req.body
+    if(!req.params.district){
+       return res.status(404).json({error:"District required"})
+    }
+    if(!req.params.school){
+        return res.status(404).json({error:"School required"})
+     }
+   // if(!session){
+   //     return res.status(404).json({error:"Session required"})
+   // }
+
+   let district = mongoose.Types.ObjectId(req.params.district);
+   let school = mongoose.Types.ObjectId(req.params.school);
+   // console.log(district)
+   const male = await models.Teacher.aggregate([
+       { $match: { $and: [{ gender: "Male" }, {district},{school}]} },
+       { $group: { _id: "$classTaking", count: { $sum: 1 } } },
+       { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+       { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+       { $project: { fromClass: 0 } }
+   ]).exec();
+   const female = await models.Teacher.aggregate([
+       { $match: { $and: [{ gender: "Female" }, {district}, {school}]} },
+       { $group: { _id: "$classTaking", count: { $sum: 1 } } },
+       { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+       { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+       { $project: { fromClass: 0 } }
+   ]).exec();
+   const total = await models.Teacher.aggregate([
+    { $match: { $and: [{district}, {school}]} },
+       { $group: { _id: "$classTaking", count: { $sum: 1 } } },
+       { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+       { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+       { $project: { fromClass: 0 } }
+   ]).exec();
+ 
+   const data = [
+       {key: "Male",color: "#FE8A7D",values: male,},
+       {key: "Female",color: "#1de9b6", values: female,},
+       {key: "Total",color: "#3ebfea",values: total,},
+   ]
+   return res.status(200).json ({message:"Teacher successfully counted by School", data })
+}
+
 exports.classesList = async (req, res)=>{
     models.Classes.find((err, data)=>{
         if(err) return res.status(400).json({error:"failed to fetch the list of the class"});
