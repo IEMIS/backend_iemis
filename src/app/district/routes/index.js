@@ -44,7 +44,7 @@ router.get("/district/students/:district",Mid.requiredSignin, Ctr.students)
 router.get("/district/student/:studentId",Mid.requiredSignin, Ctr.student)
 router.put("/district/student/:studentId",Mid.requiredSignin,  Ctr.updateStudent)
 router.delete("/district/student/:studentId",Mid.requiredSignin,  Ctr.deleteStudent)
-
+// student/data/student/school
 router.get("/district/student/data/student/:district", Mid.requiredSignin, Ctr.StudentData);
 router.get("/district/student/data/class/:district", Mid.requiredSignin, Ctr.countStudentByClassAll)
 router.get("/district/student/data/school/:school", Mid.requiredSignin, Ctr.StudentDataBySchool);

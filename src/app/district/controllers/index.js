@@ -343,7 +343,6 @@ exports.StudentDataBySchool = async (req, res) =>{
         return res.status(404).json({error:"School required"})
     }
     let school= mongoose.Types.ObjectId(req.params.school);
-    console.log({school})
 
     const countStudent = await models.Student.countDocuments({school});
     const countStudentByGender = await models.Student.aggregate([
