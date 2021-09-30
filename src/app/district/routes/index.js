@@ -61,8 +61,9 @@ router.get("/district/teachers/:district", Mid.requiredSignin,  Ctr.teachers)
 router.get("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.teacher)
 router.put("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.updateTeacher)
 router.delete("/district/teacher/:teacherId", Mid.requiredSignin,  Ctr.deleteTeacher)
-
+// countTeacherInSchoolByClass
 router.get("/district/teacher/data/school/:district", Mid.requiredSignin,  Ctr.countTeacherBySchoolAll )
+router.get("/district/teacher/data/school/class/:district&:school", Mid.requiredSignin,  Ctr.countTeacherInSchoolByClass )
 
 //
 router.get("/district/class", Mid.requiredSignin,  Ctr.classesList)
