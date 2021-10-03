@@ -81,13 +81,18 @@ const teacherSchema = mongoose.Schema({
         }]
     },
     */
-    classTaking:[{
-        type:Array,
-        default:[{
-            type: Schema.Types.ObjectId,
-            ref:"Classes"
-        }]
-    }],
+    // classTaking:[{
+    //     type:Array,
+    //     default:[{
+    //         type: Schema.Types.ObjectId,
+    //         ref:"Classes"
+    //     }]
+    // }],
+    classTaking:{
+        type: Schema.Types.ObjectId,
+        ref:"Classes"
+    },
+    
     subjectSpecialisation:{
         type: String,
         trim: true,
