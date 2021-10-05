@@ -38,14 +38,7 @@ const adminSchema = mongoose.Schema({
         type: String,
         trim: true,
     },
-    created_at:{
-        type:Date,
-        default:Date.now()
-    },
-    updated_at:{
-        type:Date,
-        default:Date.now()
-    },
+    created:Date,
     salt:String,
     hashed_password:{
         type: String,
@@ -53,7 +46,9 @@ const adminSchema = mongoose.Schema({
         required: true,
     },
     resetToken:String,
-});
+},
+{ timestamps: true }
+);
 
 // virtual field
 adminSchema

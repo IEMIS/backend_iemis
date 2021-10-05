@@ -168,21 +168,17 @@ const studentSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
+    created:Date,
+    salt:String,
     hashed_password:{
         type: String,
         trim: true,
         //required: true,
     },
-    created_at:{
-        type:Date,
-        default:Date.now()
-    },
-    updated_at:{
-        type:Date,
-        default:Date.now()
-    },
-    salt:String,
-});
+    resetToken:String,
+},
+{ timestamps: true }
+);
 
 
 // virtual field
