@@ -13,7 +13,7 @@ router.post("/schools/resetPassword", Auth.resetPassword);
 
 //Student services 
 router.post("/schools/student", Mid.requiredSignin,  Ctr.createStudent)
-router.get("/schools/students/:district",Mid.requiredSignin, Ctr.students)
+router.get("/schools/students/:school",Mid.requiredSignin, Ctr.students)
 router.get("/schools/student/:studentId",Mid.requiredSignin, Ctr.student)
 router.put("/schools/student/:studentId",Mid.requiredSignin,  Ctr.updateStudent)
 router.delete("/schools/student/:studentId",Mid.requiredSignin,  Ctr.deleteStudent)
@@ -21,9 +21,9 @@ router.delete("/schools/student/:studentId",Mid.requiredSignin,  Ctr.deleteStude
 //student data
 router.get("/schools/student/data/class/school/:school", Mid.requiredSignin, Ctr.countStudentByClassInSchool)
 router.get("/schools/student/data/school/:school", Mid.requiredSignin, Ctr.StudentDataBySchool);
-router.get("/schools/student/data/indicators/:district", Mid.requiredSignin, Ctr.indicators);
+router.get("/schools/student/data/indicators/:school", Mid.requiredSignin, Ctr.indicators);
 
-router.get("/schools/school/data/:district", Mid.requiredSignin, Ctr.schoolData);
+router.get("/schools/school/data/:school", Mid.requiredSignin, Ctr.schoolData);
 
 
 //teacher services 
@@ -37,6 +37,7 @@ router.delete("/schools/teacher/:teacherId", Mid.requiredSignin,  Ctr.deleteTeac
 router.get("/schools/teacher/data/school/class/:school", Mid.requiredSignin,  Ctr.countTeacherInSchoolByClass )
 
 //others services 
+router.get("/schools/school/:school", Mid.requiredSignin,  Ctr.schools)
 router.get("/schools/class", Mid.requiredSignin,  Ctr.classesList)
 router.get("/schools/session", Mid.requiredSignin,  Ctr.sessions)
 
