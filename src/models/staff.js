@@ -70,7 +70,6 @@ const staffSchema = mongoose.Schema({
     
     //level: Number,
     created:Date,
-    updated_at:Date,
     salt:String,
     hashed_password:{
         type: String,

@@ -112,22 +112,17 @@ const schoolSchema = mongoose.Schema({
             //required: true,
         }]
     }],
-    created_at:{
-        type:Date,
-        default:Date.now()
-    },
-    updated_at:{
-        type:Date,
-        default:Date.now()
-    },
+    created:Date,
     salt:String,
-    resetToken:String,
     hashed_password:{
         type: String,
         trim: true,
         required: true,
     },
-});
+    resetToken:String,
+},
+{ timestamps: true }
+);
         
 
 // virtual field

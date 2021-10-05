@@ -167,15 +167,16 @@ const teacherSchema = mongoose.Schema({
     },
 
     created:Date,
-    updated_at:Date,
     salt:String,
     hashed_password:{
         type: String,
         trim: true,
-        //required: true,
+        required: true,
     },
     resetToken:String,
-});
+},
+{ timestamps: true }
+);
 
 
 // virtual field
