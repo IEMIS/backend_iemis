@@ -5,58 +5,42 @@ import * as Auth from '../controllers/auth'
 import * as Ctr from '../controllers/index.js';
 import * as Valid from '../midleware/validator';
 import * as Mid from '../midleware';
-import * as DistrictAuth from '../../district/midleware';
 
-
-/**
- * District login services
- */
+//School login services 
 router.post("/schools/signin", Auth.signin);
 router.post("/schools/forgetPassword", Auth.forgetPassword);
 router.post("/schools/resetPassword", Auth.resetPassword);
 
-/**
- * Only District can 
- *  ---create District 
- *  ---Read all the district
- *  ---count total numbers of district
- * router.post("/schools",  DistrictAuth.requiredSignin, DistrictAuth.isSuperAdmin, Ctr.create);
-router.get("/schools", DistrictAuth.requiredSignin, DistrictAuth.isSuperAdmin, Ctr.schools);
-router.get("/schools/count", DistrictAuth.requiredSignin, DistrictAuth.isSuperAdmin, Ctr.countSchool);
-*/
+//Student services 
+router.post("/schools/student", Mid.requiredSignin,  Ctr.createStudent)
+router.get("/schools/students/:district",Mid.requiredSignin, Ctr.students)
+router.get("/schools/student/:studentId",Mid.requiredSignin, Ctr.student)
+router.put("/schools/student/:studentId",Mid.requiredSignin,  Ctr.updateStudent)
+router.delete("/schools/student/:studentId",Mid.requiredSignin,  Ctr.deleteStudent)
 
-router.post("/schools", Valid.schoolCreator,   Ctr.create);
-router.get("/schools",  Ctr.schools);
-router.get("/schools/count",  Ctr.countSchool);
+//student data
+router.get("/schools/student/data/class/school/:school", Mid.requiredSignin, Ctr.countStudentByClassInSchool)
+router.get("/schools/student/data/school/:school", Mid.requiredSignin, Ctr.StudentDataBySchool);
+router.get("/schools/student/data/indicators/:district", Mid.requiredSignin, Ctr.indicators);
 
-/**
- * The School can  
- * --read it self 
- * --Update itself
- * --Delete itself --- exception 
- * --can count students in it
- * --can count teachers in school
- * --can verify district she belong 
- * 
- */
-router.get("/schools/:schoolId",  Ctr.school);
-router.put("/schools/:schoolId",  Ctr.updateSchool);
-router.delete("/schools/:schoolId",  Ctr.deleteSchool);  
-
-router.get("/schools/get/students/gender",  (req, res)=>{
-    return res.status(403).json({error:"service is under construction", data:req.body})
-});
-
-router.get("/schools/get/district/:schoolId",  Ctr.schoolbelongtoDistrict);
-router.get("/schools/get/students/:schoolId",  Ctr.studentInSchool);
-
-router.get("/schools/by/district/:districtId",  Ctr.schoolInDistrcit);
-router.get("/schools/by/district/count/:districtId",  Ctr.schoolInDistrcitCount);
+router.get("/schools/school/data/:district", Mid.requiredSignin, Ctr.schoolData);
 
 
+//teacher services 
+router.post("/schools/teacher", Mid.requiredSignin,  Ctr.createTeacher)
+router.get("/schools/teachers/:school", Mid.requiredSignin,  Ctr.teachers)
+router.get("/schools/teacher/:teacherId", Mid.requiredSignin,  Ctr.teacher)
+router.put("/schools/teacher/:teacherId", Mid.requiredSignin,  Ctr.updateTeacher)
+router.delete("/schools/teacher/:teacherId", Mid.requiredSignin,  Ctr.deleteTeacher)
+//teacher data
 
+router.get("/schools/teacher/data/school/class/:school", Mid.requiredSignin,  Ctr.countTeacherInSchoolByClass )
 
-router.param("schoolId", Ctr.schoolById)
-router.param("districtId", Ctr.schoolByDistrict)
+//others services 
+router.get("/schools/class", Mid.requiredSignin,  Ctr.classesList)
+router.get("/schools/session", Mid.requiredSignin,  Ctr.sessions)
+
+router.param("teacherId", Ctr.teacherById)
+router.param("studentId", Ctr.studentById)
 
 export default router;
