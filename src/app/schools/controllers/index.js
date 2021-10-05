@@ -2,6 +2,21 @@ const  _ = require('lodash')
 const mongoose = require("mongoose")
 const models = require('../../../models')
 
+exports.schools = async (req, res)=>{
+    if(!req.params.school){
+        return res.status(404).json({error:"School required"})
+    }
+    let _id = mongoose.Types.ObjectId(req.params.school);
+    const data = await models.School.aggregate([
+        { $match : {_id}},
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+    ]).exec();
+    if(!data){
+       return res.status(404).json({error:"fails to get users"})
+    }
+    res.status(200).json({message:"schools successfully fetched", data})
+}
+
 exports.schoolData = async (req, res) =>{
     if(!req.params.district){
         return res.status(404).json({error:"District required"})
@@ -53,12 +68,12 @@ exports.createStudent = async (req, res) =>{
 }
 
 exports.students = async (req, res) =>{
-    if(!req.params.district){
-        return res.status(404).json({error:"District required"})
+    if(!req.params.school){
+        return res.status(404).json({error:"school required"})
     }
-    let district = mongoose.Types.ObjectId(req.params.district);
+    let school = mongoose.Types.ObjectId(req.params.school);
     const data = await models.Student.aggregate([
-        { $match : {district}},
+        { $match : {school}},
         { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
         { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
         { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
@@ -539,7 +554,6 @@ exports.indicators = async (req, res) =>{
         },
     })
 }
-
 
 exports.createTeacher = async (req, res)=>{
     const {email} = req.body;
