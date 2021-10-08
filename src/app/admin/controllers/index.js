@@ -388,7 +388,7 @@ exports.countDistrict = async (req, res)=>{
 }
 
 
-//   Admin School services 
+//Admin School services 
 
 export const createSchool = async (req, res) =>{
     const  {email}= req.body 
@@ -484,95 +484,6 @@ exports.deleteSchool = async (req, res)=>{
     // })
 }
 
-// /**
-//  * count all the school
-//  * @param {*} req 
-//  * @param {*} res 
-//  */
-
-// export const countSchool = async (req, res)=>{
-//     let count = await models.School.countDocuments();
-//     if(!count){
-//         return res.status(404).json({error:"failed to counts schoold"})
-//     }
-//     res.status(200).json({message:"schools successfully counted", data:count})
-// }
-
-// export const countSchoolByDistrict = async (req, res) =>{
-//     models.School.aggregate([
-//         {
-//             $group : {
-//                 _id:"$district", count:{$sum:1}
-//             },
-//         },
-//         { $sort: { count: -1 } },
-//     ])
-//     .exec((err, resp)=>{
-//         if(err) return res.status(400).json({error:"failed to count school by district"})
-//         return res.status(200).json({message:"schools counted by district",data:resp})
-//     })
-// }
-
-// export const countSchoolByEduLevel = async (req, res) =>{
-//     models.School.aggregate([
-//         {
-//             $group : {
-//                 _id:"$eduLevel", count:{$sum:1}
-//             },
-//         },
-//         { $sort: { count: -1 } },
-//     ])
-//     .exec((err, resp)=>{
-//         if(err) return res.status(400).json({error:"failed to count school by Edu Level"})
-//         return res.status(200).json({message:"schools counted by edu level ",data:resp})
-//     })
-// }
-
-// export const countSchoolByOwnerShip= async (req, res) =>{
-//     models.School.aggregate([
-//         {
-//             $group : {
-//                 _id:"$ownership", count:{$sum:1}
-//             },
-//         },
-//         { $sort: { count: -1 } },
-//     ])
-//     .exec((err, resp)=>{
-//         if(err) return res.status(400).json({error:"failed to count school by Ownership"})
-//         return res.status(200).json({message:"schools counted by OwnerShip ",data:resp})
-//     })
-// }
-
-// export const countSchoolByType= async (req, res) =>{
-//     models.School.aggregate([
-//         {
-//             $group : {
-//                 _id:"$schoolType", count:{$sum:1}
-//             },
-//         },
-//         { $sort: { count: -1 } },
-//     ])
-//     .exec((err, resp)=>{
-//         if(err) return res.status(400).json({error:"failed to count school by type"})
-//         return res.status(200).json({message:"schools counted by Type ",data:resp})
-//     })
-// }
-
-// export const countSchoolByCat= async (req, res) =>{
-//     models.School.aggregate([
-//         {
-//             $group : {
-//                 _id:"$schoolCat", count:{$sum:1}
-//             },
-//         },
-//         { $sort: { count: -1 } },
-//     ])
-//     .exec((err, resp)=>{
-//         if(err) return res.status(400).json({error:"failed to count school by type"})
-//         return res.status(200).json({message:"schools counted by Type ",data:resp})
-//     })
-// }
-
 exports.schoolData = async (req, res) =>{
     let countSchool = await models.School.countDocuments();
     let countSchoolByDistrict = await models.School.aggregate([
@@ -641,8 +552,7 @@ exports.schoolDataByDistrict = async (req, res) =>{
 
     res.status(404).json({message:"school data", data:{countSchool, countSchoolByDistrict, countSchoolByEduLevel, countSchoolByownership, countSchoolByType, countSchoolByCat}})
 }
-
-// Admin Students services  
+  
 
 exports.createStudent = async (req, res) =>{
     
@@ -746,55 +656,6 @@ exports.students = async (req, res) =>{
     
 }
 
-// exports.countStudent = async (req, res)=>{
-//     const count = await models.Student.countDocuments();
-//     if(!count) return res.status(400).json({erroe:"failed to count student"})
-//     return res.status(200).json({message:"Students successfully fetched", count})
-// }
-// exports.countStudentByGender= async (req, res)=>{
-//     models.Student.aggregate([
-//         {
-//             $group: { 
-//                 _id: "$gender", "count": { $sum: 1 }, total :{$sum:"$count"}
-//             },
-//         },
-//         {
-//             $addFields: { totalScore:
-//               { $sum: "$count"} 
-//             }
-//         },
-//     ])
-//     .exec((err, resp)=>{
-//         if(err ) return res.status(400).json({error:"error in count students by gender"})
-//         return res.status(200).json({message:"students successfully counted by gender",data:resp })
-//     })
-// }
-// exports.countStudentByYear = async (req, res)=>{
-//     models.Student.aggregate([
-//         {
-//             $group: {
-//                 _id: "$yearAdmission",
-//                 count:{$sum:1},
-//                 total:{$sum:+1}
-//             }
-//         }
-//     ])
-//     .exec((err, resp)=>{
-//         if(err ) return res.status(400).json({error:"error in count students by year of Admission"})
-//         return res.status(200).json({message:"students successfully counted by year of Admission",data:resp })
-//     })
-// }
-// exports.countStudentByProvidence = async (req, res)=>{
-//     models.Student.aggregate([
-//         {
-//             $group: {_id: "$province",count:{$sum:1}},
-//         }
-//     ])
-//     .exec((err, resp)=>{
-//         if(err ) return res.status(400).json({error:"error in count students by Providence"})
-//         return res.status(200).json({message:"students successfully counted by Providence",data:resp })
-//     })
-// }
 
 exports.countStudentByClassAll = async (req, res)=>{
     const male = await models.Student.aggregate([
@@ -1111,19 +972,6 @@ exports.studentIndicators = async (req, res)=>{
 }
 
 exports.indicators = async (req, res) =>{
-    // const {year, classid, dob } = req.body;
-    // let classId = mongoose.Types.ObjectId(classid);
-    // result: { $and: [ { $gt: [ "$qty", 100 ] }, { $lt: [ "$qty", 250 ] } ] }
-    // const grossIntake = await models.Student.aggregate([
-    //     { $match: { $and: [ {presentClass:classId, yearAdmission:"2020"}]} },
-    //     { $group: { _id: "$_id", count: { $sum: 1 } } },
-    // ]).exec();
-
-    // const netIntake = await models.Student.aggregate([
-    //     { $match: { $and: [ {presentClass: classId, yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
-    //     { $group: { _id: "$_id", count: { $sum: 1 } } },
-    // ]).exec();
-
     const aNetIntakeMale = await models.Student.aggregate([
         { $match: { $and: [ { yearAdmission:"2020",gender:"Male", age:[{ $lt:6, $gt:7}]}]} },
         { $group: { _id: "$_id", count: { $sum: 1 } } },
