@@ -1228,15 +1228,15 @@ exports.indicators = async (req, res) =>{
 
     const repetitionMale = await models.Student.aggregate([
         { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"repeater", gender:"Male"}]} },
-        { $group: { _id: "$presetClass", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
     const repetitionFemale = await models.Student.aggregate([
         { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"repeater", gender:"Female"}]} },
-        { $group: { _id: "$presetClass", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
     const repetitionTotal = await models.Student.aggregate([
         { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"repeater",}]} },
-        { $group: { _id: "$presetClass", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
 
     const repetition = [
@@ -1259,15 +1259,15 @@ exports.indicators = async (req, res) =>{
 
     const survivalMale = await models.Student.aggregate([
         { $match: { status:"promotee", gender:"Male"} },
-        { $group: { _id: "$presetClass", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
     const survivalFemale = await models.Student.aggregate([
         { $match: { status:"promotee", gender:"Female"} },
-        { $group: { _id: "$presetClass", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
     const survivalTotal = await models.Student.aggregate([
         { $match: { status:"promotee"} },
-        { $group: { _id: "$presetClass", count: { $sum: 1 } } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
 
     const survival = [
