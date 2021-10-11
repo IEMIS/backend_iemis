@@ -972,24 +972,21 @@ exports.studentIndicators = async (req, res)=>{
 }
 
 exports.indicators = async (req, res) =>{
-
-
     const aNetIntakeMale = await models.Student.aggregate([
-        // { $match: { $and: [ { yearAdmission:"2020-07-07T00:00:00.000+00:00", gender:"Male", age:[{ $lt:7, $gt:6}]}]} },
-        { $match: { $and: [ { yearAdmission:"2020-07-07T00:00:00.000+00:00", gender:"Male", age:'6' }]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        //let me know the Age you want to match with this
+        { $match: { $and: [ { yearAdmission:"2020", gender:"Male", age:6 }]} },
+        { $group: { _id: "$yearAdmission", count: { $sum: 1 } } },
     ]).exec();
-
     const aNetIntakeFemale = await models.Student.aggregate([
-        { $match: { $and: [ { yearAdmission:"2020-07-07T00:00:00.000+00:00", gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        // age:[{ $lt:6, $gt:7}]
+        { $match: { $and: [ { yearAdmission:"2020", gender:"Female", }]} },
+        { $group: { _id: "$yearAdmission", count: { $sum: 1 } } },
     ]).exec();
-
     const aNetIntakeTotal = await models.Student.aggregate([
-        { $match: { $and: [ { yearAdmission:"2020-07-07T00:00:00.000+00:00", age:[{ $lt:6, $gt:7}]}]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        // age:[{ $lt:6, $gt:7}]
+        { $match: { $and: [ { yearAdmission:"2020"}]} },
+        { $group: { _id: "$yearAdmission", count: { $sum: 1 } } },
     ]).exec();
-
     const aNetIntake = [
         {
             key: "Male",
@@ -1009,17 +1006,17 @@ exports.indicators = async (req, res) =>{
     ]
 
     const grossEnrollMale = await models.Student.aggregate([
-        { $match: { $and: [{session:"2020", gender:"Male"}]}},
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        { $match: { $and: [{session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Male"}]}},
+        { $group: { _id: "$gender", count: { $sum: 1 } } },
     ]).exec();
     
     const grossEnrollFemale = await models.Student.aggregate([
-        { $match: { $and: [{session:"2020", gender:"Female"}]}},
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        { $match: { $and: [{session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female"}]}},
+        { $group: { _id: "$gender", count: { $sum: 1 } } },
     ]).exec();
     const grossEnrollTotal = await models.Student.aggregate([
-        { $match: { $and: [{session:"2020"}]}},
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        { $match: { $and: [{session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')}]}},
+        { $group: { _id: "$session", count: { $sum: 1 } } },
     ]).exec();
 
     const grossEnroll = [
@@ -1042,16 +1039,16 @@ exports.indicators = async (req, res) =>{
 
 
     const netInTakeMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", gender:"Male", age:'6', status:"admission" , presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } ]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Male", age:6, status:"admission" , presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } ]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const netInTakeFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020",gender:"Female", age:'6', status:"admission" ,presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') }]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female", age:6, status:"admission" ,presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') }]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const netInTakeTotal= await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020",gender:"Female", age:'6', status:"admission" , presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') }]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), age:6, status:"admission" , presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') }]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
 
     const netInTake = [
@@ -1073,16 +1070,16 @@ exports.indicators = async (req, res) =>{
     ]
 
     const netEnrollMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", gender:"Male",  status:"admission" } ]} },
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Male",  status:"admission" } ]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const netEnrollFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020",gender:"Female", status:"admission"  }]} },
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female", status:"admission"  }]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const netEnrollTotal= await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020",gender:"Female", status:"admission"  }]} },
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'),  status:"admission"  }]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
 
     const netEnroll = [
@@ -1133,16 +1130,17 @@ exports.indicators = async (req, res) =>{
     ]
 
     const outOfSchoolMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", gender:"Male", age:[{ $lt:15, $gt:5}]}]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        // age:[{ $lt:15, $gt:5}]
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Male", }]} },
+        { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
     const outOfSchoolFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", gender:"Female", age:[{ $lt:15, $gt:5}]}]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female", }]} },
+        { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
     const outOfSchoolTotal = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", age:[{ $lt:15, $gt:5}]}]} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), }]} },
+        { $group: { _id: "$age", count: { $sum: 1 } } },
     ]).exec();
     const outOfSchool = [
         {
@@ -1163,16 +1161,16 @@ exports.indicators = async (req, res) =>{
     ]
 
     const transitionMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"graduate", gender:"Male"}]} },
-        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"graduate", gender:"Male"}]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const transitionFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"graduate", gender:"Female"}]} },
-        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"graduate", gender:"Female"}]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const transitionTotal = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"graduate"}]} },
-        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"graduate"}]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const transition = [
         {
@@ -1193,16 +1191,16 @@ exports.indicators = async (req, res) =>{
     ]
 
     const repetitionMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"repeater", gender:"Male"}]} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"repeater", gender:"Male"}]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const repetitionFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"repeater", gender:"Female"}]} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"repeater", gender:"Female"}]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const repetitionTotal = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"repeater",}]} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), status:"repeater",}]} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
 
     const repetition = [
@@ -1225,15 +1223,15 @@ exports.indicators = async (req, res) =>{
 
     const survivalMale = await models.Student.aggregate([
         { $match: { status:"promotee", gender:"Male"} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const survivalFemale = await models.Student.aggregate([
         { $match: { status:"promotee", gender:"Female"} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const survivalTotal = await models.Student.aggregate([
         { $match: { status:"promotee"} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
 
     const survival = [
@@ -1255,16 +1253,16 @@ exports.indicators = async (req, res) =>{
     ]
 
     const grossInTakelMale = await models.Student.aggregate([
-        { $match: { status:"addmission", gender:"Male", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        { $match: { status:"admission", gender:"Male", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const grossInTakeFemale = await models.Student.aggregate([
-        { $match: { status:"addmission",gender:"Female", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3')} },
-        // { $group: { _id: "$_id", count: { $sum: 1 } } },
+        { $match: { status:"admission",gender:"Female", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3')} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
     const grossInTakeTotal = await models.Student.aggregate([
-        { $match: { status:"addmission", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3')} },
-        // { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $match: { status:"admission", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3')} },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
     ]).exec();
 
     const grossInTake = [
@@ -1287,16 +1285,16 @@ exports.indicators = async (req, res) =>{
     return res.status(200).json({
         message:"Fetched indicator",
         data:{
-            survival,
-            repetition,
-            transition,
-            outOfSchool, 
-            ageSpec,
-            netEnroll,
-            grossEnroll, 
-            aNetIntake, 
+            aNetIntake,
+            grossEnroll,
             netInTake,
-            grossInTake
+            netEnroll,
+            ageSpec,
+            outOfSchool,
+            transition,
+            repetition,
+            survival,
+            grossInTake,
         },
     })
 }
