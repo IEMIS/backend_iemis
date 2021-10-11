@@ -138,7 +138,8 @@ const studentSchema = mongoose.Schema({
         default:[],
     },
     yearAdmission:{
-        type:Date,
+        type: String,
+        trim: true,
     },
     stream:{
         type: String,
