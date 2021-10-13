@@ -1170,6 +1170,7 @@ exports.indicators = async (req, res) =>{
         ]} },
         { $group: { _id: "$gender", count: { $sum: 1 } } },
     ]).exec();
+    
     // const outOfSchoolFemale = await models.Student.aggregate([
     //     { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female", }]} },
     //     { $group: { _id: "$age", count: { $sum: 1 } } },
