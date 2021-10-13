@@ -1577,17 +1577,16 @@ const SLESMale = await models.Student.aggregate([
         },
     ]
     const TeaMale = await models.Teacher.aggregate([
-        { $match: { gender:"Male", session:"2020"} },
+        { $match: { gender:"Male"} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
         { $sort: { count: -1 } }
     ]).exec();
     const TeaFemale = await models.Teacher.aggregate([
-        { $match: { gender:"Female", session:"2020"} },
+        { $match: { gender:"Female"} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
         { $sort: { count: -1 } }
     ]).exec();
     const TeaTotal = await models.Teacher.aggregate([
-        { $match: { session:"2020"} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
         { $sort: { count: -1 } }
     ]).exec();
@@ -1616,8 +1615,226 @@ const SLESMale = await models.Student.aggregate([
          {$addFields: { totalScore:{ $sum: "$count"} }},
     ]).exec();
 
+    const EnrollPublic= await models.Student.aggregate([
+        { $match: {session:""} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const EnrollPrivate= await models.Student.aggregate([
+        { $match: { session:""} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const EnrollTotal = await models.Student.aggregate([
+        { $match: {session:""} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
 
+    const Enroll = [
+        {
+            key: "Public",
+            color: "#FE8A7D",
+            values: EnrollPublic,
+        },
+        {
+            key: "Private",
+            color: "#1de9b6",
+            values: EnrollPrivate,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: EnrollTotal,
+        },
+    ]
+    //PERCENTAGE OF TEACHING STAFF IN PRIVATE EDUCATIONAL INSTITUTION
+    const TPublic= await models.Teacher.aggregate([
+        { $match: {session:""} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const TPrivate= await models.Teacher.aggregate([
+        { $match: { session:""} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const TTotal = await models.Teacher.aggregate([
+        { $match: {session:""} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
 
+    const TP = [
+        {
+            key: "Public",
+            color: "#FE8A7D",
+            values: TPublic,
+        },
+        {
+            key: "Private",
+            color: "#1de9b6",
+            values: TPrivate,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: TTotal,
+        },
+    ]
+    //GROSS INTAKE RATIO IN THE LAST GRADE OF PRIMARY (GIRLG)
+    const grossInTakeLG = await models.Student.aggregate([
+        { $match: { status:"promotee", presentClass:mongoose.Types.ObjectId('60ebbb3c16ce020036d353f8') } },
+        { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
+        {$addFields: { totalScore:{ $sum: "$count"} }},
+    ]).exec();
+//EXPECTED GROSS INTAKE RATIO IN THE LAST GRADE OF PRIMARY (EGIRLG)
+    const EgrossInTakeLG = await models.Student.aggregate([
+        { $match: { status:"admission", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+        { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
+        {$addFields: { totalScore:{ $sum: "$count"} }},
+    ]).exec();
+
+//GROSS PRIMARY GRADUATION (GPGR)
+    const grossPGR = await models.Student.aggregate([
+        { $match: { status:"graduate", presentClass:mongoose.Types.ObjectId('60ebbb3c16ce020036d353f8') } },
+        { $group: { _id: "$gender", count: { $sum: 1 }} },
+    ]).exec();
+
+//EXPECTED GROSS PRIMARY GRADUATION RATIO (EGPGR)
+const EGPGR = await models.Student.aggregate([
+    { $match: { status:"admission", cohortA:"2020-1", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+    { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
+    {$addFields: { totalScore:{ $sum: "$count"} }},
+]).exec();
+
+//ECE EXPERIENCE
+const ECEE = await models.Student.aggregate([
+    { $match: { status:"admission", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+    { $group: { _id: "$HadEce", count: { $sum: 1 }, total :{$sum:"$count"} } },
+    {$addFields: { totalScore:{ $sum: "$count"} }},
+]).exec();
+
+// Promotion rate
+const PromoMale = await models.Student.aggregate([
+    { $match: { gender:"Male", status:"promotee"} },
+    { $group: { _id: "$presentClass", count: { $sum: 1}, total :{$sum:"$count"} } },
+    {$addFields: { totalScore:{ $sum: "$count"} }},
+    { $sort: { count: -1 } }
+]).exec();
+const PromoFemale = await models.Student.aggregate([
+    { $match: { gender:"Female", status:"promotee"} },
+    { $group: { _id: "$presentClass", count: { $sum: 1}, total :{$sum:"$count"} } },
+    {$addFields: { totalScore:{ $sum: "$count"} }},
+    { $sort: { count: -1 } }
+]).exec();
+const PromoTotal = await models.Student.aggregate([
+    { $match: {status:"promotee"} },
+    { $group: { _id: "$presentClass", count: { $sum: 1}, total :{$sum:"$count"} } },
+    {$addFields: { totalScore:{ $sum: "$count"} }},
+    { $sort: { count: -1 } }
+]).exec();
+
+const PromoR = [
+    {
+        key: "Male",
+        color: "#FE8A7D",
+        values: PromoMale,
+    },
+    {
+        key: "Female",
+        color: "#1de9b6",
+        values: PromoFemale,
+    },
+    {
+        key: "Total",
+        color: "#3ebfea",
+        values: PromoTotal,
+    },
+]
+
+//Dropout
+const DropoutR = await models.Student.aggregate([
+    { $match: { status:"dropout"} },
+    { $group: { _id: "$gender", count: { $sum: 1 }} },
+]).exec();
+
+//GER ECE
+const GERECE = await models.Student.aggregate([
+    { $match: { edulevel:"ECE"} },
+    { $group: { _id: "$gender", count: { $sum: 1 }} },
+]).exec();
+
+//Qualified Teacher
+const TTrained= await models.Teacher.aggregate([
+    { $match: {session:""} },
+    { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+    { $sort: { count: -1 } }
+]).exec();
+const TUntrained= await models.Teacher.aggregate([
+    { $match: { session:""} },
+    { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+    { $sort: { count: -1 } }
+]).exec();
+const TTTotal = await models.Teacher.aggregate([
+    { $match: {session:""} },
+    { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+    { $sort: { count: -1 } }
+]).exec();
+
+const TQP = [
+    {
+        key: "Public",
+        color: "#FE8A7D",
+        values: TTrained,
+    },
+    {
+        key: "Private",
+        color: "#1de9b6",
+        values: TUntrained,
+    },
+    {
+        key: "Total",
+        color: "#3ebfea",
+        values: TTTotal,
+    },
+]
+
+//PERCENTAGE DISTRIBUTION OF ENROLMENT IN SECONDARY EDUCATION BY ORIENTATION OF EDUCATION PROGRAMME
+    const SEMale= await models.Student.aggregate([
+        { $match: {edulevel:"Secondary", session: ""} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const SEFemale= await models.Student.aggregate([
+        { $match: {edulevel:"Secondary", session: ""} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const SETotal = await models.Student.aggregate([
+        { $match: {edulevel:"Secondary", session: ""} },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+
+    const SED = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: SEMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: SEFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: SETotal,
+        },
+    ]
+    
     return res.status(200).json({
         message:"Fetched indicator",
         data:{
@@ -1640,6 +1857,18 @@ const SLESMale = await models.Student.aggregate([
             Pupils,
             Tea,
             PercenT,
+            Enroll,
+            TP,
+            grossInTakeLG,
+            EgrossInTakeLG,
+            grossPGR,
+            EGPGR,
+            ECEE,
+            PromoR,
+            DropoutR,
+            GERECE,
+            TQP,
+            SED
         },
     })
 }
