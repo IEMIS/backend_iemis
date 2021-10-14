@@ -708,7 +708,7 @@ exports.StudentData = async (req, res) =>{
     const countStudentByYear = await models.Student.aggregate([
         //year of Admission is now a string 
         // {$project : {year:{$year:"$yearAdmission"}}},
-        {$group: {_id: "$year", count:{$sum:1},total:{$sum:+1}}}
+        {$group: {_id: "$yearAdmission", count:{$sum:1},total:{$sum:+1}}}
     ]).exec();
 
     //const countStudentByYear  = ({a:"hello", data:"data"})
