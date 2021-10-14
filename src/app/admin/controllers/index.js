@@ -706,9 +706,12 @@ exports.StudentData = async (req, res) =>{
         {$addFields: { totalScore:{ $sum: "$count"} }},
     ]).exec();
     const countStudentByYear = await models.Student.aggregate([
-        {$project : {year:{$year:"$yearAdmission"}}},
-        {$group: {_id: "$year", count:{$sum:1},total:{$sum:+1}}}
+        //year of Admission is now a string 
+        // {$project : {year:{$year:"$yearAdmission"}}},
+        {$group: {_id: "$yearAdmission", count:{$sum:1},total:{$sum:+1}}}
     ]).exec();
+
+    //const countStudentByYear  = ({a:"hello", data:"data"})
     //const countStudentByClass = await this.countStudentByClassAll();
     const countStudentByClass = ({a:"hello", data:"data"})
     const countStudentBySchool = await models.Student.aggregate([
@@ -749,6 +752,7 @@ exports.StudentData = async (req, res) =>{
         {$group :{ _id:"$status", count:{$sum:1}}},
     ]).exec();
     res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} })
+    console.log({countStudent})
 }
 
 exports.countStudentByClassAllByDistrict = async (req, res)=>{
@@ -1183,6 +1187,7 @@ exports.indicators = async (req, res) =>{
         ]} },
         { $group: { _id: "$gender", count: { $sum: 1 } } },
     ]).exec();
+    
     // const outOfSchoolFemale = await models.Student.aggregate([
     //     { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female", }]} },
     //     { $group: { _id: "$age", count: { $sum: 1 } } },
