@@ -55,7 +55,7 @@ router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdm
 //router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.studentIndicators)
 
 
-
+          // admin/student/data/student                                             StudentData
 router.get("/admin/student/data/student", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentData);
 router.post("/admin/student/data/student/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentDataByDistrict);
 router.post("/admin/student/data/student/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentDataBySchool);
