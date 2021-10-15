@@ -385,11 +385,44 @@ exports.StudentData = async (req, res) =>{
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSession", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromSession: 0 } }
     ]).exec();
+    const Male = await models.Student.aggregate([
+        { $match: { $and: [{ gender: "Male" },{district},]} },
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const Female = await models.Student.aggregate([
+        { $match: { $and: [{gender: "Female" },{district}]} },
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const Total = await models.Student.aggregate([
+        { $match: {district}},
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    
+    const disability = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: Male,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: Female,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: Total,
+        },
+    ]
     const countStudentByStatus= await models.Student.aggregate([
         {$match: {district}},
         {$group :{ _id:"$status", count:{$sum:1}}},
     ]).exec();
-    res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} })
+    res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus,disability} })
 }
 
 exports.StudentDataBySchool = async (req, res) =>{
