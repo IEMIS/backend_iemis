@@ -1448,8 +1448,9 @@ exports.indicators = async (req, res) =>{
     const aNetIntake = await models.Student.aggregate([
         { $match:{ yearAdmission:"2020", age:6 } },
         {$group: {  _id: "$gender", "count": { $sum: 1 } }},
-        // { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
-        // {$addFields: { totalScore:{ $sum: "$count"} }},
+
+        //{ $project: { ANIR: { $divide: [ "$gender", "$pop6" ] } } }
+
     ]).exec();
     // const aNetIntakeFemale = await models.Student.aggregate([
     //     // age:[{ $lt:6, $gt:7}]
