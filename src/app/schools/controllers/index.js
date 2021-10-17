@@ -196,8 +196,8 @@ exports.StudentDataBySchool = async (req, res) =>{
     ]).exec();
     const countStudentByYear = await models.Student.aggregate([
         {$match: {school}},
-        {$project : {year:{$year:"$yearAdmission"}}},
-        {$group: {_id: "$year",count:{$sum:1},total:{$sum:+1}}}
+        //{$project : {year:{$year:"$yearAdmission"}}},
+        {$group: {_id: "$yearAdmission",count:{$sum:1},total:{$sum:+1}}}
     ]).exec();
     //const countStudentByClass = await this.countStudentByClassAll();
     // const countStudentByClass = ({a:"hello", data:"data"})
@@ -246,9 +246,45 @@ exports.StudentDataBySchool = async (req, res) =>{
         {$match: {school}},
         {$group :{ _id:"$status", count:{$sum:1}}},
     ]).exec();
+
+    const Male = await models.Student.aggregate([
+        { $match: {school}},
+        { $match: { gender:"Male"}},
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const Female = await models.Student.aggregate([
+        { $match: {school}},
+        { $match: { gender:"Female"}},
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const Total = await models.Student.aggregate([
+        { $match: {school}},
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    
+    const disability = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: Male,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: Female,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: Total,
+        },
+    ]
     res.status(200).json({
         message:"school data successfully fetched",
-        data:{countStudent,countStudentByGender,countStudentByYear,countStudentByAge,countStudentByEduLevel,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} 
+        data:{countStudent,countStudentByGender,countStudentByYear,countStudentByAge,countStudentByEduLevel,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus, disability} 
     })
 }
 
@@ -509,15 +545,15 @@ exports.indicators = async (req, res) =>{
     ]
 
     const survivalMale = await models.Student.aggregate([
-        { $match: { status:"promoted"} },
+        { $match: { status:"promotee"} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
     const survivalFemale = await models.Student.aggregate([
-        { $match: { status:"promoted"} },
+        { $match: { status:"promotee"} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
     const survivalTotal = await models.Student.aggregate([
-        { $match: { status:"promoted"} },
+        { $match: { status:"promotee"} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
     ]).exec();
 
