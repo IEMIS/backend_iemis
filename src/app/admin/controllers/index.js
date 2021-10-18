@@ -1717,6 +1717,9 @@ exports.indicators = async (req, res) =>{
     const repetitionMale = await models.Student.aggregate([
         { $match: { gender:"Male", status:"repeater", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
         { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+    { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+    { $project: { fromClass: 0 } },
         { $sort: { count: -1 } }
         
     ]).exec();
@@ -2658,6 +2661,9 @@ exports.indicatorByDistrict = async (req, res) =>{
             { $match: {district}},
             { $match: { gender:"Male", status:"repeater", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
             { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+             { $project: { fromClass: 0 } },
             { $sort: { count: -1 } }
             
         ]).exec();
