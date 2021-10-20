@@ -3682,9 +3682,7 @@ exports.countTeacherBySchoolAllByDistrict = async (req, res)=>{
 }
 
 exports.countTeacherByClass = async (req, res)=>{
-    if(!req.body.school){
-        return res.status(404).json({error:"School required"})
-    }
+
     let school= mongoose.Types.ObjectId(req.body.school);
     console.log({school})
     const steachermale = await models.Teacher.aggregate([
