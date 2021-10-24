@@ -385,11 +385,44 @@ exports.StudentData = async (req, res) =>{
         { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSession", 0 ] }, "$$ROOT" ] } }},
         { $project: { fromSession: 0 } }
     ]).exec();
+    const Male = await models.Student.aggregate([
+        { $match: { $and: [{ gender: "Male" },{district},]} },
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const Female = await models.Student.aggregate([
+        { $match: { $and: [{gender: "Female" },{district}]} },
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const Total = await models.Student.aggregate([
+        { $match: {district}},
+        { $group: { _id: "$disability", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    
+    const disability = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: Male,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: Female,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: Total,
+        },
+    ]
     const countStudentByStatus= await models.Student.aggregate([
         {$match: {district}},
         {$group :{ _id:"$status", count:{$sum:1}}},
     ]).exec();
-    res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} })
+    res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus,disability} })
 }
 
 exports.StudentDataBySchool = async (req, res) =>{
@@ -493,278 +526,974 @@ exports.studentIndicators = async (req, res)=>{
 }
 
 exports.indicators = async (req, res) =>{
-    // const {year, classid, dob } = req.body;
-    // let classId = mongoose.Types.ObjectId(classid);
-    // result: { $and: [ { $gt: [ "$qty", 100 ] }, { $lt: [ "$qty", 250 ] } ] }
-    // const grossIntake = await models.Student.aggregate([
-    //     { $match: { $and: [ {presentClass:classId, yearAdmission:"2020"}]} },
-    //     { $group: { _id: "$_id", count: { $sum: 1 } } },
-    // ]).exec();
+   if(!req.params.district){
+        return res.status(404).json({error:"District required"})
+    }
+    let district = mongoose.Types.ObjectId(req.params.district);
 
-    // const netIntake = await models.Student.aggregate([
-    //     { $match: { $and: [ {presentClass: classId, yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
-    //     { $group: { _id: "$_id", count: { $sum: 1 } } },
-    // ]).exec();
-
-    const aNetIntakeMale = await models.Student.aggregate([
-        { $match: { $and: [ { yearAdmission:"2020",gender:"Male", age:[{ $lt:6, $gt:7}]}]} },
-        { $group: { _id: "$_id", count: { $sum: 1 } } },
+        // const aNetIntakeFemale = await models.Student.aggregate([
+        //     // age:[{ $lt:6, $gt:7}]
+        //     { $match: { $and: [ { yearAdmission:"2020", gender:"Female", }]} },
+        //     { $group: { _id: "$yearAdmission", count: { $sum: 1 } } },
+        // ]).exec();
+        // const aNetIntakeTotal = await models.Student.aggregate([
+        //     // age:[{ $lt:6, $gt:7}]
+        //     { $match: { $and: [ { yearAdmission:"2020"}]} },
+        //     { $group: { _id: "$yearAdmission", count: { $sum: 1 } } },
+        // ]).exec();
+        // const aNetIntake = [
+        //     {
+        //         key: "Male",
+        //         color: "#FE8A7D",
+        //         values: aNetIntakeMale,
+        //     },
+        //     {
+        //         key: "Female",
+        //         color: "#1de9b6",
+        //         values: aNetIntakeFemale,
+        //     },
+        //     {
+        //         key: "Total",
+        //         color: "#3ebfea",
+        //         values: aNetIntakeTotal,
+        //     },
+        // ]
+    
+        const grossEnrollMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Male"}},
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        ]).exec();
+        
+        const grossEnrollFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female"}},
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        ]).exec();
+        const grossEnrollTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')}},
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        ]).exec();
+    
+        const grossEnroll = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: grossEnrollMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: grossEnrollFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: grossEnrollTotal,
+            },
+        ]
+    
+    
+        const netInTake = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), age:6, status:"admission" , presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+            { $group: { _id: "$gender", count: { $sum: 1 } } },
+        ]).exec();
+        // const netInTakeFemale = await models.Student.aggregate([
+        //     { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female", age:6, status:"admission" ,presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') }]} },
+        //     { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        // ]).exec();
+        // const netInTakeTotal= await models.Student.aggregate([
+        //     { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), age:6, status:"admission" , presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') }]} },
+        //     { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        // ]).exec();
+    
+        // const netInTake = [
+        //     {
+        //         key: "Male",
+        //         color: "#FE8A7D",
+        //         values: netInTakeMale,
+        //     },
+        //     {
+        //         key: "Female",
+        //         color: "#1de9b6",
+        //         values: netInTakeFemale,
+        //     },
+        //     {
+        //         key: "Total",
+        //         color: "#3ebfea",
+        //         values: netInTakeTotal,
+        //     },
+        // ]
+        const netEnrollECE = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { $and: [ 
+                { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), edulevel:'ECE', },
+                { $or:[{age:{$gte:2, $lte:6},}]}
+            ]} },
+            { $group: { _id: "$gender", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+            
+        ]).exec();
+        const netEnrollPRY = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { $and: [ 
+                { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), edulevel:'Primary',  },
+                { $or:[{age:{$gte:5, $lte:14},}]}
+            ]} },
+            { $group: { _id: "$gender", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const netEnrollSEC = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { $and: [ 
+                { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), edulevel:'Secondary', } ,
+                { $or:[{age:{$gte:13, $lte:19},}]}
+            ]} },
+            { $group: { _id: "$gender", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const netEnrollTVET = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { $and: [ 
+                { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), edulevel:'TVET'} ,
+                { $or:[{age:{$gte:13, $lte:19},}]}
+            ]} },
+            { $group: { _id: "$gender", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const netEnroll = [
+            {
+                key: "ECE",
+                color: "#FE8A7D",
+                values: netEnrollECE,
+            },
+            {
+                key: "Primary",
+                color: "#1de9b6",
+                values: netEnrollPRY,
+            },
+            {
+                key: "Secondary",
+                color: "#3ebfea",
+                values: netEnrollSEC,
+            },
+            {
+                key: "TVET",
+                color: "#0206",
+                values: netEnrollTVET,
+            },
+        ]
+    
+        const ageSpecMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match:
+                { gender:"Male", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')}},
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const ageSpecFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match:
+                { gender:"Female",session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')}},
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const ageSpecTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715') }},  
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const ageSpec = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: ageSpecMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: ageSpecFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: ageSpecTotal,
+            },
+        ]
+    
+        const outOfSchool = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { $and: [ 
+                { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715') },
+                { $or:[{age:{$gte:5, $lte:14},}]}
+            ]} },
+            { $group: { _id: "$gender", count: { $sum: 1 } } },
+        ]).exec();
+        
+        // const outOfSchoolFemale = await models.Student.aggregate([
+        //     { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), gender:"Female", }]} },
+        //     { $group: { _id: "$age", count: { $sum: 1 } } },
+        // ]).exec();
+        // const outOfSchoolTotal = await models.Student.aggregate([
+        //     { $match: { $and: [ { session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'), }]} },
+        //     { $group: { _id: "$age", count: { $sum: 1 } } },
+        // ]).exec();
+        // const outOfSchool = [
+        //     {
+        //         key: "Male",
+        //         color: "#FE8A7D",
+        //         values: outOfSchoolMale,
+        //     },
+        //     {
+        //         key: "Female",
+        //         color: "#1de9b6",
+        //         values: outOfSchoolFemale,
+        //     },
+        //     {
+        //         key: "Total",
+        //         color: "#3ebfea",
+        //         values: outOfSchoolTotal,
+        //     },
+        // ]
+    
+        const transitionMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Male",status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const transitionFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Female",status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')}},
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const transitionTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const transition = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: transitionMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: transitionFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: transitionTotal,
+            },
+        ]
+    
+        const repetitionMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Male", status:"repeater", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+             { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+            
+        ]).exec();
+        const repetitionFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Female",status:"repeater", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'),} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const repetitionTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"repeater",session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')}},
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+        ]).exec();
+    
+        const repetition = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: repetitionMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: repetitionFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: repetitionTotal,
+            },
+        ]
+    
+        const survivalMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Male",  status:"promotee"} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const survivalFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Female", status:"promotee",} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const survivalTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"promotee"} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+        ]).exec();
+    
+        const survival = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: survivalMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: survivalFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: survivalTotal,
+            },
+        ]
+    
+        const grossInTake = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"admission", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+            { $group: { _id: "$gender", count: { $sum: 1 } } },
+        ]).exec();
+        //SLE for ECE
+        const SLEEMale = await models.Student.aggregate([
+            { $match: {district}},
+             { $match: {  gender:"Male", edulevel:"ECE" } },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+            
+        ]).exec();
+        const SLEEFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {  gender:"Female", edulevel:"ECE", } },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SLEETotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { edulevel:"ECE" } },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SLEE = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: SLEEMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: SLEEFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: SLEETotal,
+            },
+        ]
+    //SLE for Primary
+    const SLEPMale = await models.Student.aggregate([
+        { $match: {district}},
+             { $match: {  gender:"Male", edulevel:"Primary" } },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SLEPFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Female", edulevel:"Primary" } },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SLEPTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { edulevel:'Primary'} },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SLEP = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: SLEPMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: SLEPFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: SLEPTotal,
+            },
+        ]
+    //SLE for Secondary
+    const SLESMale = await models.Student.aggregate([
+        { $match: {district}},
+             { $match:{  gender:"Male", edulevel:"Secondary" } },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SLESFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match:{ gender:"Female", edulevel:"Secondary"} },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SLESTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { edulevel:"Secondary"} },
+            { $group: { _id: "$age", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SLES = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: SLESMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: SLESFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: SLESTotal,
+            },
+        ]
+    //coefficient of efficiency
+        const coeMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match:  { gender:"Male", status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const coeFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Female", status:"graduate",session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715'),}},
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const coeTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {  status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+    
+        ]).exec();
+        const coe = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: coeMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: coeFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: coeTotal,
+            },
+        ]
+        //Year INPUT PER GRADUATE
+        const YIPMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {gender:"Male",status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const YIPFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {gender:"Female", status:"graduate",session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+    
+        ]).exec();
+        const YIPTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match:  {status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const YIP = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: YIPMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: YIPFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: YIPTotal,
+            },
+        ]
+    
+        const repeaterMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Male", status:"repeater",session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const repeaterFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Female", status:"repeater", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const repeaterTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"repeater",session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+            { $sort: { count: -1 } }
+        ]).exec();
+    
+        const repeaters = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: repeaterMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: repeaterFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: repeaterTotal,
+            },
+        ]
+        const PupilMale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Male", status:"repeater", status:"promotee",status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const PupilFemale = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Female", status:"repeater", status:"promotee",status:"graduate", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const PupilTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"repeater", status:"promotee", status:"graduate",session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+    
+        const Pupils = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: PupilMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: PupilFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: PupilTotal,
+            },
+        ]
+        const TeaMale = await models.Teacher.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Male"} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const TeaFemale = await models.Teacher.aggregate([
+            { $match: {district}},
+            { $match: { gender:"Female"} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const TeaTotal = await models.Teacher.aggregate([
+            { $match: {district}},
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+    
+        const Tea = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: TeaMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: TeaFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: TeaTotal,
+            },
+        ]
+        const PercenT = await models.Teacher.aggregate([
+            { $match: {district}},
+            //{ $match: { serviceStatus: "" }},
+            //{$group: {  _id: "$gender", "count": { $sum: 1 } }},
+            { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
+             {$addFields: { totalScore:{ $sum: "$count"} }},
+        ]).exec();
+    
+        const EnrollPublic= await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {session:""} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const EnrollPrivate= await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { session:""} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const EnrollTotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {session:""} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+    
+        const Enroll = [
+            {
+                key: "Public",
+                color: "#FE8A7D",
+                values: EnrollPublic,
+            },
+            {
+                key: "Private",
+                color: "#1de9b6",
+                values: EnrollPrivate,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: EnrollTotal,
+            },
+        ]
+        //PERCENTAGE OF TEACHING STAFF IN PRIVATE EDUCATIONAL INSTITUTION
+        const TPublic= await models.Teacher.aggregate([
+            { $match: {district}},
+            { $match: {session:""} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const TPrivate= await models.Teacher.aggregate([
+            { $match: {district}},
+            { $match: { session:""} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const TTotal = await models.Teacher.aggregate([
+            { $match: {district}},
+            { $match: {session:""} },
+            { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+    
+        const TP = [
+            {
+                key: "Public",
+                color: "#FE8A7D",
+                values: TPublic,
+            },
+            {
+                key: "Private",
+                color: "#1de9b6",
+                values: TPrivate,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: TTotal,
+            },
+        ]
+        //GROSS INTAKE RATIO IN THE LAST GRADE OF PRIMARY (GIRLG)
+        const grossInTakeLG = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"promotee", presentClass:mongoose.Types.ObjectId('60ebbb3c16ce020036d353f8') } },
+            { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
+            {$addFields: { totalScore:{ $sum: "$count"} }},
+        ]).exec();
+    //EXPECTED GROSS INTAKE RATIO IN THE LAST GRADE OF PRIMARY (EGIRLG)
+        const EgrossInTakeLG = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"admission", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+            { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
+            {$addFields: { totalScore:{ $sum: "$count"} }},
+        ]).exec();
+    
+    //GROSS PRIMARY GRADUATION (GPGR)
+        const grossPGR = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: { status:"graduate", presentClass:mongoose.Types.ObjectId('60ebbb3c16ce020036d353f8') } },
+            { $group: { _id: "$gender", count: { $sum: 1 }} },
+        ]).exec();
+    
+    //EXPECTED GROSS PRIMARY GRADUATION RATIO (EGPGR)
+    const EGPGR = await models.Student.aggregate([
+        { $match: {district}},
+        { $match: { status:"admission", cohortA:"2020-1", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+        { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
+        {$addFields: { totalScore:{ $sum: "$count"} }},
     ]).exec();
-    const aNetIntakeFemale = await models.Student.aggregate([
-        { $match: { $and: [ { yearAdmission:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
-        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    
+    //ECE EXPERIENCE
+    const ECEE = await models.Student.aggregate([
+        { $match: {district}},
+        { $match: { status:"admission", presentClass:mongoose.Types.ObjectId('60d0b6e7d8d04e53a424d1a3') } },
+        { $group: { _id: "$HadEce", count: { $sum: 1 }, total :{$sum:"$count"} } },
+        {$addFields: { totalScore:{ $sum: "$count"} }},
     ]).exec();
-    const aNetIntakeTotal = await models.Student.aggregate([
-        { $match: { $and: [ { yearAdmission:"2020", age:[{ $lt:6, $gt:7}]}]} },
-        { $group: { _id: "$_id", count: { $sum: 1 } } },
+    
+    // Promotion rate
+    const PromoMale = await models.Student.aggregate([
+        { $match: {district}},
+        { $match: { gender:"Male", status:"promotee"} },
+        { $group: { _id: "$presentClass", count: { $sum: 1}, total :{$sum:"$count"} } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+        { $sort: { count: -1 } }
     ]).exec();
-
-    const aNetIntake = [
+    const PromoFemale = await models.Student.aggregate([
+        { $match: {district}},
+        { $match: { gender:"Female", status:"promotee"} },
+        { $group: { _id: "$presentClass", count: { $sum: 1}, total :{$sum:"$count"} } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    const PromoTotal = await models.Student.aggregate([
+        { $match: {district}},
+        { $match: {status:"promotee"} },
+        { $group: { _id: "$presentClass", count: { $sum: 1}, total :{$sum:"$count"} } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+            { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+            { $project: { fromClass: 0 } },
+        { $sort: { count: -1 } }
+    ]).exec();
+    
+    const PromoR = [
         {
             key: "Male",
             color: "#FE8A7D",
-            values: aNetIntakeMale,
+            values: PromoMale,
         },
         {
             key: "Female",
             color: "#1de9b6",
-            values: aNetIntakeFemale,
+            values: PromoFemale,
         },
         {
             key: "Total",
             color: "#3ebfea",
-            values: aNetIntakeTotal,
+            values: PromoTotal,
         },
     ]
-
-    const grossEnrollMale = await models.Student.aggregate([
-        { $match: { $and: [{session:"2020", gender:"Male"}]}},
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    
+    //Dropout
+    const DropoutR = await models.Student.aggregate([
+        { $match: {district}},
+        { $match: { status:"dropout"} },
+        { $group: { _id: "$gender", count: { $sum: 1 }} },
     ]).exec();
-    const grossEnrollFemale = await models.Student.aggregate([
-        { $match: { $and: [{session:"2020", gender:"Female"}]}},
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
+    
+    //GER ECE
+    const GERECE = await models.Student.aggregate([
+        { $match: {district}},
+        { $match: { edulevel:"ECE"} },
+        { $group: { _id: "$gender", count: { $sum: 1 }} },
     ]).exec();
-    const grossEnrollTotal = await models.Student.aggregate([
-        { $match: { $and: [{session:"2020"}]}},
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
-    ]).exec();
-
-    const grossEnroll = [
-        {
-            key: "Male",
-            color: "#FE8A7D",
-            values: grossEnrollMale,
-        },
-        {
-            key: "Female",
-            color: "#1de9b6",
-            values: grossEnrollFemale,
-        },
-        {
-            key: "Total",
-            color: "#3ebfea",
-            values: grossEnrollTotal,
-        },
-    ]
-
-    const netEnrollMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", gender:"Male", age:[{ $lt:6, $gt:7}]}]} },
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
-    ]).exec();
-    const netEnrollFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
-    ]).exec();
-    const netEnrollTotal= await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020",gender:"Female", age:[{ $lt:6, $gt:7}]}]} },
-        { $group: { _id: "$eduLevel", count: { $sum: 1 } } },
-    ]).exec();
-
-    const netEnroll = [
-        {
-            key: "Male",
-            color: "#FE8A7D",
-            values: netEnrollMale,
-        },
-        {
-            key: "Female",
-            color: "#1de9b6",
-            values: netEnrollFemale,
-        },
-        {
-            key: "Total",
-            color: "#3ebfea",
-            values: netEnrollTotal,
-        },
-    ]
-
-    const ageSpecMale = await models.Student.aggregate([
-        { $match: { gender:"Male"}},
-        { $group: { _id: "$age", count: { $sum: 1 } } },
-    ]).exec();
-    const ageSpecFemale = await models.Student.aggregate([
-        { $match: { gender:"Female"}},
-        { $group: { _id: "$age", count: { $sum: 1 } } },
-    ]).exec();
-    const ageSpecTotal = await models.Student.aggregate([
-        { $group: { _id: "$age", count: { $sum: 1 } } },
-    ]).exec();
-    const ageSpec = [
-        {
-            key: "Male",
-            color: "#FE8A7D",
-            values: ageSpecMale,
-        },
-        {
-            key: "Female",
-            color: "#1de9b6",
-            values: ageSpecFemale,
-        },
-        {
-            key: "Total",
-            color: "#3ebfea",
-            values: ageSpecTotal,
-        },
-    ]
-
-    const outOfSchoolMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", gender:"Male", age:[{ $lt:6, $gt:14}]}]} },
-        { $group: { _id: "$_id", count: { $sum: 1 } } },
-    ]).exec();
-    const outOfSchoolFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", gender:"Female", age:[{ $lt:6, $gt:14}]}]} },
-        { $group: { _id: "$_id", count: { $sum: 1 } } },
-    ]).exec();
-    const outOfSchoolTotal = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", age:[{ $lt:6, $gt:14}]}]} },
-        { $group: { _id: "$_id", count: { $sum: 1 } } },
-    ]).exec();
-    const outOfSchool = [
-        {
-            key: "Male",
-            color: "#FE8A7D",
-            values: outOfSchoolMale,
-        },
-        {
-            key: "Female",
-            color: "#1de9b6",
-            values: outOfSchoolFemale,
-        },
-        {
-            key: "Total",
-            color: "#3ebfea",
-            values: outOfSchoolTotal,
-        },
-    ]
-
-    const transitionMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"graduated", gender:"Male"}]} },
+    
+    //Qualified Teacher
+    const TTrained= await models.Teacher.aggregate([
+        { $match: {district}},
+        { $match: {session:""} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
     ]).exec();
-    const transitionFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"graduated", gender:"Female"}]} },
+    const TUntrained= await models.Teacher.aggregate([
+        { $match: {district}},
+        { $match: { session:""} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
     ]).exec();
-    const transitionTotal = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"graduated"}]} },
+    const TTTotal = await models.Teacher.aggregate([
+        { $match: {district}},
+        { $match: {session:""} },
         { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
     ]).exec();
-    const transition = [
+    
+    const TQP = [
         {
-            key: "Male",
+            key: "Public",
             color: "#FE8A7D",
-            values: transitionMale,
+            values: TTrained,
         },
         {
-            key: "Female",
+            key: "Private",
             color: "#1de9b6",
-            values: transitionFemale,
+            values: TUntrained,
         },
         {
             key: "Total",
             color: "#3ebfea",
-            values: transitionTotal,
+            values: TTTotal,
         },
     ]
-
-    const repetitionMale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"repeater", gender:"Male"}]} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ]).exec();
-    const repetitionFemale = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"repeater", gender:"Female"}]} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ]).exec();
-    const repetitionTotal = await models.Student.aggregate([
-        { $match: { $and: [ { session:"2020", status:"repeater",}]} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ]).exec();
-
-    const repetition = [
-        {
-            key: "Male",
-            color: "#FE8A7D",
-            values: repetitionMale,
-        },
-        {
-            key: "Female",
-            color: "#1de9b6",
-            values: repetitionFemale,
-        },
-        {
-            key: "Total",
-            color: "#3ebfea",
-            values: repetitionTotal,
-        },
-    ]
-
-    const survivalMale = await models.Student.aggregate([
-        { $match: { status:"promoted"} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ]).exec();
-    const survivalFemale = await models.Student.aggregate([
-        { $match: { status:"promoted"} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ]).exec();
-    const survivalTotal = await models.Student.aggregate([
-        { $match: { status:"promoted"} },
-        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-    ]).exec();
-
-    const survival = [
-        {
-            key: "Male",
-            color: "#FE8A7D",
-            values: survivalMale,
-        },
-        {
-            key: "Female",
-            color: "#1de9b6",
-            values: survivalFemale,
-        },
-        {
-            key: "Total",
-            color: "#3ebfea",
-            values: survivalTotal,
-        },
-    ]
-
-    console.log({transition,repetition,survival, aNetIntake,grossEnroll, netEnroll, ageSpec, outOfSchool,})
-    return res.status(200).json({
-        message:"Fetched indicator",
-        data:{
-            survival,
-            repetition,
-            transition,
-            outOfSchool, 
-            ageSpec,
-            netEnroll,
-            grossEnroll, 
-            aNetIntake, 
-        },
-    })
-}
+    
+    /*PERCENTAGE DISTRIBUTION OF ENROLMENT IN SECONDARY EDUCATION BY ORIENTATION OF EDUCATION PROGRAMME
+    grouping should be by orientation but the education structure in fiji is unclear and */
+        const SEMale= await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {edulevel:"Secondary", session: ""} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SEFemale= await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {edulevel:"Secondary", session: ""} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+        const SETotal = await models.Student.aggregate([
+            { $match: {district}},
+            { $match: {edulevel:"Secondary", session: ""} },
+            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]).exec();
+    
+        const SED = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: SEMale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: SEFemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: SETotal,
+            },
+        ]
+        const aNetIntake = await models.Student.aggregate([
+            { $match: {district}},
+            { $match:{ yearAdmission:"2020", age:6 } },
+            {$group: {  _id: "$gender", "count": { $sum: 1 } }},
+            // { $group: { _id: "$gender", count: { $sum: 1 }, total :{$sum:"$count"} } },
+            // {$addFields: { totalScore:{ $sum: "$count"} }},
+        ]).exec();
+        
+        return res.status(200).json({
+            message:"Fetched indicator",
+            data:{
+                aNetIntake,
+                grossEnroll,
+                netInTake,
+                netEnroll,
+                ageSpec,
+                outOfSchool,
+                transition,
+                repetition,
+                survival,
+                grossInTake,
+                SLEE,
+                SLEP,
+                SLES,
+                coe,
+                YIP,
+                repeaters,
+                Pupils,
+                Tea,
+                PercenT,
+                Enroll,
+                TP,
+                grossInTakeLG,
+                EgrossInTakeLG,
+                grossPGR,
+                EGPGR,
+                ECEE,
+                PromoR,
+                DropoutR,
+                GERECE,
+                TQP,
+                SED
+            },
+        })
+    }
 
 
 exports.createTeacher = async (req, res)=>{
