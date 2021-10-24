@@ -752,7 +752,7 @@ exports.StudentData = async (req, res) =>{
         {$group :{ _id:"$status", count:{$sum:1}}},
     ]).exec();
     res.status(200).json({message:"school data successfully fetched",data:{countStudent,countStudentByGender,countStudentByYear,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentBySession,countStudentByStatus} })
-    console.log({countStudent})
+    // console.log({countStudent})
 }
 
 exports.countStudentByClassAllByDistrict = async (req, res)=>{
@@ -2242,6 +2242,15 @@ exports.teacherDataByDistrict = async (req, res) =>{
 // }
 
 
+
+exports.createBulkStudent = async (req, res) =>{
+    // res.status(200).json({message:"Endpoint reach"})
+    models.Student.insertMany(req.body).then(function (docs){
+        res.status(200).json({message:"students successfully created, you can now login", docs})
+    }).catch(function(err){
+        return res.status(401).json({error:"error in creating student, please try again",err})
+    })
+}
 
 
 
