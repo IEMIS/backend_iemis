@@ -20,8 +20,8 @@ router.get("/admin/district/data/count", Mid.requiredSignin, Mid.isSuperAdmin,Ct
 /**
   * School services
 */
-//router.get("/admin/school",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
-router.get("/admin/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
+router.get("/admin/school",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.schools);
+// router.get("/admin/school",  Ctr.schools);
 router.post("/admin/school", Valid.schoolCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createSchool);
 router.get("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.school);
 router.put("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateSchool);
@@ -40,6 +40,7 @@ router.delete("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, C
  *  Student Services 
 */
 router.get("/admin/student",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.students)
+router.post("/admin/developer/student", Ctr.createBulkStudent);
 router.post("/admin/student",Valid.studentCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createStudent)
 router.get("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.student)
 router.put("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateStudent)
@@ -57,7 +58,7 @@ router.post("/admin/student/data/count/school/sudentclass", Mid.requiredSignin, 
 //router.get("/admin/student/data/indicators", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.studentIndicators)
 
 
-          // admin/student/data/student                                             StudentData
+          // admin/student/data/student                                            createBulkStudent
 router.get("/admin/student/data/student", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentData);
 router.post("/admin/student/data/student/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentDataByDistrict);
 router.post("/admin/student/data/student/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.StudentDataBySchool);
@@ -138,6 +139,7 @@ router.get("/admin/admin/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.count
 router.get("/admin/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.admin);
 router.put("/admin/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.update);
 router.delete("/admin/admin/:adminId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.delete);
+
 
 
 router.param("teacherId", Ctr.teacherById)
