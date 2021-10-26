@@ -39,10 +39,10 @@ router.delete("/admin/school/:schoolId", Mid.requiredSignin, Mid.isSuperAdmin, C
 /**
  *  Student Services 
 */
-router.get("/admin/student",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.students)
-router.post("/admin/developer/student", Ctr.createBulkStudent);
+router.get("/admin/students", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.student);
+router.post("/admin/developer/student", Ctr.createBulkStudent)
 router.post("/admin/student",Valid.studentCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createStudent)
-router.get("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.student)
+router.get("/admin/students/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.student)
 router.put("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateStudent)
 router.delete("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteStudent)
 // router.get("/admin/student/data/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudent)
