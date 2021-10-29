@@ -109,20 +109,22 @@ router.delete("/admin/population/:population", Mid.requiredSignin, Mid.isSuperAd
  * Admin Teacher Services 
 */
 router.get("/admin/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.teachers)
+
+router.post("/admin/developer/teachers", Ctr.createBulkTeacher)
 router.post("/admin/teachers",Valid.teacherCreator, Mid.requiredSignin, Mid.isSuperAdmin, Ctr.createTeacher)
 router.get("/admin/teachers/:teacherId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.teacher)
 router.put("/admin/teachers/:teacherId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.updateTeacher)
 router.delete("/admin/teachers/:teacherId", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.deleteTeacher)
 router.get("/admin/teachers/data/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacher)
-router.get("/admin/teachers/data/count/gender", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByGender)
+//router.get("/admin/teachers/data/count/gender", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByGender)
 router.get("/admin/teachers/data/count/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolAll )
 router.post("/admin/teachers/data/count/school/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolAllByDistrict )
 router.post("/admin/teachers/data/count/school/tclass", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByClass)
+router.get("/admin/teachers/data/count/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.teacherData);
+//router.get("/admin/teachers/data/count/staff", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByTypeOfstaff)
 
-router.get("/admin/teachers/data/count/staff", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByTypeOfstaff)
 
-
-
+//router.get("/admin/teachers/data/count/pupilteacher", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.PupilTeacher);
 
 
 

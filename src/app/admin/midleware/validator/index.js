@@ -157,7 +157,7 @@ exports.teacherCreator = (req, res, next) => {
     //req.check('teachercode', 'valid teacher code is required').notEmpty();
     req.check('school', 'school is required').notEmpty();
     req.check('firstName', 'First Name is required').notEmpty();
-    req.check('middleName', 'Middle Name is required').notEmpty();
+    //req.check('middleName', 'Middle Name is required').notEmpty();
     req.check('lastName', 'Last Name is required').notEmpty();
     //req.check('title', 'tittle is required').notEmpty();
     req.check('gender', 'Gender is required').notEmpty();

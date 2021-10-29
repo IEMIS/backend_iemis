@@ -5,14 +5,14 @@ const {ObjectId} = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const teacherSchema = mongoose.Schema({
-    /*
+    
     teacherCode:{
         type: String,
         trim: true,
         required: true,
         unique: true
     },
-    */
+    
     district:{
         type: Schema.Types.ObjectId,
         ref: "District",
@@ -47,6 +47,11 @@ const teacherSchema = mongoose.Schema({
         type: String,
         trim: true,
         required: true,
+    },
+    edulevel:{
+        type: String,
+        trim: true,
+       // required: true,
     },
     dob:{
         type:Date,
@@ -88,18 +93,21 @@ const teacherSchema = mongoose.Schema({
     //         ref:"Classes"
     //     }]
     // }],
-    classTaking:{
+   /* classTaking:{
         type: Schema.Types.ObjectId,
         ref:"Classes"
     },
-    
+    */
     subjectSpecialisation:{
         type: String,
         trim: true,
         //required: true,
     },
-    level: Number,
-
+    level: {
+        type: String,
+        trim: true,
+        required: true,
+    },
  
     //age to be generated based on dob
     //age:Number,
@@ -125,8 +133,8 @@ const teacherSchema = mongoose.Schema({
     retirementyear: Date,
         
     gradeLevel:{
-        type: Number,
-        //required:true,
+        type: String,
+        trim: true,
     },
     designation:{
         type: String,
@@ -150,11 +158,12 @@ const teacherSchema = mongoose.Schema({
         //required: true,
     },
     //any administrative role Y/N 
-    Engagement:{
+    /*Engagement:{
         type:String,
         trim: true,
         //required: true,
     },
+    */
     session:{
         type: String,
         trim: true,
