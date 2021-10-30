@@ -50,7 +50,7 @@ router.delete("/admin/student/:studentId",Mid.requiredSignin, Mid.isSuperAdmin, 
 // router.get("/admin/student/data/count/gender", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByGender)
 router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdmin,  Ctr.countStudentByClassAll)
 router.post("/admin/student/data/count/class/district", Mid.requiredSignin, Mid.isSuperAdmin,  Ctr.countStudentByClassAllByDistrict)
-router.post("/admin/student/data/count/school/sudentclass", Mid.requiredSignin, Mid.isSuperAdmin,  Ctr.countStudentByClassAllBy)
+router.post("/admin/student/data/count/class/school", Mid.requiredSignin, Mid.isSuperAdmin,  Ctr.countStudentByClassAllBy)
 //router.get("/admin/student/data/count/class", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByClass)
 // router.get("/admin/student/data/count/yearadmission", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByYear)
 // router.get("/admin/student/data/count/providence", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countStudentByProvidence)
@@ -118,8 +118,10 @@ router.delete("/admin/teachers/:teacherId", Mid.requiredSignin, Mid.isSuperAdmin
 router.get("/admin/teachers/data/count", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacher)
 //router.get("/admin/teachers/data/count/gender", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByGender)
 router.get("/admin/teachers/data/count/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolAll )
+//router.get("/admin/teachers/data/count/schoolser", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByService )
 router.post("/admin/teachers/data/count/school/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolAllByDistrict )
-router.post("/admin/teachers/data/count/school/tclass", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByClass)
+router.post("/admin/teachers/data/count/school/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByClass)
+//router.post("/admin/teachers/data/count/school/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolservicestatus)
 router.get("/admin/teachers/data/count/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.teacherData);
 //router.get("/admin/teachers/data/count/staff", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByTypeOfstaff)
 
