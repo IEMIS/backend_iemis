@@ -1923,10 +1923,37 @@ const SLES = [
         },
     ]
 //Dropout
-const DropoutR = await models.Student.aggregate([
-    { $match: { status:"dropout"} },
-    { $group: { _id: "$gender", count: { $sum: 1 }} },
+const dropoutMale= await models.Student.aggregate([
+    { $match: { status:"dropout",  gender: "Male",} },
+    { $group: { _id: "$edulevel", count: { $sum: 1 }} },
 ]).exec();
+const dropoutFemale= await models.Student.aggregate([
+    { $match: { status:"dropout", gender: "Female"} },
+    { $group: { _id: "$edulevel", count: { $sum: 1 }} },
+]).exec();
+
+const dropoutTotal= await models.Student.aggregate([
+    { $match: { status:"dropout"} },
+    { $group: { _id: "$edulevel", count: { $sum: 1 }} },
+]).exec();
+
+const DropoutR = [
+    {
+        key: "Male",
+        color: "#FE8A7D",
+        values: dropoutMale,
+    },
+    {
+        key: "Female",
+        color: "#1de9b6",
+        values: dropoutFemale,
+    },
+    {
+        key: "Total",
+        color: "#3ebfea",
+        values: dropoutTotal,
+    },
+]
 
 const repetitionMale = await models.Student.aggregate([
     //{ $match: { gender:"Male", status:"repeater", session:mongoose.Types.ObjectId('60ccde2d7dab374e74640715')} },
@@ -2759,11 +2786,40 @@ exports.indicatorByDistrict = async (req, res) =>{
             },
         ]
     //Dropout
-    const DropoutR = await models.Student.aggregate([
+    const dropoutMale= await models.Student.aggregate([
+        { $match: {district}},
+        { $match: { status:"dropout",  gender: "Male",} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 }} },
+    ]).exec();
+    const dropoutFemale= await models.Student.aggregate([
+        { $match: {district}},
+        { $match: { status:"dropout", gender: "Female"} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 }} },
+    ]).exec();
+    
+    const dropoutTotal= await models.Student.aggregate([
         { $match: {district}},
         { $match: { status:"dropout"} },
-        { $group: { _id: "$gender", count: { $sum: 1 }} },
+        { $group: { _id: "$edulevel", count: { $sum: 1 }} },
     ]).exec();
+    
+    const DropoutR = [
+        {
+            key: "Male",
+            color: "#FE8A7D",
+            values: dropoutMale,
+        },
+        {
+            key: "Female",
+            color: "#1de9b6",
+            values: dropoutFemale,
+        },
+        {
+            key: "Total",
+            color: "#3ebfea",
+            values: dropoutTotal,
+        },
+    ]
 
 
    // Repetition
