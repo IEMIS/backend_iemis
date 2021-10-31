@@ -1517,52 +1517,6 @@ exports.StudentDataBySchool = async (req, res) =>{
             values: servicetotal,
         },
     ]
-    /*
-        const schstdmale = await models.Student.aggregate([
-            {$match: {school}},
-            { $match: { gender: "Male" } },
-            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-            //{ $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-            //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
-            //{ $project: { fromClass: 0 } },
-            { $sort: { _id: -1 } }
-        ]).exec();
-        const schstdfemale = await models.Student.aggregate([
-            {$match: {school}},
-            { $match: { gender: "Female" } },
-            //{ $match: { gender: "Female" } },
-            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-            //{ $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-            //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
-            //{ $project: { fromClass: 0 } },
-            { $sort: { _id: -1 } }
-        ]).exec();
-        const schstdtotal = await models.Student.aggregate([
-            {$match: {school}},
-            { $group: { _id: "$presentClass", count: { $sum: 1 } } },
-            //{ $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-            //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
-            //{ $project: { fromClass: 0 } },
-            { $sort: {_id: 1 } }
-        ]).exec();
-      
-        const studentschoolclass = [
-            {
-                key: "Male",
-                color: "#FE8A7D",
-                values: schstdmale,
-            },
-            {
-                key: "Female",
-                color: "#1de9b6",
-                values: schstdfemale,
-            },
-            {
-                key: "Total",
-                color: "#3ebfea",
-                values: schstdtotal,
-            },
-        ] */
     res.status(200).json({
         message:"school data successfully fetched",
         data:{countStudent,countStudentByGender,countStudentByAge,countStudentByEduLevel,countStudentByYear, countStudentBySession,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentByStatus, disability, servicedata} 
@@ -3768,6 +3722,49 @@ exports.countTeacherByClass = async (req, res)=>{
     return res.status(200).json ({message:"Teacher successfully counted by School", data })
 }
 
+exports.countTeacherBySchoolservicestatus= async (req, res) =>{
+    if(!req.body.school){
+        return res.status(404).json({error:"School required"})
+    }
+    let school= mongoose.Types.ObjectId(req.body.school);
+    //console.log({school})
+        const servicemale = await models.Teacher.aggregate([
+            { $match: {school} },
+            { $match: { gender: "Male" } },
+            { $group: { _id: "$serviceStatus", count: { $sum: 1 } } },
+            { $sort: { _id: 1 } }
+        ]).exec();
+        const servicefemale = await models.Teacher.aggregate([
+            { $match: {school} },
+            { $match: { gender: "Female" } },
+            { $group: { _id: "$serviceStatus", count: { $sum: 1 } } },
+            { $sort: { _id: 1 } }
+        ]).exec();
+        const servicetotal = await models.Teacher.aggregate([
+            { $match: {school} },
+            { $group: { _id: "$serviceStatus", count: { $sum: 1 } } },
+            { $sort: { _id: 1 } }
+        ]).exec();
+      
+        const servicedata= [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: servicemale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: servicefemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: servicetotal,
+            },
+        ]
+        return res.status(200).json ({message:"Teacher successfully counted by School", servicedata })
+    }
 exports.teacherDataByDistrict = async (req, res) =>{
     const countTeacher = await models.Teacher.countDocuments().exec()
     const countTeacherByTypeOfstaff = await models.Teacher.aggregate([
