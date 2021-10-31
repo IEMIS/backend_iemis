@@ -121,7 +121,7 @@ router.get("/admin/teachers/data/count/school", Mid.requiredSignin, Mid.isSuperA
 //router.get("/admin/teachers/data/count/schoolser", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByService )
 router.post("/admin/teachers/data/count/school/district", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolAllByDistrict )
 router.post("/admin/teachers/data/count/school/school", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByClass)
-//router.post("/admin/teachers/data/count/school/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolservicestatus)
+router.post("/admin/teachers/data/count/school/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherBySchoolservicestatus)
 router.get("/admin/teachers/data/count/teachers", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.teacherData);
 //router.get("/admin/teachers/data/count/staff", Mid.requiredSignin, Mid.isSuperAdmin, Ctr.countTeacherByTypeOfstaff)
 
