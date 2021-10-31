@@ -1625,7 +1625,7 @@ exports.indicators = async (req, res) =>{
         {$addFields: { totalScorenetintake:{ $sum: "$count"} }},
     ]).exec();
     const aNetIntake = await models.Student.aggregate([
-        { $match:{ age:6 } },
+        { $match:{ age:6, edulevel:"Primary" } },
         {$group: {  _id: "$gender", count: { $sum: 1 } }},
 
         //{ $project: { ANIR: { $divide: [ "$gender", "$pop6" ] } } }
@@ -2448,7 +2448,7 @@ exports.indicatorByDistrict = async (req, res) =>{
 //Anet in
         const aNetIntake = await models.Student.aggregate([
             { $match: {district}},
-            { $match:{ age:6 } },
+            { $match:{ age:6, edulevel: "Primary" } },
             {$group: {  _id: "$gender", count: { $sum: 1 } }},
     
             //{ $project: { ANIR: { $divide: [ "$gender", "$pop6" ] } } }
