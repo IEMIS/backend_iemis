@@ -665,25 +665,25 @@ exports.student = async (req, res) =>{
 exports.countStudentByClassAll = async (req, res)=>{
     const male = await models.Student.aggregate([
         { $match: { gender: "Male" } },
-        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
-        //{ $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
-        //{ $project: { fromClass: 0 } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } },
         { $sort: { _id: 1 } }
     ]).exec();
     const female = await models.Student.aggregate([
         { $match: { gender: "Female" } },
-        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
-        //{ $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
-        //{ $project: { fromClass: 0 } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromClass: 0 } },
         { $sort: { _id: 1 } }
     ]).exec();
     const total = await models.Student.aggregate([
-        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
-        //{ $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
-       // { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
-       // { $project: { fromClass: 0 } },
+        { $group: { _id: "$presentClass", count: { $sum: 1 } } },
+        { $lookup: { from: "classes", localField: "_id", foreignField: "_id", as: "fromClass"}},
+       { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromClass", 0 ] }, "$$ROOT" ] } }},
+       { $project: { fromClass: 0 } },
         { $sort: { count: 1 } }
     ]).exec();
   
@@ -2068,16 +2068,18 @@ const coePupilYear = await models.Student.aggregate([
 ]).exec();
 */
 const coe = [
-    {
-        key: "Graduate",
-        color: "#FE8A7D",
-        values: coegrad ,
-    },
+
     {
         key: "Pupil-Year",
         color: "#1de9b6",
         values: coePupilYear,
     },
+    {
+        key: "Graduate",
+        color: "#FE8A7D",
+        values: coegrad ,
+    },
+   
   /*  {
         key: "Total",
         color: "#3ebfea",
@@ -2086,7 +2088,7 @@ const coe = [
     */
 ]
 const  yigPupilYear = await models.Student.aggregate([
-        //{ $match:  {edulevel:"$edulevel" } },
+        { $match: { status:{ $in : ["graduate","promotee","dropout" ]}}},
         { $group: { _id:"$cohortA", count: { $sum: 1 } } },
         //{ $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
         //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
@@ -2976,6 +2978,7 @@ const coe = [
 ]
 const  yigPupilYear = await models.Student.aggregate([
     { $match: {district}},
+    { $match: { status:{ $in : ["graduate","promotee","dropout" ]}}},
         { $group: { _id: "$cohortA", count: { $sum: 1 } } },
         { $sort: { _id: 1 } }
     ]).exec();
@@ -3721,26 +3724,26 @@ exports.countTeacherBySchoolAllByDistrict = async (req, res)=>{
     let district = mongoose.Types.ObjectId(req.body.district);
     const male = await models.Teacher.aggregate([
         { $match: { $and: [{ gender: "Male" }, {district}]} },
-        { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
-        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
-        { $project: { fromSchool: 0 } },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        //{ $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+        //{ $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+        //{ $project: { fromSchool: 0 } },
         { $sort: { _id: -1 } }
     ]).exec();
     const female = await models.Teacher.aggregate([
         { $match: { $and: [{ gender: "Female" }, {district}]} },
-        { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
-        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
-        { $project: { fromSchool: 0 } },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+        //{ $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+       // { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+       // { $project: { fromSchool: 0 } },
         { $sort: { _id: -1 } }
     ]).exec();
     const total = await models.Teacher.aggregate([
         { $match: {district} },
-        { $group: { _id: "$school", count: { $sum: 1 } } },
-        { $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
-        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
-        { $project: { fromSchool: 0 } },
+        { $group: { _id: "$edulevel", count: { $sum: 1 } } },
+       //{ $lookup: { from: "schools", localField: "_id", foreignField: "_id", as: "fromSchool"}},
+       // { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromSchool", 0 ] }, "$$ROOT" ] } }},
+       // { $project: { fromSchool: 0 } },
         { $sort: { _id: -1 } }
     ]).exec();
   
