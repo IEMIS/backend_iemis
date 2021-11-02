@@ -853,6 +853,39 @@ exports.StudentData = async (req, res) =>{
                 values: Yeartotal,
             },
         ]  
+
+        const LEmale = await models.Student.aggregate([
+            { $match: { gender: "Male" } },
+            {$group :{ _id:"$edulevel", count:{$sum:1}}},
+            { $sort: { _id: 1 } }
+        ]).exec(); 
+        const LEfemale = await models.Student.aggregate([
+            { $match: { gender: "Female" } },
+            {$group :{ _id:"$edulevel", count:{$sum:1}}},
+            { $sort: { _id: 1 } }
+            ]).exec();
+        const LEtotal = await models.Student.aggregate([
+            {$group :{ _id:"$edulevel", count:{$sum:1}}},
+            { $sort: { _id: 1 } }
+            ]).exec();
+      
+        const learner = [
+            {
+                key: "Male",
+                color: "#FE8A7D",
+                values: LEmale,
+            },
+            {
+                key: "Female",
+                color: "#1de9b6",
+                values: LEfemale,
+            },
+            {
+                key: "Total",
+                color: "#3ebfea",
+                values: LEtotal,
+            },
+        ]  
     const countStudentByStatus= await models.Student.aggregate([
         {$group :{ _id:"$status", count:{$sum:1}}},
     ]).exec();
@@ -963,7 +996,7 @@ const disability = [
         values: None,
     }, 
 ]
-    res.status(200).json({message:"school data successfully fetched",data:{countStudentBySession, countStudent,countStudentByGender,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentByStatus, disability, datasession,adminYear, countStudentByYear } })
+    res.status(200).json({message:"school data successfully fetched",data:{countStudentBySession, countStudent,countStudentByGender,countStudentByClass,countStudentBySchool,countStudentByAge,countStudentByEduLevel,countStudentByDistrict,countStudentByReligion,countStudentByCountry,countStudentByEthnicity,countStudentByProvince,countStudentByStatus, disability, datasession,adminYear, countStudentByYear, learner } })
 //     console.log({countStudent})
 // >>>>>>> master
 }
