@@ -661,6 +661,42 @@ exports.student = async (req, res) =>{
     
 }
 
+exports.studentByDistrict_d = async (req, res) =>{
+    const district = req.params.district;
+    const data = await models.Student.aggregate([
+        { $match: { district} },
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
+        { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromDistrict: 0 } }
+    ]).exec();
+
+    if(!data){
+       return res.status(404).json({error:"fails to get users"})
+    }
+    res.status(200).json({message:"students successfully fetched", data})   
+}
+
+exports.studentBySchool_s = async (req, res) =>{
+    const school = req.params.school;
+    const data = await models.Student.aggregate([
+        { $match: { school } },
+        { $lookup: { from: "districts", localField: "district", foreignField: "_id", as: "fromDistrict"}},
+        { $lookup: { from: "schools", localField: "school", foreignField: "_id", as: "fromSchool"}},
+        { $lookup: { from: "sessions", localField: "session", foreignField: "_id", as: "fromSession"}},
+        { $lookup: { from: "classes", localField: "presentClass", foreignField: "_id", as: "fromClass"}},
+        { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromDistrict", 0 ] }, "$$ROOT" ] } }},
+        { $project: { fromDistrict: 0 } }
+    ]).exec();
+
+    if(!data){
+       return res.status(404).json({error:"fails to get users"})
+    }
+    res.status(200).json({message:"students successfully fetched", data})   
+}
+
 
 exports.countStudentByClassAll = async (req, res)=>{
     const male = await models.Student.aggregate([
