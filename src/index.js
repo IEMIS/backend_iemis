@@ -41,11 +41,11 @@ app.use("/api/v1", teacherRouter);
 
 app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swagerFile));
 app.use("/api", (req, res)=>{
-    res.json({message:"hellow word"});
+    res.json({message:"hello word"});
 });
 
 app.use("/", (req, res)=>{
-    res.json({message:"hellow word", doc:"https://iemis.herokuapp.com/api/v1/"});
+    res.json({message:"hello word", doc:"https://iemis.herokuapp.com/api/v1/"});
 });
 
 app.use(function(err, req, res, next) {
